@@ -829,7 +829,7 @@ namespace KeepBack
 #if true //tracking a bug in history processing
 				if( File.Exists( dst ) )
 				{
-					LogInfo( "File already exists at destination [ " + dst + " ]" );
+					LogInfo( "File already exists at destination " + DisplayCombined( src, dst ) );
 					_FileDelete( dst );
 				}
 #endif
@@ -945,6 +945,7 @@ namespace KeepBack
 						case 0x80070005:  return "access denied"      ; //(Win32:  5) Access is denied.
 						case 0x8007001F:  return "fault"              ; //(Win32: 31) A device attached to the system is not functioning.
 						case 0x80070020:  return "in use"             ; //(Win32: 32) The process cannot access the file because it is being used by another process.
+						case 0x80070057:  return "invalid parameter"  ; //(Win32: 87) The parameter is incorrect.
 						case 0x80070091:  return "directory not empty"; //(Win32:145) The directory is not empty.
 						case 0x800700B7:  return "file exists"        ; //(Win32:183) Cannot create a file when that file already exists.
 						default        :  return "0x" + hr.ToString( "X" ) + ": " + ex.Message;
@@ -1040,7 +1041,7 @@ namespace KeepBack
 		}
 		string DisplayCombined( string src, string dst )
 		{
-			return src + " --> " + dst;
+			return "[" + src + "] --> [" + dst + "]";
 		}
 
 		//--- interface -------------------------
