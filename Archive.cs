@@ -415,7 +415,7 @@ namespace KeepBack
 						if( include || _DirectoryCreateDirectory( cp ) )
 						{
 							action( Action.File, n );
-							LogReason( Reason.Created, pn, _FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ) ) );
+							LogReason( Reason.Created, pn, _FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ), false ) );
 							rc = true;
 						}
 					}
@@ -439,7 +439,7 @@ namespace KeepBack
 			{
 				//..file does not exist in current, simply copy
 				action( Action.File, n );
-				LogReason( Reason.Created, pn, _FileCopy( fpn, cpn ) );
+				LogReason( Reason.Created, pn, _FileCopy( fpn, cpn, false ) );
 				return;
 			}
 			//..check for file property changes
@@ -475,18 +475,20 @@ namespace KeepBack
 			//?? Is there a better way to do this combination that tests if a file can be copied first ??
 			//..perhaps copy to a different file name first, move old file to history, rename copied file
 
+			bool replace = false;
+
 			//..move old file from current to history
 			if( ! history )
 			{
 				//..remove old file from current
+
 				if( ! _FileDelete( cpn ) )
 				{
 					LogInfo( "failed to delete previous backup [" + cpn + "]" );
-					action( Action.Skip, "" );
-					return;
+					replace = true;
 				}
 				//..copy file to current
-				LogReason( Reason.Modified, pn, _FileCopy( fpn, cpn ) );
+				LogReason( Reason.Modified, pn, _FileCopy( fpn, cpn, replace ) );
 				return;
 			}
 			if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
@@ -495,24 +497,27 @@ namespace KeepBack
 			}
 			//..move old file from current to history
 			string hpn = Path.Combine( hp, n );
+#if true //history bug
+			if( File.Exists( hpn ) )
+			{
+				LogInfo( "Backup. file exists in history [" + hpn + "], replacing" );
+				_FileDelete( hpn );
+			}
+#endif
 			if( ! _FileMove( cpn, hpn ) )
 			{
 				LogInfo( "failed moving current [" + cpn + "] to history [" + hpn + "]" );
+				replace = true;
+			}
+			//..copy new file from folder to current
+			if( ! _FileCopy( fpn, cpn, replace ) )
+			{
+				LogInfo( "failed copying file [" + fpn + "] to archive [" + cpn + "]" );
 				action( Action.Skip, "" );
 				return;
 			}
-			//..copy new file from folder to current
-			if( _FileCopy( fpn, cpn ) )
-			{
-				LogReason( Reason.Modified, pn, true );
-				return;
-			}
-			//..if the file can not be copied, restore the old file from history to current
-			if( ! _FileMove( hpn, cpn ) )
-			{
-				LogInfo( "failed moving history [" + hpn + "] back to current [" + cpn + "]" );
-			}
-			action( Action.Skip, "" );
+			LogReason( Reason.Modified, pn, true );
+			return;
 		}
 		void _RemoveFile( string cp, string hp, string pn, string n, bool history )
 		{
@@ -525,11 +530,13 @@ namespace KeepBack
 					return;
 				}
 				string hpn = Path.Combine( hp, n );
+#if true //history bug
 				if( File.Exists( hpn ) )
 				{
-					LogInfo( "file exists in history [" + hpn + "], replacing" );
+					LogInfo( "Remove. file exists in history [" + hpn + "], replacing" );
 					_FileDelete( hpn );
 				}
+#endif
 				if( _FileMove( cpn, hpn ) )
 				{
 					LogReason( Reason.Deleted, pn, true );
@@ -798,11 +805,11 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _FileCopy( string src, string dst )
+		bool _FileCopy( string src, string dst, bool replace )
 		{
 			try
 			{
-				File.Copy( src, dst );
+				File.Copy( src, dst, replace );
 #if true //this is only necessary under Linux, not Windows
 				FileInfo fi = new FileInfo( dst );
 				DateTime at = File.GetLastWriteTimeUtc( src );
