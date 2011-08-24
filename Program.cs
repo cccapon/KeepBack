@@ -18,73 +18,25 @@
 
 */
 
+
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 
-/*
-History Browser structures
 
-Item
-	filename
-	size
-	history-size
-	history (byte[])
-ItemFile : Item
-	date-modified
-ItemFolder : Item
-	file-count
-	history-count
-	children (Item[])
-
-history
-	- byte array
-	- sized depending on the number of history folders
-		(folders + 7) / 8
-        ((8 - 1) + folders) / 8
-        (8 + (folders - 1)) / 8
-        (8 / 8) + ((folders - 1) / 8)
-        1 + ((folders - 1) / 8)
- * 
- * 
-children
-	- null     = hasn't been scanned yet
-	- not-null = list of child Item's (directories first), sorted
-file-count
-	- >= 0  = count of all files under folder
-	-  < 0  = incomplete count, some children haven't fully been scanned
-history-count
-	- for directories, it tracks sum of history of all children
-	- for files, history count is derrived from history (byte[])
-
-
- */
-
-
-
-/*  Underway
+/*  Current
  * ---------------------------------------
- * - when removing a folder from an archive set
- *   - folder is not moved to history on next backup
- *   - have solved this and am testing it now
- * - missing keep file
- *   - create archive with no folders
- *   - do backup
- *   - add new folder to archive
- *   - do backup
- *   - remove folder within same minute
- *   - do backup
- *   - wait a minute
- *   - do backup
- *   - in history folder, .keep file is missing
- *   - trying to find this bug right now
  */
 
 
 
 /*  Bug
  * ---------------------------------------
+ * - track down "already exists" bug
+ *   - new idea, see if the underlying 8.3 filenames are in conflict
+ *     - problem occurs during a FileMove operation so it is possible that while the long file names are
+ *       different, the short file names might still be the same and are in conflict.
  * - Adding a folder to a new archive
  *   - select folder with directory browser
  *   - change name
@@ -93,26 +45,110 @@ history-count
  *   - happens for archive path as well
  * - when a folder is excluded using a filter and that folder already exists in the backup, it will not be cleared out properly by history.
  * - find a better way to detect if file system is case sensitive or not.
- * - this bug occurs when a folder is added to an archive but no path is specified
-		Folder-1             
-		System.ArgumentNullException: Value cannot be null.
-		Parameter name: path1
-		   at System.IO.Path.Combine(String path1, String path2)
-		   at KeepBack.Archive.CopyFolder(String path, Boolean include) in C:\Documents and Settings\cc\My Documents\KeepBack\Archive.cs:line 641
-		   at KeepBack.Archive.BackupCompareFolder(String path, Boolean include, Boolean history) in C:\Documents and Settings\cc\My Documents\KeepBack\Archive.cs:line 264
-		   at KeepBack.Archive.Backup(CtrlFolder folder) in C:\Documents and Settings\cc\My Documents\KeepBack\Archive.cs:line 251
-		   at KeepBack.Archive.Backup(String archiveFilePath) in C:\Documents and Settings\cc\My Documents\KeepBack\Archive.cs:line 219
-		   at KeepBack.FormMain.Launch(Object parm) in C:\Documents and Settings\cc\My Documents\KeepBack\FormMain.cs:line 221
- * 
  * - Add new "exclude folder" to existing archive
  *   - when exclude folder is added, the file exclude icon is displayed rather than folder exclude
+ * - When backup drive is just 'E' instead of 'E:' then a folder is created called E\backup\directory rather than E:\backup\directory
+ *   - verify that all drive numbers end with the ':' character.
+ *   - maybe the separation of drive letter and path should be rethought, it isn't that difficult to change a drive letter programatically.
+ *   - if path is E:\ and root is E:\ then paths have two drive prefixes : E:\E:\
+ *		- should have parsing rules for these fields
+ * - remove default pattern
+ *   - default pattern of "*" matches everything and on an exclude is disasterous
+ *   - make default pattern "" instead
+ *   - automatically remove "" patterns when the pattern dialog is closed.
  * 
  */
 
+/*
+ *  Mike Capon ideas
+ * ---------------------------------------
+ *   - add list of wild card characters to pattern screen in edit window
+ *   - include files which are part of an excluded folder (ie: exclude the folder but include one file it contains)
+ *     - this would require some sort of nesting option
+ *     - should includes and excludes have children so they can recursively include something that was excluded and vice-versa?
+ *     - nestable include/exclude option
+ *       - must alternate - includes can have excludes but not other includes, excludes can have includes but not excludes
+ *       - multiple entries at each nest level
+ *       - some sort if display indicator that there are levels below when  displayed in the tree
+ *   - compression option for people with limited space
+ * - find a clean way to detect if file exists on destination
+ *   - need to handle all sorts of case/case insensitive situations
+ *     - backup drive may not be case sensitive where source drive may be
+ *   - fix merge as well as backup
+ * - new status trackers
+ *   - Created, Modified, Deleted
+ *   - skipped or locked files (can't be backed up but should have)
+ *   - bytes backed up, bytes removed, total space left on backup drive
+ *   - percentage remaining
+ *     - size of items in operations queue (total bytes)
+ *   - elapsed time, time remaining, estimated completion time
+ * - no dependancy on GUI
+ *   - output should be able to drive a console application
+ * - include, history, exclude
+ *   - treat include and history the same way logically
+ *     - if include or history are specified then current folder must be under at least one of them
+ *     - if exclude is specified, then current folder can not be under any of them
+ * - patterns
+ *   - directory characters (\) and (/) are added to beginning and end of pattern by radio buttons
+ *   - check the pattern to decide which to use
+ *   - nearest one to the beginning is used for the beginning
+ *   - nearest one to the end is used for the end
+ *   - if none present, pick (\) for Windows and (/) for Linux (maybe just Path.DirectoryChar will do)
+ * - 
+ * 
+ */
+
+/*
+ *  History Browser structures
+ * ---------------------------------------
+ * 
+ * Item
+ *  	filename
+ *  	size
+ *  	history-size
+ *  	history (byte[])
+ * ItemFile : Item
+ *  	date-modified
+ * ItemFolder : Item
+ *  	file-count
+ *  	history-count
+ *  	children (Item[])
+ * 
+ * history
+ * 	- byte array
+ * 	- sized depending on the number of history folders
+ * 		(folders + 7) / 8
+ *         ((8 - 1) + folders) / 8
+ *         (8 + (folders - 1)) / 8
+ *         (8 / 8) + ((folders - 1) / 8)
+ *         1 + ((folders - 1) / 8)
+ * 
+ * children
+ *  	- null     = hasn't been scanned yet
+ *  	- not-null = list of child Item's (directories first), sorted
+ * file-count
+ *  	- >= 0  = count of all files under folder
+ *  	-  < 0  = incomplete count, some children haven't fully been scanned
+ * history-count
+ *  	- for directories, it tracks sum of history of all children
+ *  	- for files, history count is derrived from history (byte[])
+ */
 
 
 /*  Enhancement
  * ---------------------------------------
+ * - History browser
+ *   - sort by
+ *     - total diskspace used by all history versions
+ *     - frequency of changes over history (number of times item appears in history sets)
+ * - Dealing with large files which change frequently over time
+ *   - typically E-Mail archives
+ *   - can we store a delta?
+ *     - maybe there is existing code to track changes to binary files
+ *     - most recent file must be the master file to which delta's are applied
+ *     - it must be possible to merge deltas when backup sets are merged
+ *     - how does the software deal with interuption?
+ *     - what if the file is open for write at backup time?
  * - display warnings for low disk space
  *   - better: display a meter which shows how much space is used/free
  *     - could this be a running display while the backup proceeds?
@@ -154,6 +190,21 @@ history-count
  * - when adding a new folder, leave name empty
  *   - if browser selects folder and name is empty, set name = foldername of path
  *   - if we leave the folder without naming it, automatically set name = foldername of path
+ * - dated directory names
+ *   - when there are no conflicting names, allow merge to rename date/time folders to just date folders
+ *     eg: 2010-11-05-1903  to  2010-11-05
+ *     especially the monthly merge if not the daily
+ *     handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05
+ * - configuration
+ *   - no two archives should have the same destination path
+ *   - no two folders should have the same archive name
+ * - force full backup
+ *   - have checkbox flag on main screen.  When checked (remember last state?) is passed along to backup
+ *   - backup does not rename history folder
+ *   - archive is new folder name as usual
+ *   - history remains NULL
+ *   - full backup takes place and no history interaction takes place
+ *   - then its business as usual
  * 
  * - check for empty paths
  * 
@@ -215,12 +266,94 @@ history-count
  *     - devices, links, pipes
  */
 
+/* 
+ *  2.0 ideas
+ * ---------------------------------------
+ * - multithreaded
+ *   - queue based
+ *   - one thread monitors GUI
+ *     - display status, update progress bar, show time elapsed and time remaining
+ *   - one thread scans directories looking for work
+ *     - compare directories
+ *     - should essentially be just reading directories
+ *     - add items to operations queue as necessary
+ *   - one thread handles all file operations (move, copy, delete)
+ *     - must handle all situations
+ *       - file or folder may exist at destination, move them to history, if exist in history (maybe case
+ *         collision) must move history to another folder somehow
+ *         - maybe automatically create a 2nd history folder with the same name but append -01 or something.
+ *           - keep creating sibling history folders for each collision so our backup can complete and no
+ *             lost data.
+ *           - merge should be adjusted to handle these backups and keep the most recent history file given
+ *             a choice.
+ *     - overly long paths >256 cause exceptions
+ *       - trap exception and use fallback logic
+ *       - cd to source folder level
+ *         - if cd fails with overly long path then recursively cd to parent directory then current directory
+ *       - copy file to temp name on destination drive
+ *       - recursively move temp file down destination drive path until at required directory level
+ *       - rename file to match name of file
+ *       - do some similar renaming when moving to history folder
+ *       - test with really long folder names as well as file names
+ *     - what happens when files change between scan thread finding them and the archive thread moving them?
+ *   - interuptable
+ *     - GUI can stop worker threads at their next opportunity
+ *   - use queue for merge as well
+ *   - handle file and folder permission issues
+ *     - maybe can't read a file or folder to back it up
+ *     - automatic elevation to administrator?
+ *     - if a file is currently open, is there a way to back it up anyway?
+ *       - if not we should keep the last backup file and not move it to history
+ *          FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, System.IO.FileShare.ReadWrite)
+ * - queue processing
+ *   - since all actions are now stored in a list, if any can't be processed they can still be in the list, flagged as incomplete
+ *   - for files that are locked
+ *     - show a list of locked files while still running the backup.
+ *     - a message indicates that if a locked file is released then the backup will still process the file
+ *     - check periodically if the file is unlocked.
+ *     - have an option to automatically exclude locked files by adding a custom filter to the Folder.
+ * - handling files or folders which move
+ *   - on source drive, if files or folders are moved from one backup to the next, currently, the files will be duplicated:
+ *     one copy in the history folder and one in the current folder
+ *   - is there a way with the multi-threading to identify files and folders which have moved and where their new locations are?
+ *     - Would probably have to let the scan finish before determining this.
+ *   - if located, then one copy is kept in the current folder and no versions kept in the history folder
+ * - handling files which have been moved
+ *   - a moved file disappears from one location and appears in another
+ *   - results in redundantly copying the new location and historically archiving the old
+ *   - when scanning for work, we could defer file create and deletes until the end
+ *   - when created files are found, they could be compared against the current deletes list and vice versa
+ *   - matching files would then simply be moved in the archive
+ *   - this is probably not a good idea since no one would be able to find historical versions of files in the
+ *     old locations.
+ *   - what about maintaining a CRC of every file
+ *     - as files change, a new CRC is generated
+ *     - new CRC's can be compared against list of known CRC's for all files
+ *       - if found, check if old file is gone
+ *         - if gone, assume file has moved
+ * 
+ */
+
+
+
+
+
 
 
 /*  History
  * ---------------------------------------
+ * 2011-08-24  v1.04
+ *   - alter interface to show Created, Modified, Deleted.  Removed Changed, Attribute, Written and Length.
+ *   - no longer check attributes as indicator of a changed file.
+ *   - reverse order of History and Exclude filters in Folder panel of Edit window.
+ *   - bug in directory processing with filters.  If an input filter is specified which includes files
+ *     in a folder, but does not specify the folder, then the folder would be moved to history.  Later it
+ *     would be copied again, then moved to history leading to a cyclic pattern and the Directory Exists bug.
+ *   - if a folder was added to an archive, but no path was specified then an exception was thrown when
+ *     a backup was run.  this now displays a warning message instead.
+ *   - directory names in the log file now have a '\' appended to the name to distinguish them from files.
  * 2011-01-20  v1.03
- *   - changed .keep XML to indent text (make it more human readable)
+ *   - changed .keep XML to indent text (make it more human readable).
  *   - when backup operation was cancelled, any unprocessed folders in the current archive would be moved to the history
  *     folder inadvertently.  Now fixed.
  * 2010-11-14  v1.02
@@ -278,7 +411,7 @@ namespace KeepBack
 {
 	static class Program
 	{
-		const string version = "v1.03";
+		const string version = "v1.04";
 
 		/// <summary>
 		/// The main entry point for the application.

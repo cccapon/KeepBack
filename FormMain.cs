@@ -38,14 +38,11 @@ namespace KeepBack
 
 		Thread          thread           = null;
 		Archive         current          = null;
-		long            changed          = 0;
-		long            skipped          = 0;
+
 		long            created          = 0;
+		long            modified         = 0;
 		long            deleted          = 0;
-		long            attribute        = 0;
-		long            written          = 0;
-		long            length           = 0;
-		FileAttributes  attrs            = 0;
+		long            skipped          = 0;
 
 
 		public string Version
@@ -95,7 +92,8 @@ namespace KeepBack
 
 
 
-		private void buttonNew_Click( object sender, EventArgs e )
+
+		private void MenuNew_Click( object sender, EventArgs e )
 		{
 			SaveFileDialog f = new SaveFileDialog();
 			f.AddExtension = true;
@@ -126,7 +124,8 @@ namespace KeepBack
 				}
 			}
 		}
-		private void buttonOpen_Click( object sender, EventArgs e )
+
+		private void MenuOpen_Click( object sender, EventArgs e )
 		{
 			OpenFileDialog f = new OpenFileDialog();
 			f.CheckFileExists  = true;
@@ -140,7 +139,18 @@ namespace KeepBack
 				Filename = f.FileName;
 			}
 		}
-		private void buttonEdit_Click(object sender, EventArgs e)
+
+		private void MenuClose_Click( object sender, EventArgs e )
+		{
+			Filename = "";
+		}
+
+		private void MenuExit_Click( object sender, EventArgs e )
+		{
+			this.Close();
+		}
+
+		private void MenuEdit_Click( object sender, EventArgs e )
 		{
 			try
 			{
@@ -156,7 +166,8 @@ namespace KeepBack
 #endif
 			}
 		}
-		private void buttonExplore_Click(object sender, EventArgs e)
+
+		private void MenuExplore_Click( object sender, EventArgs e )
 		{
 			try
 			{
@@ -172,7 +183,8 @@ namespace KeepBack
 #endif
 			}
 		}
-		private void buttonMerge_Click( object sender, EventArgs e )
+
+		private void MenuMerge_Click( object sender, EventArgs e )
 		{
 			if( ! string.IsNullOrEmpty( filename ) )
 			{
@@ -181,9 +193,10 @@ namespace KeepBack
 				thread.Start( "Merge" );
 			}
 		}
-		private void buttonBackup_Click( object sender, EventArgs e )
+
+		private void MenuBackup_Click( object sender, EventArgs e )
 		{
-			if( buttonMerge.Enabled )
+			if( newToolStripMenuItem.Enabled )
 			{
 				if( ! string.IsNullOrEmpty( filename ) )
 				{
@@ -204,13 +217,10 @@ namespace KeepBack
 
 		void ClearValues()
 		{
-			labelChanged   .Text = "";
-			labelSkipped   .Text = "";
 			labelCreated   .Text = "";
+			labelModified  .Text = "";
 			labelDeleted   .Text = "";
-			labelAttribute .Text = "";
-			labelWritten   .Text = "";
-			labelLength    .Text = "";
+			labelSkipped   .Text = "";
 		}
 
 		private void Launch( object parm )
@@ -225,14 +235,10 @@ namespace KeepBack
 				ArchiveAction(Archive.Action.Info, "==== Begin ====" );
 				ArchiveAction(Archive.Action.Info, "Control File   " + filename );
 
-				changed              = 0;
-				skipped              = 0;
 				created              = 0;
+				modified             = 0;
 				deleted              = 0;
-				attribute            = 0;
-				written              = 0;
-				length               = 0;
-				attrs                = 0;
+				skipped              = 0;
 
 				Ctrl c = Ctrl.Import( filename );
 				if( c.Archives != null )
@@ -275,29 +281,21 @@ namespace KeepBack
 				this.Invoke( new ButtonEnableCallback( ButtonEnable ), enable );
 				return;
 			}
+			bool fn = ! string.IsNullOrEmpty( filename );
+
+			//File
+			newToolStripMenuItem    .Enabled = enable;
+			openToolStripMenuItem   .Enabled = enable;
+			closeToolStripMenuItem  .Enabled = enable && fn;
+
+			//Tools
+			editToolStripMenuItem   .Enabled = enable && fn;
+			exploreToolStripMenuItem.Enabled = enable && fn;
+			mergeToolStripMenuItem  .Enabled = enable && fn;
+			backupToolStripMenuItem .Enabled = enable && fn;
+
 			buttonBackup  .Text    = enable ? "Backup" : "Cancel";
-			buttonNew     .Enabled = enable;
-			buttonOpen    .Enabled = enable;
-			if( enable )
-			{
-				enable = ! string.IsNullOrEmpty( filename );
-				buttonBackup.Enabled = enable;
-			}
-			else
-			{
-				buttonBackup  .Enabled = true;
-			}
-			buttonEdit    .Enabled = enable;
-			buttonExplore .Enabled = false; //enable;
-			buttonMerge   .Enabled = enable;
-			if( enable )
-			{
-				buttonBackup.Focus();
-			}
-			else
-			{
-				buttonNew.Focus();
-			}
+			buttonBackup  .Enabled = fn;
 		}
 
 		delegate void ArchiveActionCallback( Archive.Action action, string message );
@@ -329,12 +327,9 @@ namespace KeepBack
 				case Archive.Action.Change:
 				{
 					Archive.Reason reason = (Archive.Reason)Enum.Parse( typeof(Archive.Reason), message );
-					++changed;  labelChanged.Text = changed.ToString();
 					if( (reason & Archive.Reason.Created   ) == Archive.Reason.Created   ) { ++created  ;  labelCreated  .Text = created  .ToString(); }
+					if( (reason & Archive.Reason.Modified  ) == Archive.Reason.Modified  ) { ++modified ;  labelModified .Text = modified .ToString(); }
 					if( (reason & Archive.Reason.Deleted   ) == Archive.Reason.Deleted   ) { ++deleted  ;  labelDeleted  .Text = deleted  .ToString(); }
-					if( (reason & Archive.Reason.Written   ) == Archive.Reason.Written   ) { ++written  ;  labelWritten  .Text = written  .ToString(); }
-					if( (reason & Archive.Reason.Length    ) == Archive.Reason.Length    ) { ++length   ;  labelLength   .Text = length   .ToString(); }
-					if( (reason & Archive.Reason.Attribute ) == Archive.Reason.Attribute ) { ++attribute;  labelAttribute.Text = attribute.ToString(); }
 					break;
 				}
 				case Archive.Action.Skip:
@@ -343,14 +338,9 @@ namespace KeepBack
 					labelSkipped.Text = skipped.ToString();
 					break;
 				}
-				case Archive.Action.Attribute:
-				{
-					attrs |= (FileAttributes)Enum.Parse( typeof(FileAttributes), message );
-					labelAttrs.Text = attrs.ToString();
-					break;
-				}
 			}
 		}
+
 
 	}
 }

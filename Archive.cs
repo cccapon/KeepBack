@@ -45,8 +45,8 @@ namespace KeepBack
 
 		//--- define ----------------------------
 
-		       const string  SECTION_DETAIL  = @"                    ";
 		public const string  ARCHIVE_PATTERN = @"????-??-??-????";
+		       const string  SECTION_DETAIL  = @"           ";
 		       const char    BLANK           = '-';
 
 		public enum Action
@@ -56,15 +56,12 @@ namespace KeepBack
 			File,
 			Change,
 			Skip,
-			Attribute,
 		}
 		public enum Reason
 		{
-			Created   = 0x01 << 0,
-			Deleted   = 0x01 << 1,
-			Attribute = 0x01 << 2,
-			Written   = 0x01 << 3,
-			Length    = 0x01 << 4,
+			Created   = 1,
+			Modified  = 2,
+			Deleted   = 3,
 		}
 		public enum MergeLevel
 		{
@@ -76,18 +73,16 @@ namespace KeepBack
 		}
 		enum Function
 		{
-			DirectoryGetDirectories,
-			DirectoryGetFiles,
-			DirectoryCreateDirectory,
-			DirectoryMove,
-			DirectoryDelete,
-			FileCopy,
-			FileMove,
-			FileDelete,
-			FileInfo,
+			LD, //ListDirectories
+			LF, //ListFiles
+			DC, //DirectoryCreate
+			DM, //DirectoryMove
+			DD, //DirectoryDelete
+			FC, //FileCopy
+			FM, //FileMove
+			FD, //FileDelete
+			FI, //FileInfo
 		}
-
-		const FileAttributes FILE_ATTRIBUTES_IGNORE = FileAttributes.Normal | FileAttributes.Archive | FileAttributes.Compressed | FileAttributes.NotContentIndexed | FileAttributes.ReparsePoint;
 
 		public delegate void ActionDelegate( Action action, string text );
 
@@ -215,13 +210,14 @@ namespace KeepBack
 #endif
 			Log( "" );
 			LogLegend();
+			Log( "" );
 			{
 				/* move copy of control file in to backup folder
 				 */
 				string fp = Path.GetDirectoryName( archiveFilePath );
 				string n  = Path.GetFileName     ( archiveFilePath );
 				_BackupFile( fp, current, history, n, n, true );
-				foreach( string s in _DirectoryGetFiles( current ) )
+				foreach( string s in _ListFiles( current ) )
 				{
 					if( string.Compare( s, n, true ) != 0 )
 					{
@@ -233,7 +229,7 @@ namespace KeepBack
 			{
 				/* backup each folder in archive set
 				 */
-				List<string> a = new List<string>( _DirectoryGetDirectories( current ) );
+				List<string> a = new List<string>( _ListDirectories( current ) );
 				if( archive.Folders != null )
 				{
 					foreach( CtrlFolder folder in archive.Folders )
@@ -243,16 +239,18 @@ namespace KeepBack
 						Log( "Folder" );
 						LogInfo( Status( folder.Name, folder.Path ) );
 						_Backup( folder );
-						foreach( string s in _DirectoryGetDirectories( current, folder.Name ) )
+						foreach( string s in _ListDirectories( current, folder.Name ) )
 						{
 							a.Remove( s );
 						}
 					}
 				}
-				if( ! cancel && (a.Count > 0) )
+				if( ! cancel && (a.Count > 0) && (history != null) )
 				{
 					/* move any existing folders not in archive set to history
 					 */
+					Log( "" );
+					Log( "Remove" );
 					_DirectoryCreateDirectory( history );
 					foreach( string n in a )
 					{
@@ -270,6 +268,11 @@ namespace KeepBack
 
 		void _Backup( CtrlFolder folder )
 		{
+			if( string.IsNullOrEmpty( folder.Name ) || string.IsNullOrEmpty( folder.Path ) )
+			{
+				LogInfo( "  incomplete folder definition" );
+				return;
+			}
 			this.curr  = Path.Combine( current, folder.Name );
 			this.hist  = (history == null) ? null : Path.Combine( history, folder.Name );
 			this.fold  = folder.Path;
@@ -281,6 +284,16 @@ namespace KeepBack
 		}
 		bool _BackupCompareFolder( string path, bool include, bool history )
 		{
+			/* The 'include' flag indicates an item has specifically been included
+			 * by a filter.
+			 * The 'history' flag indicates an item has specifically been marked for
+			 * a single backup only (no historical copies).
+			 * If a folder is specifically excluded with a filter, then no further
+			 * analysis is done on it.
+			 * If the folder has not specifically been included or excluded, then a
+			 * deeper analysis is done.  The folder and its descendants are scanned
+			 * for files and folders which do match an include filter.
+			 */
 			if( ! include && inc.MatchDirectory( path ) ) { include = true ; }
 			if(              exc.MatchDirectory( path ) ) { return    false; }
 			if(   history && his.MatchDirectory( path ) ) { history = false; }
@@ -289,23 +302,24 @@ namespace KeepBack
 			string cp = Path.Combine( curr, path );
 			if( ! Directory.Exists( cp ) )
 			{
-				//..if directory doesn't exist in current, then simply copy entire tree from folder.
-				_CopyFolder( path, include );
-				return include;
+				//..if directory doesn't exist in current, then the entire tree can simply be copied.
+				return _CopyFolder( path, include );
 			}
-			List<string> a = new List<string>( _DirectoryGetDirectories( cp ) );
-			string fp = Path.Combine( fold, path );
-			string hp = (hist == null) ? null : Path.Combine( hist, path );
-			foreach( string n in _DirectoryGetDirectories( fp ) )
+			bool         rc = include;
+			List<string> a  = new List<string>( _ListDirectories( cp ) );
+			string       fp = Path.Combine( fold, path );
+			string       hp = (hist == null) ? null : Path.Combine( hist, path );
+			foreach( string n in _ListDirectories( fp ) )
 			{
-				if( cancel ) { return include; }
+				if( cancel ) { return rc; }
 				//..check each sub-directory in folder.
 				if( _BackupCompareFolder( Path.Combine( path, n ), include, history ) )
 				{
-					foreach( string s in _DirectoryGetDirectories( cp, n ) )
+					foreach( string s in _ListDirectories( cp, n ) )
 					{
 						a.Remove( s );
 					}
+					rc = true;
 				}
 			}
 			action( Action.Directory, path );
@@ -317,33 +331,34 @@ namespace KeepBack
 				{
 					foreach( string n in a )
 					{
-						if( cancel ) { return include; }
-						action( Action.File, n );
+						if( cancel ) { return rc; }
+						action( Action.File, DisplayDirectory( n ) );
 						string pn = Path.Combine( path, n );
 						if( ! history || his.MatchDirectory( pn ) )
 						{
-							LogReason( Reason.Deleted, pn, _DirectoryDelete( Path.Combine( cp, n ) ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryDelete( Path.Combine( cp, n ) ) );
 						}
 						else
 						{
-							LogReason( Reason.Deleted, pn, _DirectoryMove( Path.Combine( cp, n ), Path.Combine( hp, n ) ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryMove( Path.Combine( cp, n ), Path.Combine( hp, n ) ) );
 						}
 					}
 				}
 			}
 
-			a = new List<string>( _DirectoryGetFiles( cp ) );
-			foreach( string n in _DirectoryGetFiles( fp ) )
+			a = new List<string>( _ListFiles( cp ) );
+			foreach( string n in _ListFiles( fp ) )
 			{
-				if( cancel ) { return include; }
+				if( cancel ) { return rc; }
 				string  pn  = Path.Combine( path, n );
 				if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
 				{
-					foreach( string s in _DirectoryGetFiles( cp, n ) )
+					foreach( string s in _ListFiles( cp, n ) )
 					{
 						a.Remove( s );
 					}
 					_BackupFile( fp, cp, hp, pn, n, history && ! his.MatchFile( pn ) );
+					rc = true;
 				}
 			}
 			if( a.Count > 0 )
@@ -353,26 +368,70 @@ namespace KeepBack
 				{
 					foreach( string n in a )
 					{
-						if( cancel ) { return include; }
+						if( cancel ) { return rc; }
 						string pn = Path.Combine( path, n );
-						if( ! _RemoveFile( cp, hp, pn, n, history && ! his.MatchFile( pn ) ) )
+						_RemoveFile( cp, hp, pn, n, history && ! his.MatchFile( pn ) );
+					}
+				}
+			}
+			return rc;
+		}
+
+		/// <summary>
+		///		Copy a folder and all sub-folders as quickly as possible without
+		///		checking their contents first.
+		///		Before calling this function, make sure the destination folder
+		///		does not already exist.
+		/// </summary>
+		bool _CopyFolder( string path, bool include )
+		{
+			if( cancel ) { return include; }
+			if( ! include && inc.MatchDirectory( path ) ) { include = true; }
+			if(              exc.MatchDirectory( path ) ) { return false; }
+			bool   rc = include;
+			string cp = Path.Combine( curr, path );
+			if( ! include || _DirectoryCreateDirectory( cp ) )
+			{
+				if( include )
+				{
+					LogReason( Reason.Created, DisplayDirectory( path ), true );
+					rc = true;
+				}
+				string fp = Path.Combine( fold, path );
+				foreach( string n in _ListDirectories( fp ) )
+				{
+					if( cancel ) { return rc; }
+					string p = Path.Combine( path, n );
+					rc |= _CopyFolder( p, include );
+				}
+				action( Action.Directory, path );
+//				action( Action.File, "" );
+				foreach( string n in _ListFiles( fp ) )
+				{
+					if( cancel ) { return rc; }
+					string pn = Path.Combine( path, n );
+					if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
+					{
+						if( include || _DirectoryCreateDirectory( cp ) )
 						{
-							LogInfo( "History failure on file [" + n + "]" );
+							action( Action.File, n );
+							LogReason( Reason.Created, pn, _FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ) ) );
+							rc = true;
 						}
 					}
 				}
 			}
-			return include;
+			return rc;
 		}
 
 		void _BackupFile( string fp, string cp, string hp, string pn, string n, bool history )
 		{
-			string   cpn  = Path.Combine( cp, n );
 			string   fpn  = Path.Combine( fp, n );
+			string   cpn  = Path.Combine( cp, n );
 
-			FileInfo cfi  = _FileInfo( cpn );
 			FileInfo ffi  = _FileInfo( fpn );
-			if( (cfi == null) || (ffi == null) )
+			FileInfo cfi  = _FileInfo( cpn );
+			if( (ffi == null) || (cfi == null) )
 			{
 				return;
 			}
@@ -384,33 +443,33 @@ namespace KeepBack
 				return;
 			}
 			//..check for file property changes
-			Reason r = 0;
-			FileAttributes fa = (FileAttributes)((cfi.Attributes ^ ffi.Attributes) & ~(FILE_ATTRIBUTES_IGNORE));
-			if( fa                   != 0                    ) { r |= Reason.Attribute; }
-			if( cfi.LastWriteTimeUtc != ffi.LastWriteTimeUtc ) { r |= Reason.Written  ; }
-			if( cfi.Length           != ffi.Length           ) { r |= Reason.Length   ; }
-			if( r == 0 )
+			if( 
+				   (ffi.LastWriteTimeUtc == cfi.LastWriteTimeUtc)
+				&& (ffi.Length           == cfi.Length          )
+				)
 			{
 				//..file has not changed, ignore
 				return;
 			}
 			action( Action.File, n );
-			if( fa != 0 )
-			{
-				action( Action.Attribute, fa.ToString() );
-			}
 #if false
-			StringBuilder sb = new StringBuilder();
-			if( cfi.Attributes        != ffi.Attributes        ) { sb.Append( " A["   +     cfi.Attributes.ToString() + "][" +     ffi.Attributes.ToString() + "]" ); }
-			if( cfi.CreationTime      != ffi.CreationTime      ) { sb.Append( " C["   + dd( cfi.CreationTime )        + "][" + dd( ffi.CreationTime )        + "]" ); }
-			if( cfi.CreationTimeUtc   != ffi.CreationTimeUtc   ) { sb.Append( " CU["  + dd( cfi.CreationTimeUtc )     + "][" + dd( ffi.CreationTimeUtc )     + "]" ); }
-			if( cfi.IsReadOnly        != ffi.IsReadOnly        ) { sb.Append( " RO["  +     cfi.IsReadOnly.ToString() + "][" +     ffi.IsReadOnly.ToString() + "]" ); }
-			if( cfi.LastAccessTime    != ffi.LastAccessTime    ) { sb.Append( " LA["  + dd( cfi.LastAccessTime )      + "][" + dd( ffi.LastAccessTime )      + "]" ); }
-			if( cfi.LastAccessTimeUtc != ffi.LastAccessTimeUtc ) { sb.Append( " LAU[" + dd( cfi.LastAccessTimeUtc )   + "][" + dd( ffi.LastAccessTimeUtc )   + "]" ); }
-			if( cfi.LastWriteTime     != ffi.LastWriteTime     ) { sb.Append( " LW["  + dd( cfi.LastWriteTime )       + "][" + dd( ffi.LastWriteTime )       + "]" ); }
-			if( cfi.LastWriteTimeUtc  != ffi.LastWriteTimeUtc  ) { sb.Append( " LWU[" + dd( cfi.LastWriteTimeUtc )    + "][" + dd( ffi.LastWriteTimeUtc )    + "]" ); }
-			if( cfi.Length            != ffi.Length            ) { sb.Append( " L["   +     cfi.Length.ToString()     + "][" +     ffi.Length.ToString()     + "]" ); }
-			Log( sb.ToString() );
+			{
+				StringBuilder sbf = new StringBuilder();
+				StringBuilder sbc = new StringBuilder();
+				sbf.Append( "File:" );
+				sbc.Append( "Curr:" );
+				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" + ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" + cfi.Attributes        .ToString() + "]" ); }
+				if( ffi.CreationTime      != cfi.CreationTime      ) { sbf.Append(  " CR[" + ffi.CreationTime      .ToString() + "]" ); sbc.Append(  " CR[" + cfi.CreationTime      .ToString() + "]" ); }
+				if( ffi.CreationTimeUtc   != cfi.CreationTimeUtc   ) { sbf.Append( " CRU[" + ffi.CreationTimeUtc   .ToString() + "]" ); sbc.Append( " CRU[" + cfi.CreationTimeUtc   .ToString() + "]" ); }
+				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" + ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" + cfi.IsReadOnly        .ToString() + "]" ); }
+				if( ffi.LastAccessTime    != cfi.LastAccessTime    ) { sbf.Append(  " LA[" + ffi.LastAccessTime    .ToString() + "]" ); sbc.Append(  " LA[" + cfi.LastAccessTime    .ToString() + "]" ); }
+				if( ffi.LastAccessTimeUtc != cfi.LastAccessTimeUtc ) { sbf.Append( " LAU[" + ffi.LastAccessTimeUtc .ToString() + "]" ); sbc.Append( " LAU[" + cfi.LastAccessTimeUtc .ToString() + "]" ); }
+				if( ffi.LastWriteTime     != cfi.LastWriteTime     ) { sbf.Append(  " LW[" + ffi.LastWriteTime     .ToString() + "]" ); sbc.Append(  " LW[" + cfi.LastWriteTime     .ToString() + "]" ); }
+				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + ffi.LastWriteTimeUtc  .ToString() + "]" ); sbc.Append( " LWU[" + cfi.LastWriteTimeUtc  .ToString() + "]" ); }
+				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" + ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" + cfi.Length            .ToString() + "]" ); }
+				Log( sbf.ToString() );
+				Log( sbc.ToString() );
+			}
 #endif
 
 			//?? Is there a better way to do this combination that tests if a file can be copied first ??
@@ -427,7 +486,7 @@ namespace KeepBack
 					return;
 				}
 				//..copy file to current
-				LogReason( r, pn, _FileCopy( fpn, cpn ) );
+				LogReason( Reason.Modified, pn, _FileCopy( fpn, cpn ) );
 				return;
 			}
 			if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
@@ -445,7 +504,7 @@ namespace KeepBack
 			//..copy new file from folder to current
 			if( _FileCopy( fpn, cpn ) )
 			{
-				LogReason( r, pn, true );
+				LogReason( Reason.Modified, pn, true );
 				return;
 			}
 			//..if the file can not be copied, restore the old file from history to current
@@ -455,32 +514,30 @@ namespace KeepBack
 			}
 			action( Action.Skip, "" );
 		}
-		bool _RemoveFile( string cp, string hp, string pn, string n, bool history )
+		void _RemoveFile( string cp, string hp, string pn, string n, bool history )
 		{
 			action( Action.File, n );
-			if( ! history )
+			string cpn = Path.Combine( cp, n );
+			if( history )
 			{
-				LogReason( Reason.Deleted, pn, _FileDelete( Path.Combine( cp, n ) ) );
-				return true;
+				if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
+				{
+					return;
+				}
+				string hpn = Path.Combine( hp, n );
+				if( File.Exists( hpn ) )
+				{
+					LogInfo( "file exists in history [" + hpn + "], replacing" );
+					_FileDelete( hpn );
+				}
+				if( _FileMove( cpn, hpn ) )
+				{
+					LogReason( Reason.Deleted, pn, true );
+					return;
+				}
+				LogInfo( "failed removing current [" + cpn + "] to history [" + hpn + "]" );
 			}
-			if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
-			{
-				return true;
-			}
-			string hpn = Path.Combine( hp, n );
-			if( File.Exists( hpn ) )
-			{
-				LogInfo( "file exists in history [" + hpn + "], replacing" );
-				_FileDelete( hpn );
-			}
-			if( _FileMove( Path.Combine( cp, n ), hpn ) )
-			{
-				LogReason( Reason.Deleted, pn, true );
-				return true;
-			}
-			LogInfo( "failed removing current [" + Path.Combine( cp, n ) + "] to history [" + Path.Combine( hp, n ) + "]" );
-			action( Action.Skip, "" );
-			return false;
+			LogReason( Reason.Deleted, pn, _FileDelete( cpn ) );
 		}
 
 
@@ -576,16 +633,16 @@ namespace KeepBack
 			string dp = Path.Combine( archive.FullPath, dst );
 			if( ! Directory.Exists( dp ) )
 			{
-				LogInfo( "Destination folder missing : " + dp );
+				LogInfo( "Destination folder missing : " + DisplayDirectory( dp ) );
 				return false;
 			}
 			if( ! Directory.Exists( sp ) )
 			{
-				LogInfo( "Source folder missing : " + dp );
+				LogInfo( "Source folder missing : " + DisplayDirectory( dp ) );
 				return false;
 			}
 			bool ret = true;
-			foreach( string n in _DirectoryGetDirectories( sp ) )
+			foreach( string n in _ListDirectories( sp ) )
 			{
 				if( cancel ) { return false; }
 				string dpn = Path.Combine( dp, n );
@@ -598,7 +655,7 @@ namespace KeepBack
 					ret &= _DirectoryMove( Path.Combine( sp, n ), dpn );
 				}
 			}
-			foreach( string n in _DirectoryGetFiles( sp ) )
+			foreach( string n in _ListFiles( sp ) )
 			{
 				if( cancel ) { return false; }
 				string dpn = Path.Combine( dp, n );
@@ -629,51 +686,11 @@ namespace KeepBack
 
 
 
-		/// <summary>
-		///		Copy a folder and all sub-folders as quickly as possible without
-		///		checking their contents first.
-		///		Before calling this function, make sure the destination folder
-		///		does not already exist.
-		/// </summary>
-		void _CopyFolder( string path, bool include )
-		{
-			if( cancel ) { return; }
-			if( ! include && inc.MatchDirectory( path ) ) { include = true; }
-			if(              exc.MatchDirectory( path ) ) { return;         }
-			string cp = Path.Combine( curr, path );
-			LogReason( Reason.Created, path, true );
-			if( ! include || _DirectoryCreateDirectory( cp ) )
-			{
-				string fp = Path.Combine( fold, path );
-				foreach( string n in _DirectoryGetDirectories( fp ) )
-				{
-					if( cancel ) { return; }
-					string p = Path.Combine( path, n );
-					_CopyFolder( p, include );
-				}
-				action( Action.Directory, path );
-//				action( Action.File, "" );
-				foreach( string n in _DirectoryGetFiles( fp ) )
-				{
-					if( cancel ) { return; }
-					string pn = Path.Combine( path, n );
-					if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
-					{
-						if( include || _DirectoryCreateDirectory( cp ) )
-						{
-							action( Action.File, n );
-							LogReason( Reason.Created, pn, _FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ) ) );
-						}
-					}
-				}
-			}
-		}
-
 		string[] _ArchiveList()
 		{
 			if( Directory.Exists( archive.FullPath ) )
 			{
-				List<string> a = new List<string>( _DirectoryGetDirectories( archive.FullPath, ARCHIVE_PATTERN + @"*" ) );
+				List<string> a = new List<string>( _ListDirectories( archive.FullPath, ARCHIVE_PATTERN + @"*" ) );
 				a.Sort();
 				return a.ToArray();
 			}
@@ -683,18 +700,18 @@ namespace KeepBack
 		{
 			if( Directory.Exists( archive.FullPath ) )
 			{
-				List<string> a = new List<string>( _DirectoryGetFiles( archive.FullPath, ARCHIVE_PATTERN + @"*.log" ) );
+				List<string> a = new List<string>( _ListFiles( archive.FullPath, ARCHIVE_PATTERN + @"*.log" ) );
 				a.Sort();
 				return a.ToArray();
 			}
 			return new string[] { };
 		}
 
-		string[] _DirectoryGetDirectories( string dir )
+		string[] _ListDirectories( string dir )
 		{
-			return _DirectoryGetDirectories( dir, @"*" );
+			return _ListDirectories( dir, @"*" );
 		}
-		string[] _DirectoryGetDirectories( string dir, string pattern )
+		string[] _ListDirectories( string dir, string pattern )
 		{
 			try
 			{
@@ -707,15 +724,15 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.DirectoryGetDirectories, dir, ex );
+				LogException( Function.LD, DisplayDirectory( dir ), ex );
 			}
 			return new string[] { };
 		}
-		string[] _DirectoryGetFiles( string dir )
+		string[] _ListFiles( string dir )
 		{
-			return _DirectoryGetFiles( dir, @"*" );
+			return _ListFiles( dir, @"*" );
 		}
-		string[] _DirectoryGetFiles( string dir, string pattern )
+		string[] _ListFiles( string dir, string pattern )
 		{
 			try
 			{
@@ -728,7 +745,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.DirectoryGetFiles, dir, ex );
+				LogException( Function.LF, DisplayDirectory( dir ), ex );
 			}
 			return new string[] { };
 		}
@@ -744,7 +761,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.DirectoryCreateDirectory, dir, ex );
+				LogException( Function.DC, DisplayDirectory( dir ), ex );
 			}
 			return false;
 		}
@@ -764,7 +781,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.DirectoryMove, src, ex );
+				LogException( Function.DM, DisplayCombined( DisplayDirectory( src ), DisplayDirectory( dst ) ), ex );
 			}
 			return false;
 		}
@@ -777,7 +794,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.DirectoryDelete, dir, ex );
+				LogException( Function.DD, DisplayDirectory( dir ), ex );
 			}
 			return false;
 		}
@@ -801,7 +818,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.FileCopy, src, ex );
+				LogException( Function.FC, DisplayCombined( src, dst ), ex );
 			}
 			return false;
 		}
@@ -821,7 +838,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.FileMove, src, ex );
+				LogException( Function.FM, DisplayCombined( src, dst ), ex );
 			}
 			return false;
 		}
@@ -846,7 +863,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.FileDelete, path, ex );
+				LogException( Function.FD, path, ex );
 			}
 			return false;
 		}
@@ -858,7 +875,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				LogException( Function.FileInfo, path, ex );
+				LogException( Function.FI, path, ex );
 			}
 			return null;
 		}
@@ -873,9 +890,13 @@ namespace KeepBack
 		}
 		int _DateFolderLength( MergeLevel level )
 		{
-			// yyyy-MM-dd HHmmss
-			//    |  |  |  | | |
-			// 12345678901234567
+			/* Separate out the parts of a DateFolder filename
+			 * based on the merge level.
+			 * 
+			 *   yyyy-MM-dd HHmmss
+			 *      |  |  |  | | |
+			 *   12345678901234567
+			 */
 			switch( level )
 			{
 				case MergeLevel.Year  :  return  4;
@@ -900,41 +921,20 @@ namespace KeepBack
 			return (dt == DateTime.MinValue) ? null : _DateFolderSecond( dt );
 		}
 
+
+
 		void LogException( Function function, string path, Exception ex )
 		{
-			string fn;
-			switch( function )
-			{
-				case Function.DirectoryGetDirectories :  fn = "LD";  break;
-				case Function.DirectoryGetFiles       :  fn = "LF";  break;
-				case Function.DirectoryCreateDirectory:  fn = "DC";  break;
-				case Function.DirectoryMove           :  fn = "DM";  break;
-				case Function.DirectoryDelete         :  fn = "DD";  break;
-				case Function.FileCopy                :  fn = "FC";  break;
-				case Function.FileMove                :  fn = "FM";  break;
-				case Function.FileDelete              :  fn = "FD";  break;
-				case Function.FileInfo                :  fn = "FI";  break;
-				default                               :  fn = "??";  break;
-			}
-			string msg;
+			Log( Status( "[" + function + "] " + ExceptionMessage( ex ), path ) );
+		}
+		string ExceptionMessage( Exception ex )
+		{
 			switch( ex.GetType().FullName )
 			{
-				case "System.UnauthorizedAccessException":
-				{
-					msg = "not authorized";
-					break;
-				}
-				case "System.IO.PathTooLongException":
-				{
-					msg = "too long";
-					break;
-				}
-				case "System.IO.FileNotFoundException":
-				{
-					msg = "missing";
-					break;
-				}
-				case "System.IO.IOException":
+				case "System.UnauthorizedAccessException":  return "not authorized";
+				case "System.IO.PathTooLongException"    :  return "too long";
+				case "System.IO.FileNotFoundException"   :  return "missing";
+				case "System.IO.IOException"             :
 				{
 					PropertyInfo pi = ex.GetType().GetProperty( "HResult", BindingFlags.Instance | BindingFlags.NonPublic );
 					uint         hr = (pi == null) ? 0 : (uint)(int)pi.GetValue( ex, null );
@@ -942,26 +942,16 @@ namespace KeepBack
 					{
 						//VS Documentation: lookup "error codes [Win32]"
 
-						case 0x80070005:  //(Win32:5) Access is denied.
-							msg = "access denied";  break;
-						case 0x8007001F:  //(Win32:31) A device attached to the system is not functioning.
-							msg = "fault";  break;
-						case 0x80070020:  //(Win32:32) The process cannot access the file because it is being used by another process.
-							msg = "in use";  break;
-						case 0x800700B7:  //(Win32:183) Cannot create a file when that file already exists.
-							msg = "file exists";  break;
-						default:
-							msg = "0x" + hr.ToString( "X" ) + ": " + ex.Message;  break;
+						case 0x80070005:  return "access denied"      ; //(Win32:  5) Access is denied.
+						case 0x8007001F:  return "fault"              ; //(Win32: 31) A device attached to the system is not functioning.
+						case 0x80070020:  return "in use"             ; //(Win32: 32) The process cannot access the file because it is being used by another process.
+						case 0x80070091:  return "directory not empty"; //(Win32:145) The directory is not empty.
+						case 0x800700B7:  return "file exists"        ; //(Win32:183) Cannot create a file when that file already exists.
+						default        :  return "0x" + hr.ToString( "X" ) + ": " + ex.Message;
 					}
-					break;
 				}
-				default:
-				{
-					msg = ex.GetType().FullName + ": " + ex.Message;
-					break;
-				}
+				default:  return ex.GetType().FullName + ": " + ex.Message;
 			}
-			Log( Status( "[" + fn + "] " + msg, path ) );
 		}
 		void LogDump( string status, string[] list )
 		{
@@ -995,11 +985,11 @@ namespace KeepBack
 			Log( "Legend.." );
 			for( int i = 0; i < ReasonValues.Length; ++i )
 			{
-				Log( Status( (Reason)ReasonValues.GetValue( i ), 0, ReasonNames[i] ) );
+				Log( Status( (Reason)ReasonValues.GetValue( i ), 0, "File " + ReasonNames[i] ) );
 			}
 			for( int i = 0; i < MatchValues.Length; ++i )
 			{
-				Log( Status( 0, (MatchSet.SetType)MatchValues.GetValue( i ), MatchNames[i] ) );
+				Log( Status( 0, (MatchSet.SetType)MatchValues.GetValue( i ), "Filter " + MatchNames[i] ) );
 			}
 		}
 		void LogInfo( string message )
@@ -1014,6 +1004,8 @@ namespace KeepBack
 				log.WriteLine( message );
 			}
 		}
+
+
 		string Status( string status, string filename )
 		{
 			if( status.Length < SECTION_DETAIL.Length )
@@ -1030,11 +1022,25 @@ namespace KeepBack
 			for( int i = 0; i < ReasonValues.Length; ++i )
 			{
 				Reason r = (Reason)ReasonValues.GetValue( i );
-				sb.Append( ((reason & r) == r) ? ReasonNames[i][0] : BLANK );
+				sb.Append( (reason == r) ? ReasonNames[i][0] : BLANK );
 			}
 			sb.Append( "  " );
-			sb.Append( (type == 0) ? BLANK : (char)type );
+			for( int i = 0; i < MatchValues.Length; ++i )
+			{
+				MatchSet.SetType t = (MatchSet.SetType)MatchValues.GetValue( i );
+				sb.Append( (type == t) ? MatchNames[i][0] : BLANK );
+			}
 			return Status( sb.ToString(), filename );
+		}
+
+
+		string DisplayDirectory( string path )
+		{
+			return MatchPath.EndsWithDirectorySeparator( path ) ? path : (path + Path.DirectorySeparatorChar.ToString() );
+		}
+		string DisplayCombined( string src, string dst )
+		{
+			return src + " --> " + dst;
 		}
 
 		//--- interface -------------------------

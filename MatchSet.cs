@@ -30,9 +30,9 @@ namespace KeepBack
 		//--- define ----------------------------
 		public enum SetType : int
 		{
-			Include  = 'I',
-			Exclude  = 'X',
-			History  = 'H',
+			Include  = 1,
+			Exclude  = 2,
+			History  = 3,
 		}
 		public delegate void MatchDelegate( SetType type, MatchPath pattern, string path );
 		//--- field -----------------------------
