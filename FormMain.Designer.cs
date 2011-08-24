@@ -141,7 +141,7 @@ namespace KeepBack
 			this.labelModified.Name = "labelModified";
 			this.labelModified.Size = new System.Drawing.Size(64, 23);
 			this.labelModified.TabIndex = 7;
-			this.labelModified.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelModified.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label2
 			// 
@@ -186,7 +186,7 @@ namespace KeepBack
 			this.labelCreated.Name = "labelCreated";
 			this.labelCreated.Size = new System.Drawing.Size(64, 23);
 			this.labelCreated.TabIndex = 5;
-			this.labelCreated.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelCreated.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelDeleted
 			// 
@@ -195,7 +195,7 @@ namespace KeepBack
 			this.labelDeleted.Name = "labelDeleted";
 			this.labelDeleted.Size = new System.Drawing.Size(64, 23);
 			this.labelDeleted.TabIndex = 11;
-			this.labelDeleted.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelDeleted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label10
 			// 
@@ -213,7 +213,7 @@ namespace KeepBack
 			this.labelSkipped.Name = "labelSkipped";
 			this.labelSkipped.Size = new System.Drawing.Size(64, 23);
 			this.labelSkipped.TabIndex = 3;
-			this.labelSkipped.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.labelSkipped.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// label11
 			// 
