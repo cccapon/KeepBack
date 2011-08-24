@@ -484,7 +484,7 @@ namespace KeepBack
 
 				if( ! _FileDelete( cpn ) )
 				{
-					LogInfo( "failed to delete previous backup [" + cpn + "]" );
+					LogInfo( "Backup. failed to delete previous backup file" );
 					replace = true;
 				}
 				//..copy file to current
@@ -506,13 +506,12 @@ namespace KeepBack
 #endif
 			if( ! _FileMove( cpn, hpn ) )
 			{
-				LogInfo( "failed moving current [" + cpn + "] to history [" + hpn + "]" );
+				LogInfo( "Backup. failed moving current to history" );
 				replace = true;
 			}
 			//..copy new file from folder to current
 			if( ! _FileCopy( fpn, cpn, replace ) )
 			{
-				LogInfo( "failed copying file [" + fpn + "] to archive [" + cpn + "]" );
 				action( Action.Skip, "" );
 				return;
 			}
@@ -542,7 +541,7 @@ namespace KeepBack
 					LogReason( Reason.Deleted, pn, true );
 					return;
 				}
-				LogInfo( "failed removing current [" + cpn + "] to history [" + hpn + "]" );
+				LogInfo( "Remove. failed moving current to history" );
 			}
 			LogReason( Reason.Deleted, pn, _FileDelete( cpn ) );
 		}
