@@ -320,7 +320,7 @@ namespace KeepBack
 			action( Action.File, "" );
 			TimeSpan x = DateTime.Now - start;
 			Log( "" );
-			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), x.ToString() ) );
+			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), DisplayTime( x ) ) );
 		}
 
 		void _Backup( CtrlFolder folder )
@@ -646,7 +646,7 @@ namespace KeepBack
 			}
 
 			TimeSpan x = DateTime.Now - start;
-			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), x.ToString() ) );
+			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), DisplayTime( x ) ) );
 		}
 
 		void _Merge( MergeLevel level )
@@ -1116,6 +1116,10 @@ namespace KeepBack
 		string DisplayDate( DateTime date )
 		{
 			return date.ToString( @"yyyy-MM-dd HH:mm:ss.ffff", DateTimeFormatInfo.InvariantInfo );
+		}
+		string DisplayTime( TimeSpan time )
+		{
+			return string.Format( "{0:D2}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds );
 		}
 
 		bool DateCompare( DateTime a, DateTime b )
