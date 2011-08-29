@@ -518,8 +518,6 @@ namespace KeepBack
 			{
 				StringBuilder sbf = new StringBuilder();
 				StringBuilder sbc = new StringBuilder();
-				sbf.Append( "File:" );
-				sbc.Append( "Curr:" );
 				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" +              ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" +              cfi.Attributes        .ToString() + "]" ); }
 				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" +              ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" +              cfi.IsReadOnly        .ToString() + "]" ); }
 				if( ffi.CreationTime      != cfi.CreationTime      ) { sbf.Append(  " CR[" + DisplayDate( ffi.CreationTime                ) + "]" ); sbc.Append(  " CR[" + DisplayDate( cfi.CreationTime                ) + "]" ); }
@@ -530,9 +528,8 @@ namespace KeepBack
 				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + DisplayDate( ffi.LastWriteTimeUtc            ) + "]" ); sbc.Append( " LWU[" + DisplayDate( cfi.LastWriteTimeUtc            ) + "]" ); }
 				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" +              ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" +              cfi.Length            .ToString() + "]" ); }
 				Log( "" );
-				Log( pn );
-				Log( sbf.ToString() );
-				Log( sbc.ToString() );
+				LogStatus( "file"   , sbf.ToString() );
+				LogStatus( "archive", sbc.ToString() );
 			}
 
 			//?? Is there a better way to do this combination that tests if a file can be copied first ??
@@ -1027,8 +1024,12 @@ namespace KeepBack
 		{
 			foreach( string s in list )
 			{
-				Log( Status( "[" + status + "]", s ) );
+				LogStatus( "[" + status + "]", s );
 			}
+		}
+		void LogStatus( string status, string filename )
+		{
+			Log( Status( status, filename ) );
 		}
 		void LogMatch( MatchSet.SetType type, MatchPath pattern, string path )
 		{
