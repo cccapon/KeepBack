@@ -352,6 +352,13 @@ using System.Windows.Forms;
  *   - if a folder was added to an archive, but no path was specified then an exception was thrown when
  *     a backup was run.  this now displays a warning message instead.
  *   - directory names in the log file now have a '\' appended to the name to distinguish them from files.
+ *   - a date range check is performed on the archive filesystem and used when validating file dates.  if
+ *     the source filesystem allows a greater range of file dates than the destination, the file date will
+ *     be adjusted to match that of the archive file system.  this is to solve a bug where corrupt dates in
+ *     the source filesystem caused files to endlessly be archived (their dates were always different).  it 
+ *     may also help solve the "file exists" bug which was caused when KeepBack attempted to move the history
+ *     file back after a failed copy.  the copy hadn't actually failed, it was the code which sets the file
+ *     date that failed.
  * 2011-01-20  v1.03
  *   - changed .keep XML to indent text (make it more human readable).
  *   - when backup operation was cancelled, any unprocessed folders in the current archive would be moved to the history

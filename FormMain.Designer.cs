@@ -78,6 +78,7 @@ namespace KeepBack
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStripMain = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
+			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panelStatus.SuspendLayout();
 			this.menuStripMain.SuspendLayout();
 			this.statusStripMain.SuspendLayout();
@@ -308,7 +309,8 @@ namespace KeepBack
             this.editToolStripMenuItem,
             this.exploreToolStripMenuItem,
             this.mergeToolStripMenuItem,
-            this.backupToolStripMenuItem});
+            this.backupToolStripMenuItem,
+            this.debugToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
 			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
 			this.toolsToolStripMenuItem.Text = "&Tools";
@@ -316,28 +318,28 @@ namespace KeepBack
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.editToolStripMenuItem.Text = "&Edit";
 			this.editToolStripMenuItem.Click += new System.EventHandler(this.MenuEdit_Click);
 			// 
 			// exploreToolStripMenuItem
 			// 
 			this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.exploreToolStripMenuItem.Text = "E&xplore";
 			this.exploreToolStripMenuItem.Click += new System.EventHandler(this.MenuExplore_Click);
 			// 
 			// mergeToolStripMenuItem
 			// 
 			this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.mergeToolStripMenuItem.Text = "&Merge";
 			this.mergeToolStripMenuItem.Click += new System.EventHandler(this.MenuMerge_Click);
 			// 
 			// backupToolStripMenuItem
 			// 
 			this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-			this.backupToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.backupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.backupToolStripMenuItem.Text = "&Backup";
 			this.backupToolStripMenuItem.Click += new System.EventHandler(this.MenuBackup_Click);
 			// 
@@ -371,6 +373,13 @@ namespace KeepBack
 			this.toolStripStatus.Name = "toolStripStatus";
 			this.toolStripStatus.Size = new System.Drawing.Size(42, 17);
 			this.toolStripStatus.Text = "Ready.";
+			// 
+			// debugToolStripMenuItem
+			// 
+			this.debugToolStripMenuItem.CheckOnClick = true;
+			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.debugToolStripMenuItem.Text = "&Debug";
 			// 
 			// FormMain
 			// 
@@ -436,6 +445,7 @@ namespace KeepBack
 		private System.Windows.Forms.ToolStripMenuItem backupToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
 	}
 }
 

@@ -245,7 +245,7 @@ namespace KeepBack
 				{
 					foreach( CtrlArchive ca in c.Archives )
 					{
-						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), ca, true ) )
+						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), ca, true, debugToolStripMenuItem.Checked ) )
 						{
 							switch( s )
 							{

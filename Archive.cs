@@ -73,6 +73,7 @@ namespace KeepBack
 		}
 		enum Function
 		{
+			TD, //TestDrive
 			LD, //ListDirectories
 			LF, //ListFiles
 			DC, //DirectoryCreate
@@ -92,10 +93,12 @@ namespace KeepBack
 		CtrlArchive       archive;
 		StreamWriter      log           = null;
 
+		bool              debug         = false;
 		bool              cancel        = false;
-#if false
-		bool              ignoreCase    = false;
-#endif
+
+		bool              caseSensitive = false;             //indicates whether archive filesystem distinguishes between upper and lower case or not
+		DateTime          minDateUtc    = DateTime.MinValue; //minimum LastWriteUDC date the archive filesystem will accept
+		DateTime          maxDateUtc    = DateTime.MaxValue; //maximum LastWriteUDC date the archive filesystem will accept
 
 		DateTime          start         = DateTime.MinValue;
 		string            current       = null;
@@ -120,10 +123,11 @@ namespace KeepBack
 
 		//--- constructor -----------------------
 
-		public Archive( ActionDelegate action, CtrlArchive archive, bool create )
+		public Archive( ActionDelegate action, CtrlArchive archive, bool create, bool debug )
 		{
 			this.action   = action;
 			this.archive  = archive;
+			this.debug    = debug;
 
 			this.start    = DateTime.Now;
 
@@ -140,6 +144,72 @@ namespace KeepBack
 		}
 
 		//--- method ----------------------------
+
+		bool TestArchiveDriveProperties( string path )
+		{
+			try
+			{
+				/* Check if filesystem is case sensitive or not
+				 * by creating a temporary file then attempting
+				 * to access it using a different case name.
+				 */
+				string p = Path.Combine( path, "__TemporaryFile__.txt" );
+				if( File.Exists( p.ToLower() ) )
+				{
+					File.Delete( p.ToLower() );
+				}
+				using( StreamWriter sw = File.CreateText( p ) )
+				{
+					sw.WriteLine( p );
+				}
+				this.caseSensitive = ! File.Exists( p.ToLower() );
+
+				/* Find the supported date range for file LastWriteTimeUtc.
+				 * Use a binary search to find the min and max dates allowed.
+				 */
+				DateTime lo = DateTime.MinValue;
+				DateTime hi = DateTime.UtcNow;
+				while( (minDateUtc = hi.AddTicks( (lo.Ticks - hi.Ticks) / 2 )) < hi )
+				{
+					try
+					{
+						File.SetLastWriteTimeUtc( p, minDateUtc );
+						hi = minDateUtc;
+					}
+					catch( Exception )
+					{
+						lo = minDateUtc;
+					}
+				}
+				lo = DateTime.UtcNow;
+				hi = DateTime.MaxValue;
+				while( (maxDateUtc = lo.AddTicks( (hi.Ticks - lo.Ticks) / 2 )) > lo )
+				{
+					try
+					{
+						File.SetLastWriteTimeUtc( p, maxDateUtc );
+						lo = maxDateUtc;
+					}
+					catch( Exception )
+					{
+						hi = maxDateUtc;
+					}
+				}
+
+				File.Delete( p );
+				if( debug )
+				{
+					Log( "  filesystem " + (this.caseSensitive ? "does" : "does not") + " distinguish between upper and lower case." );
+					Log( "  filesystem date range is from " + minDateUtc + " to " + maxDateUtc + "." );
+				}
+				return true;
+			}
+			catch( Exception ex )
+			{
+				LogException( Function.TD, DisplayDirectory( path ), ex );
+			}
+			return false;
+		}
 
 		public void _Backup( string archiveFilePath )
 		{
@@ -188,26 +258,13 @@ namespace KeepBack
 				}
 			}
 			LogInfo( Status( "  current", current ) );
-#if false
+
+			if( ! TestArchiveDriveProperties( archive.FullPath ) )
 			{
-				/* Check if filesystem is case sensitive or not
-				 * by creating a temporary file then attempting
-				 * to access it using a different case name.
-				 */
-				string p = Path.Combine( archive.FullPath, "__TemporaryFile__.txt" );
-				if( File.Exists( p.ToLower() ) )
-				{
-					File.Delete( p.ToLower() );
-				}
-				using( StreamWriter sw = File.CreateText( p ) )
-				{
-					sw.WriteLine( p );
-				}
-				this.ignoreCase = File.Exists( p.ToLower() );
-				File.Delete( p );
-				Log( "  filesystem " + (this.ignoreCase ? "is not" : "is") + " case sensitive." );
+				LogInfo( "Was not able to test archive filesystem properties." );
+				return;
 			}
-#endif
+
 			Log( "" );
 			LogLegend();
 			Log( "" );
@@ -442,17 +499,22 @@ namespace KeepBack
 				LogReason( Reason.Created, pn, _FileCopy( fpn, cpn, false ) );
 				return;
 			}
-			//..check for file property changes
+			/* ..check for file property changes
+			 * The date of the file is adjusted to fit within the min and max dates the archive filesystem can support.
+			 * The dates are checked to be within 1 second of each other to avoid slight inconsistencies at the millisecond level.
+			 * The file length must match.
+			 */
 			if( 
-				   (ffi.LastWriteTimeUtc == cfi.LastWriteTimeUtc)
-				&& (ffi.Length           == cfi.Length          )
+				   DateCompare( DateAdjust( ffi.LastAccessTimeUtc ), DateAdjust( cfi.LastWriteTimeUtc ) )
+				&& (ffi.Length == cfi.Length )
 				)
 			{
 				//..file has not changed, ignore
 				return;
 			}
 			action( Action.File, n );
-#if true
+
+			if( debug )
 			{
 				StringBuilder sbf = new StringBuilder();
 				StringBuilder sbc = new StringBuilder();
@@ -467,10 +529,11 @@ namespace KeepBack
 				if( ffi.LastWriteTime     != cfi.LastWriteTime     ) { sbf.Append(  " LW[" + ffi.LastWriteTime     .ToString() + "]" ); sbc.Append(  " LW[" + cfi.LastWriteTime     .ToString() + "]" ); }
 				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + ffi.LastWriteTimeUtc  .ToString() + "]" ); sbc.Append( " LWU[" + cfi.LastWriteTimeUtc  .ToString() + "]" ); }
 				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" + ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" + cfi.Length            .ToString() + "]" ); }
+				Log( "" );
+				Log( pn );
 				Log( sbf.ToString() );
 				Log( sbc.ToString() );
 			}
-#endif
 
 			//?? Is there a better way to do this combination that tests if a file can be copied first ??
 			//..perhaps copy to a different file name first, move old file to history, rename copied file
@@ -809,17 +872,17 @@ namespace KeepBack
 			try
 			{
 				File.Copy( src, dst, replace );
-#if true //this is only necessary under Linux, not Windows
+
+				//make sure the destination LastWriteTimeUtc matches the source (at least for the way we compare them).
 				FileInfo fi = new FileInfo( dst );
-				DateTime at = File.GetLastWriteTimeUtc( src );
-				if( fi.LastWriteTimeUtc != at )
+				DateTime at = DateAdjust( File.GetLastWriteTimeUtc( src ) );
+				if( ! DateCompare( DateAdjust( fi.LastWriteTimeUtc ), at ) )
 				{
 					bool b = fi.IsReadOnly;
 					if( b ) { fi.IsReadOnly = false; }
 					fi.LastWriteTimeUtc = at;
 					if( b ) { fi.IsReadOnly = true ; }
 				}
-#endif
 				return true;
 			}
 			catch( Exception ex )
@@ -1048,6 +1111,19 @@ namespace KeepBack
 		string DisplayCombined( string src, string dst )
 		{
 			return "[" + src + "] --> [" + dst + "]";
+		}
+
+		bool DateCompare( DateTime a, DateTime b )
+		{
+			/* the dates are checked to see if they are within 1 second of each other.
+			 * this allows for differences in date handling for different filesystems.
+			 */
+			return (a.AddSeconds( -1 ) < b) && (a.AddSeconds( 1 ) > b);
+		}
+		DateTime DateAdjust( DateTime date )
+		{
+			// dates are adjusted to fit within the min and max bounds the archive file system supports.
+			return (date < minDateUtc) ? minDateUtc : ((date > maxDateUtc) ? maxDateUtc : date);
 		}
 
 		//--- interface -------------------------
