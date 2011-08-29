@@ -518,8 +518,6 @@ namespace KeepBack
 			{
 				StringBuilder sbf = new StringBuilder();
 				StringBuilder sbc = new StringBuilder();
-				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" +              ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" +              cfi.Attributes        .ToString() + "]" ); }
-				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" +              ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" +              cfi.IsReadOnly        .ToString() + "]" ); }
 				if( ffi.CreationTime      != cfi.CreationTime      ) { sbf.Append(  " CR[" + DisplayDate( ffi.CreationTime                ) + "]" ); sbc.Append(  " CR[" + DisplayDate( cfi.CreationTime                ) + "]" ); }
 				if( ffi.CreationTimeUtc   != cfi.CreationTimeUtc   ) { sbf.Append( " CRU[" + DisplayDate( ffi.CreationTimeUtc             ) + "]" ); sbc.Append( " CRU[" + DisplayDate( cfi.CreationTimeUtc             ) + "]" ); }
 				if( ffi.LastAccessTime    != cfi.LastAccessTime    ) { sbf.Append(  " LA[" + DisplayDate( ffi.LastAccessTime              ) + "]" ); sbc.Append(  " LA[" + DisplayDate( cfi.LastAccessTime              ) + "]" ); }
@@ -527,9 +525,11 @@ namespace KeepBack
 				if( ffi.LastWriteTime     != cfi.LastWriteTime     ) { sbf.Append(  " LW[" + DisplayDate( ffi.LastWriteTime               ) + "]" ); sbc.Append(  " LW[" + DisplayDate( cfi.LastWriteTime               ) + "]" ); }
 				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + DisplayDate( ffi.LastWriteTimeUtc            ) + "]" ); sbc.Append( " LWU[" + DisplayDate( cfi.LastWriteTimeUtc            ) + "]" ); }
 				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" +              ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" +              cfi.Length            .ToString() + "]" ); }
+				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" +              ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" +              cfi.Attributes        .ToString() + "]" ); }
+				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" +              ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" +              cfi.IsReadOnly        .ToString() + "]" ); }
 				Log( "" );
-				LogStatus( "file"   , sbf.ToString() );
-				LogStatus( "archive", sbc.ToString() );
+				LogStatus( "   file"  , sbf.ToString() );
+				LogStatus( "  archive", sbc.ToString() );
 			}
 
 			//?? Is there a better way to do this combination that tests if a file can be copied first ??
