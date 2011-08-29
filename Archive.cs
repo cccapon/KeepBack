@@ -505,7 +505,7 @@ namespace KeepBack
 			 * The file length must match.
 			 */
 			if( 
-				   DateCompare( DateAdjust( ffi.LastAccessTimeUtc ), DateAdjust( cfi.LastWriteTimeUtc ) )
+				   DateCompare( DateAdjust( ffi.LastWriteTimeUtc ), DateAdjust( cfi.LastWriteTimeUtc ) )
 				&& (ffi.Length == cfi.Length )
 				)
 			{
