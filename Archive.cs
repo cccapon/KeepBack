@@ -199,8 +199,8 @@ namespace KeepBack
 				File.Delete( p );
 				if( debug )
 				{
-					Log( "  filesystem " + (this.caseSensitive ? "does" : "does not") + " distinguish between upper and lower case." );
-					Log( "  filesystem date range is from " + minDateUtc + " to " + maxDateUtc + "." );
+					Log( "  filesystem " + (this.caseSensitive ? "distinguishes" : "does not distinguish") + " between upper and lower case." );
+					Log( "  filesystem date range is from " + DisplayDate( minDateUtc ) + " to " + DisplayDate( maxDateUtc ) + "." );
 				}
 				return true;
 			}
@@ -520,15 +520,15 @@ namespace KeepBack
 				StringBuilder sbc = new StringBuilder();
 				sbf.Append( "File:" );
 				sbc.Append( "Curr:" );
-				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" + ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" + cfi.Attributes        .ToString() + "]" ); }
-				if( ffi.CreationTime      != cfi.CreationTime      ) { sbf.Append(  " CR[" + ffi.CreationTime      .ToString() + "]" ); sbc.Append(  " CR[" + cfi.CreationTime      .ToString() + "]" ); }
-				if( ffi.CreationTimeUtc   != cfi.CreationTimeUtc   ) { sbf.Append( " CRU[" + ffi.CreationTimeUtc   .ToString() + "]" ); sbc.Append( " CRU[" + cfi.CreationTimeUtc   .ToString() + "]" ); }
-				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" + ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" + cfi.IsReadOnly        .ToString() + "]" ); }
-				if( ffi.LastAccessTime    != cfi.LastAccessTime    ) { sbf.Append(  " LA[" + ffi.LastAccessTime    .ToString() + "]" ); sbc.Append(  " LA[" + cfi.LastAccessTime    .ToString() + "]" ); }
-				if( ffi.LastAccessTimeUtc != cfi.LastAccessTimeUtc ) { sbf.Append( " LAU[" + ffi.LastAccessTimeUtc .ToString() + "]" ); sbc.Append( " LAU[" + cfi.LastAccessTimeUtc .ToString() + "]" ); }
-				if( ffi.LastWriteTime     != cfi.LastWriteTime     ) { sbf.Append(  " LW[" + ffi.LastWriteTime     .ToString() + "]" ); sbc.Append(  " LW[" + cfi.LastWriteTime     .ToString() + "]" ); }
-				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + ffi.LastWriteTimeUtc  .ToString() + "]" ); sbc.Append( " LWU[" + cfi.LastWriteTimeUtc  .ToString() + "]" ); }
-				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" + ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" + cfi.Length            .ToString() + "]" ); }
+				if( ffi.Attributes        != cfi.Attributes        ) { sbf.Append(  " AT[" +              ffi.Attributes        .ToString() + "]" ); sbc.Append(  " AT[" +              cfi.Attributes        .ToString() + "]" ); }
+				if( ffi.IsReadOnly        != cfi.IsReadOnly        ) { sbf.Append(  " RO[" +              ffi.IsReadOnly        .ToString() + "]" ); sbc.Append(  " RO[" +              cfi.IsReadOnly        .ToString() + "]" ); }
+				if( ffi.CreationTime      != cfi.CreationTime      ) { sbf.Append(  " CR[" + DisplayDate( ffi.CreationTime                ) + "]" ); sbc.Append(  " CR[" + DisplayDate( cfi.CreationTime                ) + "]" ); }
+				if( ffi.CreationTimeUtc   != cfi.CreationTimeUtc   ) { sbf.Append( " CRU[" + DisplayDate( ffi.CreationTimeUtc             ) + "]" ); sbc.Append( " CRU[" + DisplayDate( cfi.CreationTimeUtc             ) + "]" ); }
+				if( ffi.LastAccessTime    != cfi.LastAccessTime    ) { sbf.Append(  " LA[" + DisplayDate( ffi.LastAccessTime              ) + "]" ); sbc.Append(  " LA[" + DisplayDate( cfi.LastAccessTime              ) + "]" ); }
+				if( ffi.LastAccessTimeUtc != cfi.LastAccessTimeUtc ) { sbf.Append( " LAU[" + DisplayDate( ffi.LastAccessTimeUtc           ) + "]" ); sbc.Append( " LAU[" + DisplayDate( cfi.LastAccessTimeUtc           ) + "]" ); }
+				if( ffi.LastWriteTime     != cfi.LastWriteTime     ) { sbf.Append(  " LW[" + DisplayDate( ffi.LastWriteTime               ) + "]" ); sbc.Append(  " LW[" + DisplayDate( cfi.LastWriteTime               ) + "]" ); }
+				if( ffi.LastWriteTimeUtc  != cfi.LastWriteTimeUtc  ) { sbf.Append( " LWU[" + DisplayDate( ffi.LastWriteTimeUtc            ) + "]" ); sbc.Append( " LWU[" + DisplayDate( cfi.LastWriteTimeUtc            ) + "]" ); }
+				if( ffi.Length            != cfi.Length            ) { sbf.Append( " LEN[" +              ffi.Length            .ToString() + "]" ); sbc.Append( " LEN[" +              cfi.Length            .ToString() + "]" ); }
 				Log( "" );
 				Log( pn );
 				Log( sbf.ToString() );
@@ -1111,6 +1111,10 @@ namespace KeepBack
 		string DisplayCombined( string src, string dst )
 		{
 			return "[" + src + "] --> [" + dst + "]";
+		}
+		string DisplayDate( DateTime date )
+		{
+			return date.ToString( @"yyyy-MM-dd HH:mm:ss.ffff", DateTimeFormatInfo.InvariantInfo );
 		}
 
 		bool DateCompare( DateTime a, DateTime b )
