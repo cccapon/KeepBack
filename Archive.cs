@@ -560,7 +560,7 @@ namespace KeepBack
 #if true //history bug
 			if( File.Exists( hpn ) )
 			{
-				LogInfo( "Backup. file exists in history [" + hpn + "], replacing" );
+				LogInfo( "Backup. file already exists in history [" + hpn + "], replacing" );
 				_FileDelete( hpn );
 			}
 #endif
@@ -592,7 +592,7 @@ namespace KeepBack
 #if true //history bug
 				if( File.Exists( hpn ) )
 				{
-					LogInfo( "Remove. file exists in history [" + hpn + "], replacing" );
+					LogInfo( "Remove. file already exists in history [" + hpn + "], replacing" );
 					_FileDelete( hpn );
 				}
 #endif
@@ -895,7 +895,7 @@ namespace KeepBack
 #if true //tracking a bug in history processing
 				if( File.Exists( dst ) )
 				{
-					LogInfo( "File already exists at destination " + DisplayCombined( src, dst ) );
+					LogInfo( "FileMove. file already exists at destination " + DisplayCombined( src, dst ) + ", replacing" );
 					_FileDelete( dst );
 				}
 #endif

@@ -30,6 +30,10 @@ using System.Windows.Forms;
  */
 
 
+/*  Quick Notes
+ * ---------------------------------------
+ */
+
 
 /*  Bug
  * ---------------------------------------
@@ -62,7 +66,6 @@ using System.Windows.Forms;
 /*
  *  Mike Capon ideas
  * ---------------------------------------
- *   - add list of wild card characters to pattern screen in edit window
  *   - include files which are part of an excluded folder (ie: exclude the folder but include one file it contains)
  *     - this would require some sort of nesting option
  *     - should includes and excludes have children so they can recursively include something that was excluded and vice-versa?
@@ -156,6 +159,8 @@ using System.Windows.Forms;
  *     - if we run out of space, can backup pause and wait for user to clear space?
  *       - make history browser available for cleanup?
  *       - allow options to change merge criteria
+ *    - should all file copies check to see if the destination has space?  Could then free some up if necessary.
+ * 
  * - history browser
  *   - allow option to spontaneously merge two or more adjacent backup incrementals
  * - create proper file menu and toolbar for buttons
@@ -205,6 +210,10 @@ using System.Windows.Forms;
  *   - history remains NULL
  *   - full backup takes place and no history interaction takes place
  *   - then its business as usual
+ * - History flag vulnerability
+ *   - when history option selected, backing up a file means the previous copy is being overwritten
+ *   - if the copy fails, the old file will be lost
+ *   - should we rename the file first then copy the new file, then delete the old file?
  * 
  * - check for empty paths
  * 
@@ -359,6 +368,9 @@ using System.Windows.Forms;
  *     may also help solve the "file exists" bug which was caused when KeepBack attempted to move the history
  *     file back after a failed copy.  the copy hadn't actually failed, it was the code which sets the file
  *     date that failed.
+ *   - added a debug menu option to add extra messages to the log file.
+ *   - add list of wild card characters to pattern screen in edit window.
+ *   - added about box.
  * 2011-01-20  v1.03
  *   - changed .keep XML to indent text (make it more human readable).
  *   - when backup operation was cancelled, any unprocessed folders in the current archive would be moved to the history

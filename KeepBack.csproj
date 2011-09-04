@@ -66,6 +66,12 @@
     <Compile Include="CtrlArchive.cs" />
     <Compile Include="CtrlFolder.cs" />
     <Compile Include="CtrlPattern.cs" />
+    <Compile Include="FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +97,9 @@
     <Compile Include="MatchSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEdit.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormEdit.cs</DependentUpon>

@@ -74,11 +74,11 @@ namespace KeepBack
 			this.exploreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.backupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStripMain = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
-			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panelStatus.SuspendLayout();
 			this.menuStripMain.SuspendLayout();
 			this.statusStripMain.SuspendLayout();
@@ -318,30 +318,37 @@ namespace KeepBack
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
 			this.editToolStripMenuItem.Text = "&Edit";
 			this.editToolStripMenuItem.Click += new System.EventHandler(this.MenuEdit_Click);
 			// 
 			// exploreToolStripMenuItem
 			// 
 			this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
 			this.exploreToolStripMenuItem.Text = "E&xplore";
 			this.exploreToolStripMenuItem.Click += new System.EventHandler(this.MenuExplore_Click);
 			// 
 			// mergeToolStripMenuItem
 			// 
 			this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
 			this.mergeToolStripMenuItem.Text = "&Merge";
 			this.mergeToolStripMenuItem.Click += new System.EventHandler(this.MenuMerge_Click);
 			// 
 			// backupToolStripMenuItem
 			// 
 			this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-			this.backupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.backupToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
 			this.backupToolStripMenuItem.Text = "&Backup";
 			this.backupToolStripMenuItem.Click += new System.EventHandler(this.MenuBackup_Click);
+			// 
+			// debugToolStripMenuItem
+			// 
+			this.debugToolStripMenuItem.CheckOnClick = true;
+			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+			this.debugToolStripMenuItem.Text = "&Debug";
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -354,8 +361,9 @@ namespace KeepBack
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.aboutToolStripMenuItem.Text = "&About";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.MenuAbout_Click);
 			// 
 			// statusStripMain
 			// 
@@ -374,16 +382,8 @@ namespace KeepBack
 			this.toolStripStatus.Size = new System.Drawing.Size(42, 17);
 			this.toolStripStatus.Text = "Ready.";
 			// 
-			// debugToolStripMenuItem
-			// 
-			this.debugToolStripMenuItem.CheckOnClick = true;
-			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.debugToolStripMenuItem.Text = "&Debug";
-			// 
 			// FormMain
 			// 
-			this.AcceptButton = this.buttonBackup;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(692, 478);

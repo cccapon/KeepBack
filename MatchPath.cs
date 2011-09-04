@@ -53,6 +53,9 @@ namespace KeepBack
 		 * Patterns that end with a directory character will be compared against directories
 		 *   only.  Otherwise they will be compared against files only.  The ending directory
 		 *   character is not part of the pattern matching and is removed.
+		 * Include patterns
+		 *   If none are provided then all files and folders are matched.
+		 *   If '*' is the only pattern then all files are matched but empty folders are not.
 		 */
 
 		//--- field -----------------------------

@@ -215,6 +215,24 @@ namespace KeepBack
 			}
 		}
 
+		private void MenuAbout_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				FormAbout f = new FormAbout();
+				f.Version = version;
+				f.ShowDialog();
+			}
+			catch( Exception ex )
+			{
+#if DEBUG
+				MessageBox.Show( ex.ToString() );
+#else
+				MessageBox.Show( ex.Message );
+#endif
+			}
+		}
+
 		void ClearValues()
 		{
 			labelCreated   .Text = "";

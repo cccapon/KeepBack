@@ -117,6 +117,17 @@ namespace KeepBack
 			this.buttonArchiveDelete = new System.Windows.Forms.Button();
 			this.buttonArchiveAdd = new System.Windows.Forms.Button();
 			this.listBoxArchives = new System.Windows.Forms.ListBox();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.labelPattern1Tag = new System.Windows.Forms.Label();
+			this.labelPattern1Description = new System.Windows.Forms.Label();
+			this.labelPattern2Tag = new System.Windows.Forms.Label();
+			this.labelPattern2Description = new System.Windows.Forms.Label();
+			this.labelPattern3Tag = new System.Windows.Forms.Label();
+			this.labelPattern3Description = new System.Windows.Forms.Label();
+			this.labelPattern4Tag = new System.Windows.Forms.Label();
+			this.labelPattern5Description = new System.Windows.Forms.Label();
+			this.labelPattern5Tag = new System.Windows.Forms.Label();
+			this.labelPattern4Description = new System.Windows.Forms.Label();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
@@ -127,6 +138,7 @@ namespace KeepBack
 			this.panelFolder.SuspendLayout();
 			this.panelArchive.SuspendLayout();
 			this.panelRoot.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// treeViewControl
@@ -184,6 +196,7 @@ namespace KeepBack
 			// panelPattern
 			// 
 			this.panelPattern.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelPattern.Controls.Add(this.tableLayoutPanel1);
 			this.panelPattern.Controls.Add(this.groupBoxCase);
 			this.panelPattern.Controls.Add(this.checkBoxPatternDebug);
 			this.panelPattern.Controls.Add(this.buttonPatternPrevious);
@@ -194,7 +207,7 @@ namespace KeepBack
 			this.panelPattern.Controls.Add(this.labelPattern);
 			this.panelPattern.Location = new System.Drawing.Point(4, 170);
 			this.panelPattern.Name = "panelPattern";
-			this.panelPattern.Size = new System.Drawing.Size(483, 164);
+			this.panelPattern.Size = new System.Drawing.Size(483, 317);
 			this.panelPattern.TabIndex = 3;
 			// 
 			// groupBoxCase
@@ -375,7 +388,7 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(493, 10);
+			this.panelFolder.Location = new System.Drawing.Point(493, 3);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(483, 342);
 			this.panelFolder.TabIndex = 2;
@@ -625,7 +638,7 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.textBoxArchiveRoot);
 			this.panelArchive.Controls.Add(this.C);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(4, 340);
+			this.panelArchive.Location = new System.Drawing.Point(493, 351);
 			this.panelArchive.Name = "panelArchive";
 			this.panelArchive.Size = new System.Drawing.Size(483, 305);
 			this.panelArchive.TabIndex = 1;
@@ -938,6 +951,127 @@ namespace KeepBack
 			this.listBoxArchives.TabIndex = 0;
 			this.listBoxArchives.DoubleClick += new System.EventHandler(this.listBoxArchives_DoubleClick);
 			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.76423F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.23577F));
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Tag, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Tag, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Description, 1, 2);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Tag, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Description, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Tag, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Description, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Tag, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Description, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Description, 1, 3);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(84, 180);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 5;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(369, 109);
+			this.tableLayoutPanel1.TabIndex = 42;
+			// 
+			// labelPattern1Tag
+			// 
+			this.labelPattern1Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern1Tag.Location = new System.Drawing.Point(3, 0);
+			this.labelPattern1Tag.Name = "labelPattern1Tag";
+			this.labelPattern1Tag.Size = new System.Drawing.Size(77, 19);
+			this.labelPattern1Tag.TabIndex = 0;
+			this.labelPattern1Tag.Text = "*";
+			this.labelPattern1Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern1Description
+			// 
+			this.labelPattern1Description.Location = new System.Drawing.Point(86, 0);
+			this.labelPattern1Description.Name = "labelPattern1Description";
+			this.labelPattern1Description.Size = new System.Drawing.Size(280, 19);
+			this.labelPattern1Description.TabIndex = 1;
+			this.labelPattern1Description.Text = "matches zero or more characters";
+			this.labelPattern1Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern2Tag
+			// 
+			this.labelPattern2Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern2Tag.Location = new System.Drawing.Point(3, 19);
+			this.labelPattern2Tag.Name = "labelPattern2Tag";
+			this.labelPattern2Tag.Size = new System.Drawing.Size(77, 19);
+			this.labelPattern2Tag.TabIndex = 2;
+			this.labelPattern2Tag.Text = "?";
+			this.labelPattern2Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern2Description
+			// 
+			this.labelPattern2Description.Location = new System.Drawing.Point(86, 19);
+			this.labelPattern2Description.Name = "labelPattern2Description";
+			this.labelPattern2Description.Size = new System.Drawing.Size(280, 19);
+			this.labelPattern2Description.TabIndex = 3;
+			this.labelPattern2Description.Text = "matches zero or one character";
+			this.labelPattern2Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern3Tag
+			// 
+			this.labelPattern3Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern3Tag.Location = new System.Drawing.Point(3, 38);
+			this.labelPattern3Tag.Name = "labelPattern3Tag";
+			this.labelPattern3Tag.Size = new System.Drawing.Size(77, 23);
+			this.labelPattern3Tag.TabIndex = 4;
+			this.labelPattern3Tag.Text = "\\";
+			this.labelPattern3Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern3Description
+			// 
+			this.labelPattern3Description.Location = new System.Drawing.Point(86, 38);
+			this.labelPattern3Description.Name = "labelPattern3Description";
+			this.labelPattern3Description.Size = new System.Drawing.Size(280, 24);
+			this.labelPattern3Description.TabIndex = 5;
+			this.labelPattern3Description.Text = "matches a directory path character";
+			this.labelPattern3Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern4Tag
+			// 
+			this.labelPattern4Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern4Tag.Location = new System.Drawing.Point(3, 62);
+			this.labelPattern4Tag.Name = "labelPattern4Tag";
+			this.labelPattern4Tag.Size = new System.Drawing.Size(77, 23);
+			this.labelPattern4Tag.TabIndex = 6;
+			this.labelPattern4Tag.Text = "/";
+			this.labelPattern4Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern5Description
+			// 
+			this.labelPattern5Description.Location = new System.Drawing.Point(86, 89);
+			this.labelPattern5Description.Name = "labelPattern5Description";
+			this.labelPattern5Description.Size = new System.Drawing.Size(280, 20);
+			this.labelPattern5Description.TabIndex = 7;
+			this.labelPattern5Description.Text = "match any number of intermediate directory levels";
+			this.labelPattern5Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern5Tag
+			// 
+			this.labelPattern5Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern5Tag.Location = new System.Drawing.Point(3, 89);
+			this.labelPattern5Tag.Name = "labelPattern5Tag";
+			this.labelPattern5Tag.Size = new System.Drawing.Size(77, 20);
+			this.labelPattern5Tag.TabIndex = 8;
+			this.labelPattern5Tag.Text = "/.../";
+			this.labelPattern5Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern4Description
+			// 
+			this.labelPattern4Description.Location = new System.Drawing.Point(86, 62);
+			this.labelPattern4Description.Name = "labelPattern4Description";
+			this.labelPattern4Description.Size = new System.Drawing.Size(280, 27);
+			this.labelPattern4Description.TabIndex = 9;
+			this.labelPattern4Description.Text = "matches a directory path character";
+			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// FormEdit
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -965,6 +1099,7 @@ namespace KeepBack
 			this.panelArchive.PerformLayout();
 			this.panelRoot.ResumeLayout(false);
 			this.panelRoot.PerformLayout();
+			this.tableLayoutPanel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1039,5 +1174,16 @@ namespace KeepBack
 		private System.Windows.Forms.GroupBox groupBoxCase;
 		private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
 		private System.Windows.Forms.RadioButton radioButtonCaseIgnore;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.Label labelPattern5Description;
+		private System.Windows.Forms.Label labelPattern4Tag;
+		private System.Windows.Forms.Label labelPattern3Description;
+		private System.Windows.Forms.Label labelPattern3Tag;
+		private System.Windows.Forms.Label labelPattern2Description;
+		private System.Windows.Forms.Label labelPattern2Tag;
+		private System.Windows.Forms.Label labelPattern1Description;
+		private System.Windows.Forms.Label labelPattern1Tag;
+		private System.Windows.Forms.Label labelPattern5Tag;
+		private System.Windows.Forms.Label labelPattern4Description;
 	}
 }
