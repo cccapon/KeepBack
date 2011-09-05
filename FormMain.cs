@@ -308,7 +308,7 @@ namespace KeepBack
 
 			//Tools
 			editToolStripMenuItem   .Enabled = enable && fn;
-			exploreToolStripMenuItem.Enabled = enable && fn;
+			exploreToolStripMenuItem.Enabled = false; // enable && fn;
 			mergeToolStripMenuItem  .Enabled = enable && fn;
 			backupToolStripMenuItem .Enabled = enable && fn;
 			debugToolStripMenuItem  .Enabled = enable;
