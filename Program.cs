@@ -355,8 +355,8 @@ using System.Windows.Forms;
  *   - alter interface to show Created, Modified, Deleted.  Removed Changed, Attribute, Written and Length.
  *   - no longer check attributes as indicator of a changed file.
  *   - reverse order of History and Exclude filters in Folder panel of Edit window.
- *   - bug in directory processing with filters.  If an input filter is specified which includes files
- *     in a folder, but does not specify the folder, then the folder would be moved to history.  Later it
+ *   - bug in directory processing with filters.  if an input filter is specified which includes files
+ *     in a folder, but does not specify the folder, then the folder would be moved to history.  later it
  *     would be copied again, then moved to history leading to a cyclic pattern and the Directory Exists bug.
  *   - if a folder was added to an archive, but no path was specified then an exception was thrown when
  *     a backup was run.  this now displays a warning message instead.
@@ -368,6 +368,10 @@ using System.Windows.Forms;
  *     may also help solve the "file exists" bug which was caused when KeepBack attempted to move the history
  *     file back after a failed copy.  the copy hadn't actually failed, it was the code which sets the file
  *     date that failed.
+ *   - if a file is moved to a history folder and the latest version of that file can not be copied to the
+ *     archive, no attempt is made to move the history version back to the current archive.  in the past we
+ *     tried to put the file back, which lead to problems like the date range bug above.  now, the archive
+ *     more accurately represents the accessability of the filesystem.
  *   - added a debug menu option to add extra messages to the log file.
  *   - add list of wild card characters to pattern screen in edit window.
  *   - added about box.

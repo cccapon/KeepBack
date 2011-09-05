@@ -311,6 +311,7 @@ namespace KeepBack
 			exploreToolStripMenuItem.Enabled = enable && fn;
 			mergeToolStripMenuItem  .Enabled = enable && fn;
 			backupToolStripMenuItem .Enabled = enable && fn;
+			debugToolStripMenuItem  .Enabled = enable;
 
 			buttonBackup  .Text    = enable ? "Backup" : "Cancel";
 			buttonBackup  .Enabled = fn;
