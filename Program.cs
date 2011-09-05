@@ -375,6 +375,7 @@ using System.Windows.Forms;
  *   - added a debug menu option to add extra messages to the log file.
  *   - add list of wild card characters to pattern screen in edit window.
  *   - added about box.
+ *   - a bug in the DirectoryDelete operation required the folder to be empty for delete to take place.
  * 2011-01-20  v1.03
  *   - changed .keep XML to indent text (make it more human readable).
  *   - when backup operation was cancelled, any unprocessed folders in the current archive would be moved to the history

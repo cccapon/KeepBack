@@ -393,7 +393,7 @@ namespace KeepBack
 						string pn = Path.Combine( path, n );
 						if( ! history || his.MatchDirectory( pn ) )
 						{
-							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryDelete( Path.Combine( cp, n ) ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryDelete( Path.Combine( cp, n ), true ) );
 						}
 						else
 						{
@@ -739,9 +739,10 @@ namespace KeepBack
 					ret &= b;
 				}
 			}
-			if( ret )
+			if( ! cancel && ret )
 			{
-				ret &= _DirectoryDelete( sp );
+				//..if all opperations were successful then remove source folder
+				ret &= _DirectoryDelete( sp, true );
 			}
 			return ret;
 		}
@@ -839,7 +840,7 @@ namespace KeepBack
 				if( Directory.Exists( dst ) )
 				{
 					LogInfo( "Directory already exists at destination [ " + dst + " ]" );
-					_DirectoryDelete( dst );
+					_DirectoryDelete( dst, true );
 				}
 #endif
 				Directory.Move( src, dst );
@@ -851,11 +852,11 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _DirectoryDelete( string dir )
+		bool _DirectoryDelete( string dir, bool recursive )
 		{
 			try
 			{
-				Directory.Delete( dir );
+				Directory.Delete( dir, recursive );
 				return true;
 			}
 			catch( Exception ex )
