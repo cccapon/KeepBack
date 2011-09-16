@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>KeepBack - A simple backup solution.</title>
+		<style>
+
+			html
+			{
+				font-family : Arial;
+			}
+			body
+			{
+				margin : 20pt;
+			}
+			ul
+			{
+				padding    : 0;
+				margin     : 0;
+				list-style : none;
+			}
+			li
+			{
+				padding    : 0;
+				margin     : 0;
+				list-style : none;
+			}
+			
+			.Header
+			{
+				background-color : gray;
+				padding          : 10pt;
+			}
+			.Title
+			{
+				font-size   : 24pt;
+				color       : red;
+				display     : block;
+			}
+			.Subtitle
+			{
+				font-size   : 10pt;
+				color       : blue;
+				display     : block;
+			}
+
+			.Nav
+			{
+				float  : right;
+				border : darkGrey 1px solid;
+				margin : 10pt;
+			}
+			.Nav-Category-Title
+			{
+				font-size     : 11pt;
+				font-weight   : bold;
+				color         : green;
+				margin        : 4px;
+				border-bottom : darkGrey 1px solid;
+			}
+			.Nav-Category-Content
+			{
+				font-size     : 9pt;
+				color         : black;
+				margin-left   : 18px;
+				margin-top    : 2px;
+				margin-bottom : 8px;
+				margin-right  : 18px;
+			}
+			
+			
+			.Content
+			{
+				margin        : 10pt;
+				font-size     : 11pt;
+				color         : black;
+			}
+			
+			h1
+			{
+				font-size   : 16pt;
+				color       : green;
+				padding-top : 15pt;
+			}
+			.Feature
+			{
+				color : blue;
+			}
+			.Feature-Detail
+			{
+				font-size      : 9pt;
+				padding-left   : 50pt;
+				padding-bottom : 10pt;
+			}
+			
+			.Footer
+			{
+				border-top : darkGrey 1px solid;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="Header">
+			<div class="Title">KeepBack</div>
+			<div class="Subtitle">A simple backup solution.</div>
+		</div>
+		<div class="Nav">
+			<ul>
+				<li>
+					<div class="Nav-Category-Title">Main</div>
+					<div class="Nav-Category-Content">
+						<ul>
+							<li>
+								<a href="http://sourceforge.net/news/?group_id=373718">News</a>
+							</li>
+							<li>
+								<a href="http://sourceforge.net/project/screenshots.php?group_id=373718">Screen Shots</a>
+							</li>
+							<li>
+								<a href="http://sourceforge.net/projects/keepback/">SourceForge Page</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="Nav-Category-Title">Download</div>
+					<div class="Nav-Category-Content">
+						<ul>
+							<li>
+								<a href="http://sourceforge.net/projects/keepback/files/">Software</a>
+							</li>
+							<li>
+								<a href="http://keepback.svn.sourceforge.net/viewvc/keepback/">Source</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="Nav-Category-Title">Support</div>
+					<div class="Nav-Category-Content">
+						<ul>
+							<li>
+								<a href="http://sourceforge.net/projects/keepback/forums/forum/1296056">Help Forum</a>
+							</li>
+							<li>
+								<a href="http://sourceforge.net/tracker/?group_id=373718&atid=1556439">Report a Bug</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="Content">
+			<h1>Introduction</h1>
+			<p>
+				<b>KeepBack</b> is a small backup application.  &nbsp;It is used to archive files
+				and directories to USB hard drives or to Network Attached Storage (NAS) drives.
+				&nbsp;<b>KeepBack</b> is intended for the home user and can be used to preserve copies
+				of your personal files. 
+			</p>
+			<h1>Features</h1>
+			<ul>
+				<li>
+					<div class="Feature">Keep historical copies.</div>
+					<div class="Feature-Detail">
+						<p>
+							Copies of all of your documents are maintained going back in time.
+							&nbsp;If disaster strikes and a file becomes corrupt, an older copy may save the day.
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="Feature">Reverse incremental backups.</div>
+					<div class="Feature-Detail">
+						<p>
+							With <b>KeepBack</b>, the most recent backup is a complete replica of all your current files.
+							&nbsp;Older backups only keep copies of files that changed.
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="Feature">Can be safely interrupted.</div>
+					<div class="Feature-Detail">
+						<p>
+							While underway, backups can be stopped at any time without concern and restarted at
+							a later date.  &nbsp;Files already preserved, stay preserved.  &nbsp;Only outstanding files that changed
+							will be backed up when <b>KeepBack</b> is launched again.
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="Feature">Automatic maintenance of backup sets.</div>
+					<div class="Feature-Detail">
+						<p>
+							<b>KeepBack</b> has a system in place for merging older backups to conserve disk space.
+							&nbsp;This is done over time based on a schedule you set.
+						</p>
+					</div>
+				</li>
+				<li>
+					<div class="Feature">Portable across platforms.</div>
+					<div class="Feature-Detail">
+						<p>
+							Written in <b>C#</b>, <b>KeepBack</b> can be run on any system which supports the <b>.NET</b> platform.
+							&nbsp;This includes systems which support the <a href="http://www.mono-project.com/Main_Page"><b>Mono</b></a> run-time environment.
+							&nbsp;<b>KeepBack</b> runs on <b>Windows XP</b>, <b>Vista</b>, <b>Windows 7</b> and <b>Debian GNU/Linux</b>.			
+						</p>
+					</div>
+				</li>
+			</ul>
+			<h1>Getting Started</h1>
+			<p>
+				Download the latest version of the software using the navigation links.
+				&nbsp;Documentation is available as a <b>PDF</b> from the same location.  
+			</p>
+			<h1>License</h1>
+			<p>
+				<b>KeepBack</b> is licensed under the GNU GNU General Public License version 3.0.
+			</p>
+		</div>
+		<div class="Footer"></div>
+	</body>
+</html>
