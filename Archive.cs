@@ -131,13 +131,13 @@ namespace KeepBack
 
 			this.start    = DateTime.Now;
 
-			if( create && ! _DirectoryCreateDirectory( archive.FullPath ) )
+			if( create && ! DirectoryCreateDirectory( archive.FullPath ) )
 			{
 				LogInfo( "Can not create archive path [ " + archive.FullPath + " ]." );
 			}
 			if( Directory.Exists( archive.FullPath ) )
 			{
-				this.log = new StreamWriter( Path.Combine( archive.FullPath, _DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
+				this.log = new StreamWriter( Path.Combine( archive.FullPath, DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
 			}
 			LogInfo( "---------------" );
 			LogInfo( Status( "Archive", archive.FullPath ) );
@@ -211,7 +211,7 @@ namespace KeepBack
 			return false;
 		}
 
-		public void _Backup( string archiveFilePath )
+		public void Backup( string archiveFilePath )
 		{
 			Log( "" );
 			LogInfo( "Backup..." );
@@ -220,16 +220,16 @@ namespace KeepBack
 				LogInfo( "The archive path [ " + archive.FullPath + " ] is not accessible." );
 				return;
 			}
-			current = _DateFolderMinute( start );
+			current = DateFolderMinute( start );
 			history = null;
 			{
-				string[] a = _ArchiveList();
+				string[] a = ArchiveList();
 				if( a.Length > 0 )
 				{
 					history = a[a.Length - 1];
 					if( string.Compare( current, history, true ) <= 0 )
 					{
-						current = _DateFolderSecond( start );
+						current = DateFolderSecond( start );
 						if( string.Compare( current, history, true ) <= 0 )
 						{
 							LogInfo( "A backup was started at " + current + " which is earlier than your previous backup at " + history + ".  Please try again later." );
@@ -243,7 +243,7 @@ namespace KeepBack
 			{
 				history = Path.Combine( archive.FullPath, history );
 				LogInfo( Status( "  previous", history ) );
-				if( ! _DirectoryMove( history, current ) )
+				if( ! DirectoryMove( history, current ) )
 				{
 					LogInfo( "The latest backup folder can not be renamed.  Maybe another application is using it." );
 					return;
@@ -251,7 +251,7 @@ namespace KeepBack
 			}
 			else
 			{
-				if( ! _DirectoryCreateDirectory( current ) )
+				if( ! DirectoryCreateDirectory( current ) )
 				{
 					LogInfo( "A folder for this backup can not be created at [ " + current + " ]." );
 					return;
@@ -273,12 +273,12 @@ namespace KeepBack
 				 */
 				string fp = Path.GetDirectoryName( archiveFilePath );
 				string n  = Path.GetFileName     ( archiveFilePath );
-				_BackupFile( fp, current, history, n, n, true );
-				foreach( string s in _ListFiles( current ) )
+				BackupFile( fp, current, history, n, n, true );
+				foreach( string s in ListFiles( current ) )
 				{
 					if( string.Compare( s, n, true ) != 0 )
 					{
-						_RemoveFile( current, history, s, s, true );
+						RemoveFile( current, history, s, s, true );
 					}
 				}
 			}
@@ -286,7 +286,7 @@ namespace KeepBack
 			{
 				/* backup each folder in archive set
 				 */
-				List<string> a = new List<string>( _ListDirectories( current ) );
+				List<string> a = new List<string>( ListDirectories( current ) );
 				if( archive.Folders != null )
 				{
 					foreach( CtrlFolder folder in archive.Folders )
@@ -295,8 +295,8 @@ namespace KeepBack
 						Log( "" );
 						Log( "Folder" );
 						LogInfo( Status( folder.Name, folder.Path ) );
-						_Backup( folder );
-						foreach( string s in _ListDirectories( current, folder.Name ) )
+						Backup( folder );
+						foreach( string s in ListDirectories( current, folder.Name ) )
 						{
 							a.Remove( s );
 						}
@@ -308,10 +308,10 @@ namespace KeepBack
 					 */
 					Log( "" );
 					Log( "Remove" );
-					_DirectoryCreateDirectory( history );
+					DirectoryCreateDirectory( history );
 					foreach( string n in a )
 					{
-						LogReason( Reason.Deleted, n, _DirectoryMove( Path.Combine( current, n ), Path.Combine( history, n ) ) );
+						LogReason( Reason.Deleted, n, DirectoryMove( Path.Combine( current, n ), Path.Combine( history, n ) ) );
 					}
 				}
 			}
@@ -323,7 +323,7 @@ namespace KeepBack
 			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), DisplayTime( x ) ) );
 		}
 
-		void _Backup( CtrlFolder folder )
+		void Backup( CtrlFolder folder )
 		{
 			if( string.IsNullOrEmpty( folder.Name ) || string.IsNullOrEmpty( folder.Path ) )
 			{
@@ -337,9 +337,9 @@ namespace KeepBack
 			this.inc   = new MatchSet( MatchSet.SetType.Include, folder.Include, md );
 			this.exc   = new MatchSet( MatchSet.SetType.Exclude, folder.Exclude, md );
 			this.his   = new MatchSet( MatchSet.SetType.History, folder.History, md );
-			_BackupCompareFolder( "", false, true );
+			BackupCompareFolder( "", false, true );
 		}
-		bool _BackupCompareFolder( string path, bool include, bool history )
+		bool BackupCompareFolder( string path, bool include, bool history )
 		{
 			/* The 'include' flag indicates an item has specifically been included
 			 * by a filter.
@@ -360,19 +360,19 @@ namespace KeepBack
 			if( ! Directory.Exists( cp ) )
 			{
 				//..if directory doesn't exist in current, then the entire tree can simply be copied.
-				return _CopyFolder( path, include );
+				return CopyFolder( path, include );
 			}
 			bool         rc = include;
-			List<string> a  = new List<string>( _ListDirectories( cp ) );
+			List<string> a  = new List<string>( ListDirectories( cp ) );
 			string       fp = Path.Combine( fold, path );
 			string       hp = (hist == null) ? null : Path.Combine( hist, path );
-			foreach( string n in _ListDirectories( fp ) )
+			foreach( string n in ListDirectories( fp ) )
 			{
 				if( cancel ) { return rc; }
 				//..check each sub-directory in folder.
-				if( _BackupCompareFolder( Path.Combine( path, n ), include, history ) )
+				if( BackupCompareFolder( Path.Combine( path, n ), include, history ) )
 				{
-					foreach( string s in _ListDirectories( cp, n ) )
+					foreach( string s in ListDirectories( cp, n ) )
 					{
 						a.Remove( s );
 					}
@@ -384,7 +384,7 @@ namespace KeepBack
 			if( a.Count > 0 )
 			{
 				//..move deleted, renamed or excluded directories from current to history.
-				if( ! history || ((hp != null) && _DirectoryCreateDirectory( hp )) )
+				if( ! history || ((hp != null) && DirectoryCreateDirectory( hp )) )
 				{
 					foreach( string n in a )
 					{
@@ -393,41 +393,41 @@ namespace KeepBack
 						string pn = Path.Combine( path, n );
 						if( ! history || his.MatchDirectory( pn ) )
 						{
-							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryDelete( Path.Combine( cp, n ), true ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryDelete( Path.Combine( cp, n ), true ) );
 						}
 						else
 						{
-							LogReason( Reason.Deleted, DisplayDirectory( pn ), _DirectoryMove( Path.Combine( cp, n ), Path.Combine( hp, n ) ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryMove( Path.Combine( cp, n ), Path.Combine( hp, n ) ) );
 						}
 					}
 				}
 			}
 
-			a = new List<string>( _ListFiles( cp ) );
-			foreach( string n in _ListFiles( fp ) )
+			a = new List<string>( ListFiles( cp ) );
+			foreach( string n in ListFiles( fp ) )
 			{
 				if( cancel ) { return rc; }
 				string  pn  = Path.Combine( path, n );
 				if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
 				{
-					foreach( string s in _ListFiles( cp, n ) )
+					foreach( string s in ListFiles( cp, n ) )
 					{
 						a.Remove( s );
 					}
-					_BackupFile( fp, cp, hp, pn, n, history && ! his.MatchFile( pn ) );
+					BackupFile( fp, cp, hp, pn, n, history && ! his.MatchFile( pn ) );
 					rc = true;
 				}
 			}
 			if( a.Count > 0 )
 			{
 				//..move deleted, renamed or excluded files from current to history.
-				if( ! history || ((hp != null) && _DirectoryCreateDirectory( hp )) )
+				if( ! history || ((hp != null) && DirectoryCreateDirectory( hp )) )
 				{
 					foreach( string n in a )
 					{
 						if( cancel ) { return rc; }
 						string pn = Path.Combine( path, n );
-						_RemoveFile( cp, hp, pn, n, history && ! his.MatchFile( pn ) );
+						RemoveFile( cp, hp, pn, n, history && ! his.MatchFile( pn ) );
 					}
 				}
 			}
@@ -440,14 +440,14 @@ namespace KeepBack
 		///		Before calling this function, make sure the destination folder
 		///		does not already exist.
 		/// </summary>
-		bool _CopyFolder( string path, bool include )
+		bool CopyFolder( string path, bool include )
 		{
 			if( cancel ) { return include; }
 			if( ! include && inc.MatchDirectory( path ) ) { include = true; }
 			if(              exc.MatchDirectory( path ) ) { return false; }
 			bool   rc = include;
 			string cp = Path.Combine( curr, path );
-			if( ! include || _DirectoryCreateDirectory( cp ) )
+			if( ! include || DirectoryCreateDirectory( cp ) )
 			{
 				if( include )
 				{
@@ -455,24 +455,24 @@ namespace KeepBack
 					rc = true;
 				}
 				string fp = Path.Combine( fold, path );
-				foreach( string n in _ListDirectories( fp ) )
+				foreach( string n in ListDirectories( fp ) )
 				{
 					if( cancel ) { return rc; }
 					string p = Path.Combine( path, n );
-					rc |= _CopyFolder( p, include );
+					rc |= CopyFolder( p, include );
 				}
 				action( Action.Directory, path );
 //				action( Action.File, "" );
-				foreach( string n in _ListFiles( fp ) )
+				foreach( string n in ListFiles( fp ) )
 				{
 					if( cancel ) { return rc; }
 					string pn = Path.Combine( path, n );
 					if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
 					{
-						if( include || _DirectoryCreateDirectory( cp ) )
+						if( include || DirectoryCreateDirectory( cp ) )
 						{
 							action( Action.File, n );
-							LogReason( Reason.Created, pn, _FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ), false ) );
+							LogReason( Reason.Created, pn, FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ), false ) );
 							rc = true;
 						}
 					}
@@ -481,13 +481,13 @@ namespace KeepBack
 			return rc;
 		}
 
-		void _BackupFile( string fp, string cp, string hp, string pn, string n, bool history )
+		void BackupFile( string fp, string cp, string hp, string pn, string n, bool history )
 		{
 			string   fpn  = Path.Combine( fp, n );
 			string   cpn  = Path.Combine( cp, n );
 
-			FileInfo ffi  = _FileInfo( fpn );
-			FileInfo cfi  = _FileInfo( cpn );
+			FileInfo ffi  = FileInfo( fpn );
+			FileInfo cfi  = FileInfo( cpn );
 			if( (ffi == null) || (cfi == null) )
 			{
 				return;
@@ -496,7 +496,7 @@ namespace KeepBack
 			{
 				//..file does not exist in current, simply copy
 				action( Action.File, n );
-				LogReason( Reason.Created, pn, _FileCopy( fpn, cpn, false ) );
+				LogReason( Reason.Created, pn, FileCopy( fpn, cpn, false ) );
 				return;
 			}
 			/* ..check for file property changes
@@ -542,16 +542,16 @@ namespace KeepBack
 			{
 				//..remove old file from current
 
-				if( ! _FileDelete( cpn ) )
+				if( ! FileDelete( cpn ) )
 				{
 					LogInfo( "Backup. failed to delete previous backup file" );
 					replace = true;
 				}
 				//..copy file to current
-				LogReason( Reason.Modified, pn, _FileCopy( fpn, cpn, replace ) );
+				LogReason( Reason.Modified, pn, FileCopy( fpn, cpn, replace ) );
 				return;
 			}
-			if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
+			if( (hp == null) || ! DirectoryCreateDirectory( hp ) )
 			{
 				return;
 			}
@@ -561,16 +561,16 @@ namespace KeepBack
 			if( File.Exists( hpn ) )
 			{
 				LogInfo( "Backup. file already exists in history [" + hpn + "], replacing" );
-				_FileDelete( hpn );
+				FileDelete( hpn );
 			}
 #endif
-			if( ! _FileMove( cpn, hpn ) )
+			if( ! FileMove( cpn, hpn ) )
 			{
 				LogInfo( "Backup. failed moving current to history" );
 				replace = true;
 			}
 			//..copy new file from folder to current
-			if( ! _FileCopy( fpn, cpn, replace ) )
+			if( ! FileCopy( fpn, cpn, replace ) )
 			{
 				action( Action.Skip, "" );
 				return;
@@ -578,13 +578,13 @@ namespace KeepBack
 			LogReason( Reason.Modified, pn, true );
 			return;
 		}
-		void _RemoveFile( string cp, string hp, string pn, string n, bool history )
+		void RemoveFile( string cp, string hp, string pn, string n, bool history )
 		{
 			action( Action.File, n );
 			string cpn = Path.Combine( cp, n );
 			if( history )
 			{
-				if( (hp == null) || ! _DirectoryCreateDirectory( hp ) )
+				if( (hp == null) || ! DirectoryCreateDirectory( hp ) )
 				{
 					return;
 				}
@@ -593,22 +593,22 @@ namespace KeepBack
 				if( File.Exists( hpn ) )
 				{
 					LogInfo( "Remove. file already exists in history [" + hpn + "], replacing" );
-					_FileDelete( hpn );
+					FileDelete( hpn );
 				}
 #endif
-				if( _FileMove( cpn, hpn ) )
+				if( FileMove( cpn, hpn ) )
 				{
 					LogReason( Reason.Deleted, pn, true );
 					return;
 				}
 				LogInfo( "Remove. failed moving current to history" );
 			}
-			LogReason( Reason.Deleted, pn, _FileDelete( cpn ) );
+			LogReason( Reason.Deleted, pn, FileDelete( cpn ) );
 		}
 
 
 
-		public void _Merge()
+		public void Merge()
 		{
 			Log( "" );
 			LogInfo( "Merge..." );
@@ -617,17 +617,17 @@ namespace KeepBack
 				LogInfo( "The archive path [ " + archive.FullPath + " ] is not accessible." );
 				return;
 			}
-			_Merge( MergeLevel.Minute );
-			_Merge( MergeLevel.Hour   );
-			_Merge( MergeLevel.Day    );
-			_Merge( MergeLevel.Month  );
-			_Merge( MergeLevel.Year   );
+			Merge( MergeLevel.Minute );
+			Merge( MergeLevel.Hour   );
+			Merge( MergeLevel.Day    );
+			Merge( MergeLevel.Month  );
+			Merge( MergeLevel.Year   );
 
 			//..remove old log files
-			string[] a = _ArchiveList();
-			string   s = _DateFolderSkipCurrent( MergeLevel.Minute );
-			int      z = _DateFolderLength     ( MergeLevel.Minute );
-			foreach( string f in _ArchiveLogList() )
+			string[] a = ArchiveList();
+			string   s = DateFolderSkipCurrent( MergeLevel.Minute );
+			int      z = DateFolderLength     ( MergeLevel.Minute );
+			foreach( string f in ArchiveLogList() )
 			{
 				int i = a.Length;
 				do
@@ -637,7 +637,7 @@ namespace KeepBack
 					{
 						if( string.Compare( f, s, true ) < 0 )
 						{
-							_FileDelete( Path.Combine( archive.FullPath, f ) );
+							FileDelete( Path.Combine( archive.FullPath, f ) );
 						}
 						break;
 					}
@@ -649,15 +649,15 @@ namespace KeepBack
 			LogInfo( Status( ".." + (cancel ? "cancelled" : "done     "), DisplayTime( x ) ) );
 		}
 
-		void _Merge( MergeLevel level )
+		void Merge( MergeLevel level )
 		{
 			if( cancel ) { return; }
-			string  s = _DateFolderSkipCurrent  ( level );
-			int     z = _DateFolderLength       ( level );
+			string  s = DateFolderSkipCurrent  ( level );
+			int     z = DateFolderLength       ( level );
 			if( ! string.IsNullOrEmpty( s ) && (z > 0) )
 			{
 				//..merge directories
-				string[] a  = _ArchiveList();
+				string[] a  = ArchiveList();
 				int      i  = a.Length;
 				do
 				{
@@ -676,7 +676,7 @@ namespace KeepBack
 							x |= 0x01;
 						}
 						LogInfo( Status( "  ..remove/merge", a[i] ) );
-						if( ! _Merge( a[i], a[j] ) )
+						if( ! Merge( a[i], a[j] ) )
 						{
 							LogInfo( "  merge failed" );
 							x |= 0x02;
@@ -687,12 +687,12 @@ namespace KeepBack
 					{
 						string t = a[j].Substring( 0, z );
 						LogInfo( Status( "  ..rename", a[j] + "   " + t ) );
-						_DirectoryMove( Path.Combine( archive.FullPath, a[j] ), Path.Combine( archive.FullPath, t ) );
+						DirectoryMove( Path.Combine( archive.FullPath, a[j] ), Path.Combine( archive.FullPath, t ) );
 					}
 				}
 			}
 		}
-		bool _Merge( string src, string dst )
+		bool Merge( string src, string dst )
 		{
 			if( cancel ) { return false; }
 			string sp = Path.Combine( archive.FullPath, src );
@@ -708,30 +708,30 @@ namespace KeepBack
 				return false;
 			}
 			bool ret = true;
-			foreach( string n in _ListDirectories( sp ) )
+			foreach( string n in ListDirectories( sp ) )
 			{
 				if( cancel ) { return false; }
 				string dpn = Path.Combine( dp, n );
 				if( Directory.Exists( dpn ) )
 				{
-					ret &= _Merge( Path.Combine( src, n ), Path.Combine( dst, n ) );
+					ret &= Merge( Path.Combine( src, n ), Path.Combine( dst, n ) );
 				}
 				else
 				{
-					ret &= _DirectoryMove( Path.Combine( sp, n ), dpn );
+					ret &= DirectoryMove( Path.Combine( sp, n ), dpn );
 				}
 			}
-			foreach( string n in _ListFiles( sp ) )
+			foreach( string n in ListFiles( sp ) )
 			{
 				if( cancel ) { return false; }
 				string dpn = Path.Combine( dp, n );
 				if( File.Exists( dpn ) )
 				{
-					ret &= _FileDelete( Path.Combine( sp, n ) );
+					ret &= FileDelete( Path.Combine( sp, n ) );
 				}
 				else
 				{
-					bool b = _FileMove( Path.Combine( sp, n ), dpn );
+					bool b = FileMove( Path.Combine( sp, n ), dpn );
 					if( ! b )
 					{
 						LogInfo( "failed moving source [" + Path.Combine( sp, n ) + "] to destination [" + Path.Combine( dp, n ) + "]" );
@@ -742,7 +742,7 @@ namespace KeepBack
 			if( ! cancel && ret )
 			{
 				//..if all opperations were successful then remove source folder
-				ret &= _DirectoryDelete( sp, true );
+				ret &= DirectoryDelete( sp, true );
 			}
 			return ret;
 		}
@@ -753,32 +753,32 @@ namespace KeepBack
 
 
 
-		string[] _ArchiveList()
+		string[] ArchiveList()
 		{
 			if( Directory.Exists( archive.FullPath ) )
 			{
-				List<string> a = new List<string>( _ListDirectories( archive.FullPath, ARCHIVE_PATTERN + @"*" ) );
+				List<string> a = new List<string>( ListDirectories( archive.FullPath, ARCHIVE_PATTERN + @"*" ) );
 				a.Sort();
 				return a.ToArray();
 			}
 			return new string[] { };
 		}
-		string[] _ArchiveLogList()
+		string[] ArchiveLogList()
 		{
 			if( Directory.Exists( archive.FullPath ) )
 			{
-				List<string> a = new List<string>( _ListFiles( archive.FullPath, ARCHIVE_PATTERN + @"*.log" ) );
+				List<string> a = new List<string>( ListFiles( archive.FullPath, ARCHIVE_PATTERN + @"*.log" ) );
 				a.Sort();
 				return a.ToArray();
 			}
 			return new string[] { };
 		}
 
-		string[] _ListDirectories( string dir )
+		string[] ListDirectories( string dir )
 		{
-			return _ListDirectories( dir, @"*" );
+			return ListDirectories( dir, @"*" );
 		}
-		string[] _ListDirectories( string dir, string pattern )
+		string[] ListDirectories( string dir, string pattern )
 		{
 			try
 			{
@@ -795,11 +795,11 @@ namespace KeepBack
 			}
 			return new string[] { };
 		}
-		string[] _ListFiles( string dir )
+		string[] ListFiles( string dir )
 		{
-			return _ListFiles( dir, @"*" );
+			return ListFiles( dir, @"*" );
 		}
-		string[] _ListFiles( string dir, string pattern )
+		string[] ListFiles( string dir, string pattern )
 		{
 			try
 			{
@@ -816,7 +816,7 @@ namespace KeepBack
 			}
 			return new string[] { };
 		}
-		bool _DirectoryCreateDirectory( string dir )
+		bool DirectoryCreateDirectory( string dir )
 		{
 			try
 			{
@@ -832,7 +832,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _DirectoryMove( string src, string dst )
+		bool DirectoryMove( string src, string dst )
 		{
 			try
 			{
@@ -840,7 +840,7 @@ namespace KeepBack
 				if( Directory.Exists( dst ) )
 				{
 					LogInfo( "Directory already exists at destination [ " + dst + " ]" );
-					_DirectoryDelete( dst, true );
+					DirectoryDelete( dst, true );
 				}
 #endif
 				Directory.Move( src, dst );
@@ -852,7 +852,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _DirectoryDelete( string dir, bool recursive )
+		bool DirectoryDelete( string dir, bool recursive )
 		{
 			try
 			{
@@ -865,7 +865,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _FileCopy( string src, string dst, bool replace )
+		bool FileCopy( string src, string dst, bool replace )
 		{
 			try
 			{
@@ -889,7 +889,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _FileMove( string src, string dst )
+		bool FileMove( string src, string dst )
 		{
 			try
 			{
@@ -897,7 +897,7 @@ namespace KeepBack
 				if( File.Exists( dst ) )
 				{
 					LogInfo( "FileMove. file already exists at destination " + DisplayCombined( src, dst ) + ", replacing" );
-					_FileDelete( dst );
+					FileDelete( dst );
 				}
 #endif
 				File.Move( src, dst );
@@ -909,7 +909,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		bool _FileDelete( string path )
+		bool FileDelete( string path )
 		{
 			try
 			{
@@ -934,7 +934,7 @@ namespace KeepBack
 			}
 			return false;
 		}
-		FileInfo _FileInfo( string path )
+		FileInfo FileInfo( string path )
 		{
 			try
 			{
@@ -947,15 +947,15 @@ namespace KeepBack
 			return null;
 		}
 
-		string _DateFolderMinute( DateTime date )
+		string DateFolderMinute( DateTime date )
 		{
 			return date.ToString( @"yyyy-MM-dd-HHmm", DateTimeFormatInfo.InvariantInfo );
 		}
-		string _DateFolderSecond( DateTime date )
+		string DateFolderSecond( DateTime date )
 		{
 			return date.ToString( @"yyyy-MM-dd-HHmmss", DateTimeFormatInfo.InvariantInfo );
 		}
-		int _DateFolderLength( MergeLevel level )
+		int DateFolderLength( MergeLevel level )
 		{
 			/* Separate out the parts of a DateFolder filename
 			 * based on the merge level.
@@ -974,7 +974,7 @@ namespace KeepBack
 				default               :  return 17;
 			}
 		}
-		string _DateFolderSkipCurrent( MergeLevel level )
+		string DateFolderSkipCurrent( MergeLevel level )
 		{
 			DateTime dt = DateTime.MinValue;
 			switch( level )
@@ -985,7 +985,7 @@ namespace KeepBack
 				case MergeLevel.Hour  :  if( archive.Minute > 0 ) { dt = start.AddMinutes ( 0 - archive.Minute ); } break;
 				case MergeLevel.Minute:  dt = start;                                                                break;
 			}
-			return (dt == DateTime.MinValue) ? null : _DateFolderSecond( dt );
+			return (dt == DateTime.MinValue) ? null : DateFolderSecond( dt );
 		}
 
 

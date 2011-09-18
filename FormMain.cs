@@ -33,7 +33,6 @@ namespace KeepBack
 {
 	public partial class FormMain : Form
 	{
-		string          version          = "";
 		string          filename         = null;
 
 		Thread          thread           = null;
@@ -45,14 +44,6 @@ namespace KeepBack
 		long            skipped          = 0;
 
 
-		public string Version
-		{
-			set
-			{
-				version = value;
-				SetHeader();
-			}
-		}
 		public string Filename
 		{
 			get 
@@ -67,11 +58,7 @@ namespace KeepBack
 		}
 		void SetHeader()
 		{
-			this.Text = "KeepBack";
-			if( ! string.IsNullOrEmpty( version ) )
-			{
-				this.Text += " " + version;
-			}
+			this.Text = Program.AssemblyTitle + " " + Program.AssemblyVersion;
 			if( ! string.IsNullOrEmpty( filename ) )
 			{
 				filename = Path.GetFullPath( filename );
@@ -83,6 +70,7 @@ namespace KeepBack
 		public FormMain()
 		{
 			InitializeComponent();
+			SetHeader();
 		}
 
 		private void FormMain_Load( object sender, EventArgs e )
@@ -171,7 +159,7 @@ namespace KeepBack
 		{
 			try
 			{
-				FormHistory f = new FormHistory();
+				FormExplore f = new FormExplore();
 				f.ShowDialog();
 			}
 			catch( Exception ex )
@@ -219,9 +207,7 @@ namespace KeepBack
 		{
 			try
 			{
-				FormAbout f = new FormAbout();
-				f.Version = version;
-				f.ShowDialog();
+				new FormAbout().ShowDialog();
 			}
 			catch( Exception ex )
 			{
@@ -267,8 +253,8 @@ namespace KeepBack
 						{
 							switch( s )
 							{
-								case "Backup":  current._Merge(); current._Backup( filename );  break;
-								case "Merge" :  current._Merge();                    break;
+								case "Backup":  current.Merge(); current.Backup( filename );  break;
+								case "Merge" :  current.Merge();                    break;
 							}
 							if( current.Cancel )
 							{
@@ -308,7 +294,7 @@ namespace KeepBack
 
 			//Tools
 			editToolStripMenuItem   .Enabled = enable && fn;
-			exploreToolStripMenuItem.Enabled = false; // enable && fn;
+			exploreToolStripMenuItem.Enabled = enable && fn;
 			mergeToolStripMenuItem  .Enabled = enable && fn;
 			backupToolStripMenuItem .Enabled = enable && fn;
 			debugToolStripMenuItem  .Enabled = enable;

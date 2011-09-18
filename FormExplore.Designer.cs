@@ -19,7 +19,7 @@
 */
 namespace KeepBack
 {
-	partial class FormHistory
+	partial class FormExplore
 	{
 		/// <summary>
 		/// Required designer variable.

@@ -3,10 +3,10 @@
 
 KeepBack is licensed under the GPL (see License.txt).
 
-For Installation instructions and further information, please visit:
+For installation instructions, please refer to the PDF documentation
+included.  For further information, please visit:
 
-   http://sourceforge.net/projects/keepback/
-   http://sourceforge.net/apps/wordpress/keepback/
+   http://keepback.sourceforge.net/
 
 KeepBack is a small backup application.  It is used to archive files
 and directories to USB hard drives or to Network Attached Storage

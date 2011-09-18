@@ -19,6 +19,7 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -28,11 +29,54 @@ using System.Windows.Forms;
 
 namespace KeepBack
 {
-	public partial class FormHistory : Form
+	public partial class FormExplore : Form
 	{
-		public FormHistory()
+		struct HistoryFile
+		{
+			BitArray history;
+			ulong    size;
+			string   name;
+
+			public HistoryFile( int histories, string name )
+			{
+				this.history = new BitArray( histories );
+				this.size    = 0;
+				this.name    = name;
+			}
+		}
+		struct HistoryFolder
+		{
+			BitArray        history;
+			ulong           count;
+			ulong           size;
+			string          name;
+			HistoryFolder[] folders;
+			HistoryFile  [] files;
+
+			public HistoryFolder( int histories, string name )
+			{
+				this.history = new BitArray( histories );
+				this.count   = 0;
+				this.size    = 0;
+				this.name    = name;
+				this.folders = null;
+				this.files   = null;
+			}
+		}
+
+		HistoryFolder  root;
+
+
+		public FormExplore()
 		{
 			InitializeComponent();
 		}
+
+		void Scan( string path )
+		{
+
+
+		}
+
 	}
 }
