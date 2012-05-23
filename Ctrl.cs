@@ -28,21 +28,25 @@ using System.Xml.Serialization;
 
 namespace KeepBack
 {
-	[XmlRoot(ElementName="keepback",Namespace="http://keepback.org/2008-09/keepback")]
+	[XmlRoot(ElementName="keepback",Namespace=Ctrl.XmlNamespace)]
 	public class Ctrl
 	{
+		//--- define ----------------------------
+
+		public const string XmlNamespace = "urn:keepback:schema:2011-09";
+
 		//--- field -----------------------------
 
-		string          path      = null;
-		CtrlArchive[]   archives  = null;
+		string        path     = null;
+		CtrlArchive   archive  = null;
 
 		//--- property --------------------------
 
 		[XmlIgnore]
-		public string          Path      { get { return path; } set { path = value; } }
+		public string        Path     { get { return path   ; } set { path    = value; } }
 
-		[XmlArray(ElementName="archives")] [XmlArrayItem(ElementName="archive")]
-		public CtrlArchive[]   Archives  { get { return archives; } set { archives = value; } }
+		[XmlElement(ElementName="archive")]
+		public CtrlArchive   Archive  { get { return archive; } set { archive = value; } }
 
 		//--- constructor -----------------------
 
@@ -102,29 +106,14 @@ namespace KeepBack
 			}
 		}
 
-		public void ArchiveSort()
+		public CtrlArchive ArchiveCreate()
 		{
-			if( archives != null )
-			{
-				Array.Sort<CtrlArchive>( archives );
-			}
+			archive = new CtrlArchive();
+			return archive;
 		}
-		public CtrlArchive ArchiveAdd()
+		public void ArchiveDelete()
 		{
-			CtrlArchive a = new CtrlArchive();
-			List<CtrlArchive> list = (archives == null) ? new List<CtrlArchive>() : new List<CtrlArchive>( archives );
-			list.Add( a );
-			archives = list.ToArray();
-			return a;
-		}
-		public void ArchiveDelete( CtrlArchive archive )
-		{
-			if( archives != null )
-			{
-				List<CtrlArchive> list = new List<CtrlArchive>( archives );
-				list.Remove( archive );
-				archives = (list.Count > 0) ? list.ToArray() : null;
-			}
+			archive = null;
 		}
 
 		//--- end -------------------------------

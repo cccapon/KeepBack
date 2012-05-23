@@ -3,11 +3,29 @@
  Current
 ---------------------------------------
 
+- no idea
+- we were working on History, but started to merge 2.0 changes in
+- I think a start was made on isolating v1 control file format classes
+	- this to provide an upgrade path to v2 control files
+	- need logic to detect the file format and import to the right control files
+	- need logic to move v1 files to v2
+	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
+
+- Bug:
+	- with current KeepBack.keep test file, deleting the * include filter duplicates the tree on the left
 
 
  Quick Notes
 ---------------------------------------
 
+
+ Tip
+---------------------------------------
+- to quickly produce a directory tree with no files (for an initial archive file format)
+	- set up .keep as you would for a complete backup
+	- add an exclude filter which pattern matches files '*'
+	- this will reproduce the folder hierarchy without backing up any files
+	- you can then load up the structure with files from other software backups to seed the initial backup.
 
 
  Bug
@@ -32,239 +50,303 @@
   - automatically remove "" patterns when the pattern dialog is closed.
 
 
-
- Mike Capon ideas
+ Changes
 ---------------------------------------
-  - include files which are part of an excluded folder (ie: exclude the folder but include one file it contains)
-    - this would require some sort of nesting option
-    - should includes and excludes have children so they can recursively include something that was excluded and vice-versa?
-    - nestable include/exclude option
-      - must alternate - includes can have excludes but not other includes, excludes can have includes but not excludes
-      - multiple entries at each nest level
-      - some sort if display indicator that there are levels below when  displayed in the tree
-- find a clean way to detect if file exists on destination
-  - need to handle all sorts of case/case insensitive situations
-    - backup drive may not be case sensitive where source drive may be
-  - fix merge as well as backup
-- new status trackers
-  - Created, Modified, Deleted
-  - skipped or locked files (can't be backed up but should have)
-  - bytes backed up, bytes removed, total space left on backup drive
-  - percentage remaining
-    - size of items in operations queue (total bytes)
-  - elapsed time, time remaining, estimated completion time
-- no dependancy on GUI
-  - output should be able to drive a console application
-- include, history, exclude
-  - treat include and history the same way logically
-    - if include or history are specified then current folder must be under at least one of them
-    - if exclude is specified, then current folder can not be under any of them
-- patterns
-  - directory characters (\) and (/) are added to beginning and end of pattern by radio buttons
-  - check the pattern to decide which to use
-  - nearest one to the beginning is used for the beginning
-  - nearest one to the end is used for the end
-  - if none present, pick (\) for Windows and (/) for Linux (maybe just Path.DirectoryChar will do)
+
+... Errors and Messages
+
+	- keep separate list of files which were not backed up
+		- display them at the end of processing (or the log file), make them easy to find.
+	- display warning/error counter as part of statistics
+		- offer to display reduced (no files that didn't produce errors) or full log file if there were warnings or errors
+	- separate filenames from log
+		- log top should contain all error and status messages
+		- list of files backed up should be at the bottom or in a separate file
+		- write the file list in such a way that in the future there could be options to rollback files or even folders to a specific point in time.
+
+... Functionality
+
+	- dated directory names
+		- when there are no conflicting names, allow merge to rename date/time folders to just date folders
+			eg: 2010-11-05-1903  to  2010-11-05
+			especially the monthly merge if not the daily
+			handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05
+	- if we have eliminated the 'already exists' problem
+		- can we go back to comparing filenames rather than asking the filesystem to pattern match the names?
+		- use the filter match object with the case sensitive flag from our filesystem test
+	- Support for multiple archives per backup set
+		- should we keep this or revert to a single archive per backup set
+			- multiple archives complicates log file and history explorer
+			- also, multi-threading gets weird.
+		- For log files, display list of archives on left, log files on right.
+		- for explorer, dropdown for archive?, all archives in one tree? that would kill scan time though.
+	- connecting to a network drive
+		- when a failure occurs, retry over a short period to see if network interuptions can be overcome
+			System.IO.IOException: The specified network name is no longer available.
+	- When an exception kills the current backup (IO exception, etc)
+		- destination network name no longer available
+		- come up with a friendly message format where exception info is in log file but
+		  message on the screen is simple.
+	- command line options
+		- Backup - auto start the backup when a .keep file is provided
+		- Exit   - after backup completes, exit KeepBack automatically
+	- verify merge count parameters
+		- if months, days, hours or minutes are set to zero then no merge is done on that timeframe (unlimited backups)
+	- find a clean way to detect if file exists on destination
+		- need to handle all sorts of case/case insensitive situations
+			- backup drive may not be case sensitive where source drive may be
+		- fix merge as well as backup
+	- multithreaded backup
+		- reader thread
+			- scan for changes, queue up files which must be backed up
+		- writer thread
+			- archive old files
+			- copy over new files
+			- delete files being removed
+
+... Filters
+
+	- rework filters
+		- remove history filter and replace
+			- there is a risk when overwriting files, if failure occurs while large files is being
+			  overwritten, then both source and destination would be lost
+			- instead, backup new copy of file and remove old copy later
+			- replace history with a pattern backup count
+			- allow user to specify maximum number of copies to retain
+			- older versions are culled during the merge phase
+		- have just one list of filters and provide filter options when creating
+			- options for include or exclude
+			- options for max backup count
+		- should there be a hierarchy of filters?
+			- if first filter matches, try child filters
+	- include files which are part of an excluded folder (ie: exclude the folder but include one file it contains)
+		- this would require some sort of nesting option
+		- should includes and excludes have children so they can recursively include something that was excluded and vice-versa?
+		- nestable include/exclude option
+			- must alternate - includes can have excludes but not other includes, excludes can have includes but not excludes
+			- multiple entries at each nest level
+			- some sort if display indicator that there are levels below when  displayed in the tree
+	- include, history, exclude
+		- treat include and history the same way logically
+			- if include or history are specified then current folder must be under at least one of them
+			- if exclude is specified, then current folder can not be under any of them
+	- patterns
+		- directory characters (\) and (/) are added to beginning and end of pattern by radio buttons
+		- check the pattern to decide which to use
+		- nearest one to the beginning is used for the beginning
+		- nearest one to the end is used for the end
+		- if none present, pick (\) for Windows and (/) for Linux (maybe just Path.DirectoryChar will do)
+	- History flag vulnerability
+		- when history option selected, backing up a file means the previous copy is being overwritten
+		- if the copy fails, the old file will be lost
+		- should we rename the file first then copy the new file, then delete the old file?
+	- Include, Exclude, History
+		- test all combinations
+			- file, directory
+			- include, exclude, history
+			- existing, new, deleted
+	- add option to apply include/exclude/history rules when merging
 
 
- History Browser structures
----------------------------------------
+... Features
+
+	- disk usage
+		- provide a summary at the end showing free space on hard drive from begin and end of backup
+	- handle out-of-disk-space errors better.  
+		- currently exception is thrown and app aborts
+		- display warnings for low disk space
+		- better: display a meter which shows how much space is used/free
+			- could this be a running display while the backup proceeds?
+				- warn as it gets close
+		- if we run out of space, can backup pause and wait for user to clear space?
+			- make history browser available for cleanup?
+			- allow options to change merge criteria
+		- should all file copies check to see if the destination has space?  Could then free some up if necessary.
+	- provide support for backing up FROM network shares as well as TO network shares
+		- sharing a user folder as Read-only over the network is fine for backup purposes
+		- if user is logged off then all files can be backed up - none locked open.
+	- Add Validate button/option
+		- when running a backup, all recent files are compared byte for byte against the backup file
+		- takes a long time but ensures an exact copy of every file
+		- if run from history browser, could validate just a specific directory or file
+	- periodic message: have you checked your backup sources lately?
+		- warn users to verify their backups cover everything they need on their machine
+	- no dependancy on GUI
+		- output should be able to drive a console application
+	- Dealing with large files which change frequently over time
+		- typically E-Mail archives
+		- can we store a delta?
+			- maybe there is existing code to track changes to binary files
+			- most recent file must be the master file to which delta's are applied
+			- it must be possible to merge deltas when backup sets are merged
+			- how does the software deal with interuption?
+			- what if the file is open for write at backup time?
+	- force full backup
+		- have checkbox flag on main screen.  When checked (remember last state?) is passed along to backup
+		- backup does not rename history folder
+		- archive is new folder name as usual
+		- history remains NULL
+		- full backup takes place and no history interaction takes place
+		- then its business as usual
+	- provide an easy way to move the backup destination
+		- USB drives could end up being mounted in a variety of places
+		- when control file is run, a test is made to see if the destination path
+			exists.  If not, then two options are presented:
+			- create destination
+			- search for destination
+				- search could be automatic, hunt each valid root for /folder/name
+				- skip floppy drives if possible
+	- registry backup
+		- registry is always locked for current user
+		- windows only
+	- write a service app to scan for file properties
+		- can scan a single file or whole file system
+		- looks for any information which can be derrived from a file
+		- will report anything new or unknown to the console.
+			- attributes, file dates, properties, security information, size, accessibility, permissions, etc.
+	- try to identify files which should never be backed up
+		- devices, links, pipes
+
+
+... Main Display
+
+	- add running time to display so user knows elapsed time
+	- new status trackers
+		- Created, Modified, Deleted
+		- skipped or locked files (can't be backed up but should have)
+		- bytes backed up, bytes removed, total space left on backup drive
+		- percentage remaining
+			- size of items in operations queue (total bytes)
+		- elapsed time, time remaining, estimated completion time
+	- pause  backup
+		- option to pause current backup then resume operation from current location.
+		- change check for 'cancel' into a method call which blocks on a wait() if 'pause' selected.
+
+... Configuration Editor
+
+	- for Files section, rename fields to Destination and Source.  
+		- allow destination to be a path, not just a folder name.
+	- for folders, automatically select the folder Name from the last level of the folder Path
+		- this is how Archive currently works
+	- make folder text box double height for when path wraps due to length
+	- when adding a new folder, leave name empty
+		- if browser selects folder and name is empty, set name = foldername of path
+		- if we leave the folder without naming it, automatically set name = foldername of path
+	- no two archives should have the same destination path
+	- no two folders should have the same archive name
+	- check for empty paths
+	- check for invalid characters in each field
+		- file or folder names should not contain these characters:  <  >  :  "  /  \  |  ?  *
+		- patterns should not contain folder paths with . or .. in them eg:  /fred/../barney/*
+		- do not allow control characters
+		- should not start or end with a space
+		- can not end with a .
+	- always sort include/exclude/history lists (directories first)
+	- edit forms need hover help
+		- micro help or tool-tip help for each field
+		- explain how each field is used by KeepBack
+
+... Log file viewer
+	- display a list of all log files related to the loaded backup.keep
+	- let the user select one
+	- display the log file in a scrollable window.
+
+... History Browser
+	- history browser shows a combined tree which merges all file paths from all dated folders.
+	- it has a Windows Explorer type interface.
+	- the left side panel is an expandable tree of folder paths.
+	- the middle panel is a local file listing for which ever folder is selected in the tree.
+	- a far right panel shows a list of dated folders in which a path exists, newest first.
+	- for each path, a combined count of overall files and sizes in all dated folders is maintained.
+	- a history bit field tracks which dated folders the path was found in.
  
-- history browser shows a combined tree which merges all file paths from all dated folders.
-- it has a Windows Explorer type interface.
-- the left side panel is an expandable tree of folder paths.
-- the middle panel is a local file listing for which ever folder is selected in the tree.
-- a far right panel shows a list of dated folders in which a path exists, newest first.
-- for each path, a combined count of overall files and sizes in all dated folders is maintained.
-- a history bit field tracks which dated folders the path was found in.
+	 Item
+  		filename
+  		size
+  		history-size
+  		history (byte[])
+	 ItemFile : Item
+  		date-modified
+	 ItemFolder : Item
+  		file-count
+  		history-count
+  		children (Item[])
  
- Item
-  	filename
-  	size
-  	history-size
-  	history (byte[])
- ItemFile : Item
-  	date-modified
- ItemFolder : Item
-  	file-count
-  	history-count
-  	children (Item[])
- 
- history
-	- byte array
-	- sized depending on the number of history folders
-		(folders + 7) / 8
-        ((8 - 1) + folders) / 8
-        (8 + (folders - 1)) / 8
-        (8 / 8) + ((folders - 1) / 8)
-        1 + ((folders - 1) / 8)
+	 history
+		- byte array
+		- sized depending on the number of history folders
+			(folders + 7) / 8
+			((8 - 1) + folders) / 8
+			(8 + (folders - 1)) / 8
+			(8 / 8) + ((folders - 1) / 8)
+			1 + ((folders - 1) / 8)
 
-children
- 	- null     = hasn't been scanned yet
- 	- not-null = list of child Item's (directories first), sorted
-file-count
- 	- >= 0  = count of all files under folder
- 	-  < 0  = incomplete count, some children haven't fully been scanned
-history-count
- 	- for directories, it tracks sum of history-count of all children
- 	- for files, history count is derrived from history (byte[]) = number of bits used
+	children
+ 		- null     = hasn't been scanned yet
+ 		- not-null = list of child Item's (directories first), sorted
+	file-count
+ 		- >= 0  = count of all files under folder
+ 		-  < 0  = incomplete count, some children haven't fully been scanned
+	history-count
+ 		- for directories, it tracks sum of history-count of all children
+ 		- for files, history count is derrived from history (byte[]) = number of bits used
 
+	- shows merger tree of all history folders combined
+	- shows file count and total size of all folders for all history versions
+		- show separate counts for most recent vs all history versions
+	- tool to apply backup filters to a dated folder (or group of dated folders)
+		- if they select a file/folder from either tree or list view then apply filters to all history levels
+		- if they select a history date instead, only apply filter to that date
+		- allow multi-select in all views
+	- option to review log files
+	- sort by
+		- total diskspace used by all history versions
+		- frequency of changes over history (number of times item appears in history sets)
+	- allow option to spontaneously merge two or more adjacent incremental backups
 
+	- after merging all dated folders, display any non-current folders in a different colour
+		- this way, deleted or renamed folders are easier to pick out
+	- display a small progress bar which shows the percentage of size allocated to each item in the list
+		- starts from the right side, displays a virtical bar graph of which items are most likely to need pruning
+	- merge/moved option
+		- when a directory or large file is moved or renamed, sometimes backup will contain duplicates of everything
+		- have an option to tag one folder as having moved to another folder
+		- select both folders as source and destination or from and to
+		- destination folder should not have history prior to source folder, source folder should end when destination folder starts
+		- a scan of both folders and a merge of contents should give a percentage of matching files and folders
+			- this can be used to decide if the user should be warned before the merge.  eg: only 30% of the files match, are you sure?
+		- when merging, the same merge rules are applied to the entire folder tree to eliminate files which have not changed in later versions
+		- confirm with user before finalizing the merge
+		- all folders going back in time are renamed to the new folder name, then a merge is applied.  It becomes as if the folder was
+			always given that name since the beginning of time.
+		- hmm.  Option to do a one time merge between the old and new folders so you don't have to rename the historical folders but
+		  can use it to prune duplicate files.
+			- we could put a special file in the folder indicating where the new backup directory was moved to
+				- that wouldn't work for files, only folders though
+	- duplicate files
+		- history option to help locate large files which are duplicates
+		- needed to help clean up system
+		- when large files are moved they can fill the backup archive
+			- locate duplicates and give easy options for eliminating historical versions which are in old folders.
 
- Enhancement
----------------------------------------
-- if we have eliminated the 'already exists' problem
-  - can we go back to comparing filenames rather than asking the filesystem to pattern match the names?
-  - use the filter match object with the case sensitive flag from our filesystem test
-  
-- Log file viewer
-  - display a list of all log files related to the loaded backup.keep
-  - let the user select one
-  - display the log file in a scrollable window.
-- History browser
-  - shows merger tree of all history folders combined
-  - shows file count and total size of all folders for all history versions
-    - show separate counts for most recent vs all history versions
-  - tool to apply backup filters to a dated folder (or group of dated folders)
-    - if they select a file/folder from either tree or list view then apply filters to all history levels
-    - if they select a history date instead, only apply filter to that date
-    - allow multi-select in all views
-  - option to review log files
-  - sort by
-    - total diskspace used by all history versions
-    - frequency of changes over history (number of times item appears in history sets)
-  - allow option to spontaneously merge two or more adjacent incremental backups
-  
-- Configuration Editor
-  - for folders, automatically select the folder Name from the last level of the folder Path
-    - this is how Archive currently works
-  - make folder text box double height for when path wraps due to length
-  - when adding a new folder, leave name empty
-    - if browser selects folder and name is empty, set name = foldername of path
-    - if we leave the folder without naming it, automatically set name = foldername of path
-  - no two archives should have the same destination path
-  - no two folders should have the same archive name
-  - check for empty paths
-  - check for invalid characters in each field
-    - file or folder names should not contain these characters:  <  >  :  "  /  \  |  ?  *
-    - patterns should not contain folder paths with . or .. in them eg:  /fred/../barney/*
-    - do not allow control characters
-    - should not start or end with a space
-    - can not end with a .
-  - always sort include/exclude/history lists (directories first)
-  - edit forms need hover help
-    - micro help or tool-tip help for each field
-    - explain how each field is used by KeepBack
-    
-- Dealing with large files which change frequently over time
-  - typically E-Mail archives
-  - can we store a delta?
-    - maybe there is existing code to track changes to binary files
-    - most recent file must be the master file to which delta's are applied
-    - it must be possible to merge deltas when backup sets are merged
-    - how does the software deal with interuption?
-    - what if the file is open for write at backup time?
-- display warnings for low disk space
-  - better: display a meter which shows how much space is used/free
-    - could this be a running display while the backup proceeds?
-      - warn as it gets close
-    - if we run out of space, can backup pause and wait for user to clear space?
-      - make history browser available for cleanup?
-      - allow options to change merge criteria
-   - should all file copies check to see if the destination has space?  Could then free some up if necessary.
-   
+... System Tray
+	- monitor file system
+		- record changes to file system
+		- feed just the changed files to the backup program once per hour
+	- monitor removable drives
+		- when drive shows up which contains backup set
+			- automatically start backup
+			- optionally, unmount removable drive after backup completes
+			- called zero-touch backup
+	- scheduling
+		- keep track of specific backup.keep files
+			- when were they last seen
+		- remember frequency each backup set is expected to be run
+		- if backup set is overdue, display pop-up indicating which drives should be attached
+		- when drive appears, trigger backup then record completion date
+		- if drive is already mounted and scheduled backup occurs, initiate backup but don't auto eject
 
 
-
-- handle out-of-disk-space errors better.  
-  - currently exception is thrown and app aborts
-- display warning/error counter as part of statistics
-  - offer to display reduced (no files that didn't produce errors) or full log file if there were warnings or errors
-- multithreaded backup
-  - reader thread
-    - scan for changes, queue up files which must be backed up
-  - writer thread
-    - archive old files
-    - copy over new files
-    - delete files being removed
-- separate filenames from log
-  - log top should contain all error and status messages
-  - list of files backed up should be at the bottom or in a separate file
-  - write the file list in such a way that in the future there could be options to rollback files or even folders to a specific point in time.
-- command line options
-  - Backup - auto start the backup when a .keep file is provided
-  - Exit   - after backup completes, exit KeepBack automatically
-- disk usage
-  - provide a summary at the end showing free space on hard drive from begin and end of backup
-- pause  backup
-  - option to pause current backup then resume operation from current location.
-  - change check for 'cancel' into a method call which blocks on a wait() if 'pause' selected.
-- duplicate files
-  - history option to help locate large files which are duplicates
-  - needed to help clean up system
-  - when large files are moved they can fill the backup archive
-    - locate duplicates and give easy options for eliminating historical versions which are in old folders.
-- dated directory names
-  - when there are no conflicting names, allow merge to rename date/time folders to just date folders
-    eg: 2010-11-05-1903  to  2010-11-05
-    especially the monthly merge if not the daily
-    handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05
-- force full backup
-  - have checkbox flag on main screen.  When checked (remember last state?) is passed along to backup
-  - backup does not rename history folder
-  - archive is new folder name as usual
-  - history remains NULL
-  - full backup takes place and no history interaction takes place
-  - then its business as usual
-- History flag vulnerability
-  - when history option selected, backing up a file means the previous copy is being overwritten
-  - if the copy fails, the old file will be lost
-  - should we rename the file first then copy the new file, then delete the old file?
-
-
-- Include, Exclude, History
-  - test all combinations
-    - file, directory
-      - include, exclude, history
-        - existing, new, deleted
-- add option to apply include/exclude/history rules when merging
-- provide an easy way to move the backup destination
-  - USB drives could end up being mounted in a variety of places
-  - when control file is run, a test is made to see if the destination path
-    exists.  If not, then two options are presented:
-       - create destination
-       - search for destination
-         - search could be automatic, hunt each valid root for /folder/name
-           - skip floppy drives if possible
-
-- registry backup
-  - registry is always locked for current user
-  - windows only
-
-- system tray tool
-  - monitor file system
-    - record changes to file system
-    - feed just the changed files to the backup program once per hour
-  - monitor removable drives
-    - when drive shows up which contains backup set
-      - automatically start backup
-      - optionally, unmount removable drive after backup completes
-      - called zero-touch backup
-  - scheduling
-    - keep track of specific backup.keep files
-      - when were they last seen
-    - remember frequency each backup set is expected to be run
-    - if backup set is overdue, display pop-up indicating which drives should be attached
-    - when drive appears, trigger backup then record completion date
-    - if drive is already mounted and scheduled backup occurs, initiate backup but don't auto eject
-
-- write a service app to scan for file properties
-  - can scan a single file or whole file system
-  - looks for any information which can be derrived from a file
-  - will report anything new or unknown to the console.
-    - attributes, file dates, properties, security information, size, accessibility, permissions, etc.
-  - try to identify files which should never be backed up
-    - devices, links, pipes
 
 
 

@@ -32,15 +32,14 @@ namespace KeepBack
 	public partial class FormEdit : Form
 	{
 		//--- define ----------------------------
-		const int IMAGE_SET             = 0;
-		const int IMAGE_ARCHIVE         = 1;
-		const int IMAGE_FOLDER          = 2;
-		const int IMAGE_INCLUDE_FILE    = 3;
-		const int IMAGE_INCLUDE_FOLDER  = 4;
-		const int IMAGE_EXCLUDE_FILE    = 5;
-		const int IMAGE_EXCLUDE_FOLDER  = 6;
-		const int IMAGE_HISTORY_FILE    = 7;
-		const int IMAGE_HISTORY_FOLDER  = 8;
+		const int IMAGE_ARCHIVE         = 0;
+		const int IMAGE_FOLDER          = 1;
+		const int IMAGE_INCLUDE_FILE    = 2;
+		const int IMAGE_INCLUDE_FOLDER  = 3;
+		const int IMAGE_EXCLUDE_FILE    = 4;
+		const int IMAGE_EXCLUDE_FOLDER  = 5;
+		const int IMAGE_HISTORY_FILE    = 6;
+		const int IMAGE_HISTORY_FOLDER  = 7;
 		//--- field -----------------------------
 		Ctrl  ctrl;
 		bool  modified           = false;
@@ -62,7 +61,6 @@ namespace KeepBack
 		{
 			Rectangle r = splitContainer.Panel2.ClientRectangle;
 			AnchorStyles st = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-			panelRoot   .SetBounds( r.X, r.Y, r.Width, r.Height );  panelRoot   .Anchor = st;
 			panelArchive.SetBounds( r.X, r.Y, r.Width, r.Height );  panelArchive.Anchor = st;
 			panelFolder .SetBounds( r.X, r.Y, r.Width, r.Height );  panelFolder .Anchor = st;
 			panelPattern.SetBounds( r.X, r.Y, r.Width, r.Height );  panelPattern.Anchor = st;
@@ -85,63 +83,65 @@ namespace KeepBack
 			if( ctrl != null )
 			{
 				this.Text = ctrl.Path;
-				this.treeViewControl.Nodes.Clear();
-				TreeNode set = new TreeNode( "Backup Set", IMAGE_SET, IMAGE_SET );
-				set.Tag = ctrl;
-				this.treeViewControl.Nodes.Add( set );
-				if( ctrl.Archives != null )
+
+				CtrlArchive a;
+				if( ctrl.Archive == null )
 				{
-					ctrl.ArchiveSort();
-					foreach( CtrlArchive a in ctrl.Archives )
+					a = ctrl.ArchiveCreate();
+					a.Path   = "Archive";
+					a.Month  =  6;
+					a.Day    = 15;
+					a.Hour   = 24;
+					a.Minute = 60;
+					modified = true;
+				}
+				a = ctrl.Archive;
+				TreeNode archive = new TreeNode( a.Name, IMAGE_ARCHIVE, IMAGE_ARCHIVE );
+				archive.Tag = a;
+				this.treeViewControl.Nodes.Add( archive );
+				if( a.Folders != null )
+				{
+					a.FolderSort();
+					foreach( CtrlFolder f in a.Folders )
 					{
-						TreeNode archive = new TreeNode( a.Name, IMAGE_ARCHIVE, IMAGE_ARCHIVE );
-						archive.Tag = a;
-						set.Nodes.Add( archive );
-						if( a.Folders != null )
+						TreeNode folder = new TreeNode( f.Name, IMAGE_FOLDER, IMAGE_FOLDER );
+						folder.Tag = f;
+						archive.Nodes.Add( folder );
+						f.PatternSort();
+						if( f.Include != null )
 						{
-							a.FolderSort();
-							foreach( CtrlFolder f in a.Folders )
+							foreach( CtrlPattern p in f.Include )
 							{
-								TreeNode folder = new TreeNode( f.Name, IMAGE_FOLDER, IMAGE_FOLDER );
-								folder.Tag = f;
-								archive.Nodes.Add( folder );
-								f.PatternSort();
-								if( f.Include != null )
-								{
-									foreach( CtrlPattern p in f.Include )
-									{
-										int i = p.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
-										TreeNode include = new TreeNode( p.Pattern, i, i );
-										include.Tag = p;
-										folder.Nodes.Add( include );
-									}
-								}
-								if( f.Exclude != null )
-								{
-									foreach( CtrlPattern p in f.Exclude )
-									{
-										int i = p.IsFolder ? IMAGE_EXCLUDE_FOLDER : IMAGE_EXCLUDE_FILE;
-										TreeNode exclude = new TreeNode( p.Pattern, i, i );
-										exclude.Tag = p;
-										folder.Nodes.Add( exclude );
-									}
-								}
-								if( f.History != null )
-								{
-									foreach( CtrlPattern p in f.History )
-									{
-										int i = p.IsFolder ? IMAGE_HISTORY_FOLDER : IMAGE_HISTORY_FILE;
-										TreeNode history = new TreeNode( p.Pattern, i, i );
-										history.Tag = p;
-										folder.Nodes.Add( history );
-									}
-								}
+								int i = p.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
+								TreeNode include = new TreeNode( p.Pattern, i, i );
+								include.Tag = p;
+								folder.Nodes.Add( include );
+							}
+						}
+						if( f.Exclude != null )
+						{
+							foreach( CtrlPattern p in f.Exclude )
+							{
+								int i = p.IsFolder ? IMAGE_EXCLUDE_FOLDER : IMAGE_EXCLUDE_FILE;
+								TreeNode exclude = new TreeNode( p.Pattern, i, i );
+								exclude.Tag = p;
+								folder.Nodes.Add( exclude );
+							}
+						}
+						if( f.History != null )
+						{
+							foreach( CtrlPattern p in f.History )
+							{
+								int i = p.IsFolder ? IMAGE_HISTORY_FOLDER : IMAGE_HISTORY_FILE;
+								TreeNode history = new TreeNode( p.Pattern, i, i );
+								history.Tag = p;
+								folder.Nodes.Add( history );
 							}
 						}
 					}
 				}
 				this.treeViewControl.ExpandAll();
-				TreeSelect( (select == null) ? ctrl : select );
+				TreeSelect( (select == null) ? ctrl.Archive : select );
 			}
 		}
 		private void TreeSelect( object select )
@@ -201,14 +201,12 @@ namespace KeepBack
 
 		private void treeViewControl_AfterSelect( object sender, TreeViewEventArgs e )
 		{
-			this.panelRoot    .Visible  = false;
 			this.panelArchive .Visible  = false;
 			this.panelFolder  .Visible  = false;
 			this.panelPattern .Visible  = false;
 
 			Accept();
 
-			this.panelRoot    .Tag      = null;
 			this.panelArchive .Tag      = null;
 			this.panelFolder  .Tag      = null;
 			this.panelPattern .Tag      = null;
@@ -217,27 +215,14 @@ namespace KeepBack
 			if( (node != null) && (node.Tag != null) )
 			{
 				Type t = node.Tag.GetType();
-				if( t == typeof(Ctrl) )
-				{
-					this.panelRoot.Visible = true;
-					this.listBoxArchives.Items.Clear();
-					Ctrl x = (Ctrl)node.Tag;
-					this.panelRoot.Tag = x;
-					buttonSave.Enabled = modified;
-					if( x.Archives != null )
-					{
-						this.listBoxArchives.Items.AddRange( x.Archives );
-					}
-				}
-				else if( t == typeof(CtrlArchive) )
+				if( t == typeof(CtrlArchive) )
 				{
 					this.panelArchive.Visible = true;
 					this.listBoxFolders.Items.Clear();
 					CtrlArchive a = (CtrlArchive)node.Tag;
 					this.panelArchive.Tag = a;
-					textBoxArchiveRoot  .Text  = a.Root             ;
+					buttonSave.Enabled = modified;
 					textBoxArchivePath  .Text  = a.Path             ;
-					textBoxArchiveName  .Text  = a.Name             ;
 					textBoxArchiveMonth .Text  = a.Month .ToString();
 					textBoxArchiveDay   .Text  = a.Day   .ToString();
 					textBoxArchiveHour  .Text  = a.Hour  .ToString();
@@ -280,7 +265,6 @@ namespace KeepBack
 		}
 		private void Accept()
 		{
-			AcceptRoot();
 			AcceptArchive();
 			AcceptFolder();
 			AcceptPattern();
@@ -308,78 +292,6 @@ namespace KeepBack
 
 
 		/* ------------------
-		 *    PanelRoot
-		 * ------------------
-		 */
-		private void AcceptRoot()
-		{
-			Ctrl x = this.panelRoot.Tag as Ctrl;
-			if( x != null )
-			{
-				//nothing to accept on this panel
-			}
-		}
-
-		private void buttonSave_Click( object sender, EventArgs e )
-		{
-			Save();
-		}
-
-		private void buttonArchiveAdd_Click( object sender, EventArgs e )
-		{
-			Ctrl x = this.panelRoot.Tag as Ctrl;
-			if( x != null )
-			{
-				int    i = 0;
-				int    j;
-				string s;
-				do
-				{
-					++i;
-					s = @"Archive-" + i;
-					j = (x.Archives == null) ? 0 : x.Archives.Length;
-					while( (--j >= 0) && (s != x.Archives[j].Name) )
-					{
-					}
-				}
-				while( j >= 0 );
-				CtrlArchive a = x.ArchiveAdd();
-				a.Name   = s ;
-				a.Month  =  6;
-				a.Day    = 15;
-				a.Hour   = 24;
-				a.Minute = 60;
-				modified = true;
-				TreeUpdate( a );
-			}
-		}
-
-		private void buttonArchiveDelete_Click( object sender, EventArgs e )
-		{
-			Ctrl        x = this.panelRoot.Tag as Ctrl;
-			CtrlArchive a = this.listBoxArchives.SelectedItem as CtrlArchive;
-			if( (x != null) && (a != null) )
-			{
-				if( MessageBox.Show( "Delete Archive:\r\n\r\n" + a.Name + "\r\n" + a.FullPath + "\r\n\r\nAre you Sure?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
-				{
-					x.ArchiveDelete( a );
-					modified = true;
-					TreeUpdate( x );
-				}
-			}
-		}
-
-		private void listBoxArchives_DoubleClick( object sender, EventArgs e )
-		{
-			CtrlArchive a = this.listBoxArchives.SelectedItem as CtrlArchive;
-			if( a != null )
-			{
-				TreeSelect( a );
-			}
-		}
-
-
-		/* ------------------
 		 *    PanelArchive
 		 * ------------------
 		 */
@@ -390,9 +302,7 @@ namespace KeepBack
 			{
 				string s;
 				int    i;
-				s = textBoxArchiveRoot  .Text.Trim(); if( s != a.Root ) { if( ! string.IsNullOrEmpty( s ) ) { a.Root =                    s; modified = true; }                          }
-				s = textBoxArchivePath  .Text.Trim(); if( s != a.Path ) {                                     a.Path = (s == null) ? "" : s; modified = true;                            } 
-				s = textBoxArchiveName  .Text.Trim(); if( s != a.Name ) { if( ! string.IsNullOrEmpty( s ) ) { a.Name =                    s; modified = true; } TreeText( a, a.Name ); }
+				s = textBoxArchivePath  .Text.Trim(); if( s != a.Path ) { if( ! string.IsNullOrEmpty( s ) ) { a.Path = s; modified = true; } TreeText( a, a.Name ); }
 				s = textBoxArchiveMonth .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Month  ) { a.Month  = i; modified = true; } } catch { } }
 				s = textBoxArchiveDay   .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Day    ) { a.Day    = i; modified = true; } } catch { } }
 				s = textBoxArchiveHour  .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Hour   ) { a.Hour   = i; modified = true; } } catch { } }
@@ -400,9 +310,9 @@ namespace KeepBack
 			}
 		}
 
-		private void buttonArchivePrevious_Click( object sender, EventArgs e )
+		private void buttonSave_Click( object sender, EventArgs e )
 		{
-			TreeSelectParent( this.panelArchive.Tag );
+			Save();
 		}
 
 		private void buttonArchivePath_Click( object sender, EventArgs e )
@@ -412,29 +322,22 @@ namespace KeepBack
 			f.ShowNewFolderButton = true;
 			try
 			{
-				f.SelectedPath = Path.Combine( Path.Combine( textBoxArchiveRoot.Text, textBoxArchivePath.Text ), textBoxArchiveName.Text );
+				f.SelectedPath = textBoxArchivePath.Text;
 			}
 			catch
 			{
 			}
 			if( f.ShowDialog() == DialogResult.OK )
 			{
-				string s = Path.GetFullPath( f.SelectedPath );
-				string r = Path.GetPathRoot     ( s );
-				string p = Path.GetDirectoryName( s );
-				string n = Path.GetFileName     ( s );
-				p = (p.StartsWith( r ) ? p.Substring( r.Length ) : p);
-				textBoxArchiveRoot.Text = r;
-				textBoxArchivePath.Text = p;
-				textBoxArchiveName.Text = n;
+				textBoxArchivePath.Text = Path.GetFullPath( f.SelectedPath );
 			}
 		}
 
-		private void textBoxArchiveName_TextChanged( object sender, EventArgs e )
+		private void textBoxArchivePath_TextChanged( object sender, EventArgs e )
 		{
 			if( ! ignoreChangeState )
 			{
-				TreeText( this.panelArchive.Tag, textBoxArchiveName.Text );
+				TreeText( this.panelArchive.Tag, Path.GetFileName( textBoxArchivePath.Text ) );
 			}
 		}
 

@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2008,2009,2010,2011 Chris Capon.
+
+    This file is part of KeepBack.
+
+    KeepBack is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    KeepBack is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with KeepBack.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<xs:schema id="KeepBack"
+	elementFormDefault="qualified"
+	targetNamespace="urn:keepback:schema:2011-09"
+	xmlns          ="urn:keepback:schema:2011-09"
+	xmlns:mstns    ="urn:keepback:schema:2011-09"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	>
+
+	<xs:element name="keepback">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="archive" maxOccurs="1" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="archive">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="folders" maxOccurs="1" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="path"   type="xs:string"  />
+			<xs:attribute name="month"  type="xs:integer" />
+			<xs:attribute name="day"    type="xs:integer" />
+			<xs:attribute name="hour"   type="xs:integer" />
+			<xs:attribute name="minute" type="xs:integer" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="folders">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="folder" maxOccurs="unbounded" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="folder">
+		<xs:complexType>
+			<xs:all maxOccurs="1" minOccurs="0">
+				<xs:element ref="includes"  maxOccurs="1" minOccurs="0" />
+				<xs:element ref="histories" maxOccurs="1" minOccurs="0" />
+				<xs:element ref="excludes"  maxOccurs="1" minOccurs="0" />
+			</xs:all>
+			<xs:attribute name="name"   type="xs:string"  />
+			<xs:attribute name="path"   type="xs:string"  />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="includes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="include" maxOccurs="unbounded" minOccurs="0" type="pattern" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="histories">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="history" maxOccurs="unbounded" minOccurs="0" type="pattern" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="excludes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="exclude" maxOccurs="unbounded" minOccurs="0" type="pattern" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="pattern">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="debug"          type="xs:boolean"  />
+				<xs:attribute name="case-sensitive" type="xs:boolean"  />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+</xs:schema>

@@ -44,28 +44,9 @@ namespace KeepBack
 		long            skipped          = 0;
 
 
-		public string Filename
-		{
-			get 
-			{
-				return filename;
-			}
-			set
-			{
-				filename = value;
-				SetHeader();
-			}
-		}
-		void SetHeader()
-		{
-			this.Text = Program.AssemblyTitle + " " + Program.AssemblyVersion;
-			if( ! string.IsNullOrEmpty( filename ) )
-			{
-				filename = Path.GetFullPath( filename );
-				this.Text += " - " + filename;
-			}
-			ButtonEnable( true );
-		}
+		public string Filename   { get { return filename; } set { filename = value; SetHeader(); } }
+		public bool   IsFilename { get { return ! string.IsNullOrEmpty( filename ); } }
+		public bool   IsDebug    { get { return debugToolStripMenuItem.Checked; } }
 
 		public FormMain()
 		{
@@ -79,79 +60,104 @@ namespace KeepBack
 		}
 
 
+		void SetHeader()
+		{
+			this.Text = Program.AssemblyTitle + " " + Program.AssemblyVersion;
+			if( IsFilename )
+			{
+				filename = Path.GetFullPath( filename );
+				this.Text += " - " + filename;
+			}
+			ButtonEnable( true );
+		}
 
 
 		private void MenuNew_Click( object sender, EventArgs e )
 		{
-			SaveFileDialog f = new SaveFileDialog();
-			f.AddExtension = true;
-			f.CheckPathExists = true;
-			f.CreatePrompt = false;
-			f.DefaultExt = "ctrl";
-			f.Filter           = "control files (*.keep)|*.keep";
-			f.FilterIndex      = 1;
-			f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
-			f.OverwritePrompt = true;
-			f.RestoreDirectory = true;
-			f.Title = "Where should the new control file be saved?";
-			if( f.ShowDialog() == DialogResult.OK )
+			try
 			{
-				Filename = f.FileName;
-				try
+				SaveFileDialog f = new SaveFileDialog();
+				f.AddExtension = true;
+				f.CheckPathExists = true;
+				f.CreatePrompt = false;
+				f.DefaultExt = "ctrl";
+				f.Filter           = "control files (*.keep)|*.keep";
+				f.FilterIndex      = 1;
+				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
+				f.OverwritePrompt = true;
+				f.RestoreDirectory = true;
+				f.Title = "Where should the new control file be saved?";
+				if( f.ShowDialog() == DialogResult.OK )
 				{
+					Filename = f.FileName;
 					Ctrl ctrl = new Ctrl();
 					ctrl.Export( Filename );
 				}
-				catch( Exception ex )
-				{
-#if DEBUG
-					MessageBox.Show( ex.ToString() );
-#else
-					MessageBox.Show( ex.Message );
-#endif
-				}
+			}
+			catch( Exception ex )
+			{
+				Info( ex );
 			}
 		}
 
 		private void MenuOpen_Click( object sender, EventArgs e )
 		{
-			OpenFileDialog f = new OpenFileDialog();
-			f.CheckFileExists  = true;
-			f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
-			f.Filter           = "control files (*.keep)|*.keep|All files (*.*)|*.*";
-			f.FilterIndex      = 1;
-			f.RestoreDirectory = true;
-			f.Title = "Select a backup control file to work with.";
-			if( f.ShowDialog() == DialogResult.OK )
+			try
 			{
-				Filename = f.FileName;
+				OpenFileDialog f = new OpenFileDialog();
+				f.CheckFileExists  = true;
+				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
+				f.Filter           = "control files (*.keep)|*.keep|All files (*.*)|*.*";
+				f.FilterIndex      = 1;
+				f.RestoreDirectory = true;
+				f.Title = "Select a backup control file to work with.";
+				if( f.ShowDialog() == DialogResult.OK )
+				{
+					Filename = f.FileName;
+				}
+			}
+			catch( Exception ex )
+			{
+				Info( ex );
 			}
 		}
 
 		private void MenuClose_Click( object sender, EventArgs e )
 		{
-			Filename = "";
+			try
+			{
+				Filename = "";
+			}
+			catch( Exception ex )
+			{
+				Info( ex );
+			}
 		}
 
 		private void MenuExit_Click( object sender, EventArgs e )
 		{
-			this.Close();
+			try
+			{
+				this.Close();
+			}
+			catch( Exception )
+			{
+			}
 		}
 
 		private void MenuEdit_Click( object sender, EventArgs e )
 		{
 			try
 			{
-				FormEdit f = new FormEdit( Ctrl.Import( filename ) );
-				f.ShowDialog();
+				if( IsFilename )
+				{
+					FormEdit f = new FormEdit( Ctrl.Import( filename ) );
+					f.ShowDialog();
+				}
 			}
 			catch( Exception ex )
 			{
-#if DEBUG
-				MessageBox.Show( ex.ToString() );
-#else
-				MessageBox.Show( ex.Message );
-#endif
+				Info( ex );
 			}
 		}
 
@@ -159,47 +165,85 @@ namespace KeepBack
 		{
 			try
 			{
-				FormExplore f = new FormExplore();
-				f.ShowDialog();
+				if( IsFilename )
+				{
+					Ctrl c = Ctrl.Import( filename );
+					if( (c != null) && (c.Archive != null) )
+					{
+						FormExplore f = new FormExplore( c );
+						f.ShowDialog();
+					}
+				}
 			}
 			catch( Exception ex )
 			{
-#if DEBUG
-				MessageBox.Show( ex.ToString() );
-#else
-				MessageBox.Show( ex.Message );
-#endif
+				Info( ex );
 			}
 		}
 
+		private void MenuLogs_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				if( IsFilename )
+				{
+					Ctrl c = Ctrl.Import( filename );
+					if( (c != null) && (c.Archive != null) )
+					{
+						FormLog f = new FormLog( c );
+						f.ShowDialog();
+					}
+				}
+			}
+			catch( Exception ex )
+			{
+				Info( ex );
+			}
+		}
+
+
 		private void MenuMerge_Click( object sender, EventArgs e )
 		{
-			if( ! string.IsNullOrEmpty( filename ) )
+			try
 			{
-				ClearValues();
-				thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
-				thread.Start( "Merge" );
+				if( IsFilename )
+				{
+					ClearValues();
+					thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
+					thread.Start( "Merge" );
+				}
+			}
+			catch( Exception ex )
+			{
+				Info( ex );
 			}
 		}
 
 		private void MenuBackup_Click( object sender, EventArgs e )
 		{
-			if( newToolStripMenuItem.Enabled )
+			try
 			{
-				if( ! string.IsNullOrEmpty( filename ) )
+				if( newToolStripMenuItem.Enabled )
 				{
-					ClearValues();
-					thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
-					thread.Start( "Backup" );
+					if( IsFilename )
+					{
+						ClearValues();
+						thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
+						thread.Start( "Backup" );
+					}
+				}
+				else
+				{
+					Archive a = current;
+					if( a != null )
+					{
+						a.Cancel = true;
+					}
 				}
 			}
-			else
+			catch( Exception ex )
 			{
-				Archive a = current;
-				if( a != null )
-				{
-					a.Cancel = true;
-				}
+				Info( ex );
 			}
 		}
 
@@ -211,11 +255,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-#if DEBUG
-				MessageBox.Show( ex.ToString() );
-#else
-				MessageBox.Show( ex.Message );
-#endif
+				Info( ex );
 			}
 		}
 
@@ -235,41 +275,40 @@ namespace KeepBack
 				current = null;
 				ButtonEnable( false );
 
-				ArchiveAction(Archive.Action.Info, "" );
-				ArchiveAction(Archive.Action.Info, "==== Begin ====" );
-				ArchiveAction(Archive.Action.Info, "Control File   " + filename );
+				Info( "" );
+				Info( "==== Begin ====" );
+				Info( "Control File   " + filename );
 
 				created              = 0;
 				modified             = 0;
 				deleted              = 0;
 				skipped              = 0;
 
-				Ctrl c = Ctrl.Import( filename );
-				if( c.Archives != null )
+				if( IsFilename )
 				{
-					foreach( CtrlArchive ca in c.Archives )
+					Ctrl c = Ctrl.Import( filename );
+					if( c.Archive != null )
 					{
-						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), ca, true, debugToolStripMenuItem.Checked ) )
+						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), c, true, IsDebug ) )
 						{
-							switch( s )
+							if( current != null )
 							{
-								case "Backup":  current.Merge(); current.Backup( filename );  break;
-								case "Merge" :  current.Merge();                    break;
-							}
-							if( current.Cancel )
-							{
-								break;
+								switch( s )
+								{
+									case "Backup":  current.Merge(); current.Backup( filename );  break;
+									case "Merge" :  current.Merge();                              break;
+								}
 							}
 						}
-						current = null;
 					}
 				}
-				ArchiveAction(Archive.Action.Info, "===== End =====" );
-				ArchiveAction(Archive.Action.Info, "" );
+				current = null;
+				Info( "===== End =====" );
+				Info( "" );
 			}
 			catch( Exception ex )
 			{
-				ArchiveAction( Archive.Action.Info, ex.ToString() );
+				Info( ex );
 			}
 			finally
 			{
@@ -285,7 +324,7 @@ namespace KeepBack
 				this.Invoke( new ButtonEnableCallback( ButtonEnable ), enable );
 				return;
 			}
-			bool fn = ! string.IsNullOrEmpty( filename );
+			bool fn = IsFilename;
 
 			//File
 			newToolStripMenuItem    .Enabled = enable;
@@ -295,12 +334,23 @@ namespace KeepBack
 			//Tools
 			editToolStripMenuItem   .Enabled = enable && fn;
 			exploreToolStripMenuItem.Enabled = enable && fn;
+			logsToolStripMenuItem   .Enabled = enable && fn;
 			mergeToolStripMenuItem  .Enabled = enable && fn;
 			backupToolStripMenuItem .Enabled = enable && fn;
 			debugToolStripMenuItem  .Enabled = enable;
 
 			buttonBackup  .Text    = enable ? "Backup" : "Cancel";
 			buttonBackup  .Enabled = fn;
+		}
+
+		void Info( Exception ex )
+		{
+			Info( IsDebug ? ex.ToString() : ex.Message );
+		}
+		void Info( string message )
+		{
+			richTextBoxInfo.AppendText( message + "\r\n" );
+			richTextBoxInfo.ScrollToCaret();
 		}
 
 		delegate void ArchiveActionCallback( Archive.Action action, string message );
@@ -315,8 +365,7 @@ namespace KeepBack
 			{
 				case Archive.Action.Info:
 				{
-					richTextBoxInfo.AppendText( message + "\r\n" );
-					richTextBoxInfo.ScrollToCaret();
+					Info( message );
 					break;
 				}
 				case Archive.Action.Directory:
@@ -345,7 +394,6 @@ namespace KeepBack
 				}
 			}
 		}
-
 
 	}
 }

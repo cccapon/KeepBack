@@ -99,9 +99,12 @@
     <Compile Include="FormExplore.Designer.cs">
       <DependentUpon>FormExplore.cs</DependentUpon>
     </Compile>
-    <Compile Include="History.cs" />
-    <Compile Include="HistoryFolder.cs" />
-    <Compile Include="HistoryFile.cs" />
+    <Compile Include="FormLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLog.Designer.cs">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +125,9 @@
     <EmbeddedResource Include="FormExplore.resx">
       <DependentUpon>FormExplore.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormLog.resx">
+      <DependentUpon>FormLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -136,7 +142,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="KeepBack.keep" />
+    <None Include="KeepBack.keep">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="KeepBack.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -148,18 +159,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FolderOpen.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Previous.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Image\Add.png" />
+    <Content Include="Image\Archive.png" />
+    <Content Include="Image\Control.png" />
+    <Content Include="Image\Delete.png" />
+    <Content Include="Image\ExcludeFile.png" />
+    <Content Include="Image\ExcludeFolder.png" />
+    <Content Include="Image\FolderClose.png" />
+    <Content Include="Image\FolderOpen.png" />
+    <Content Include="Image\HistoryFile.png" />
+    <Content Include="Image\HistoryFolder.png" />
+    <Content Include="Image\IncludeFile.png" />
+    <Content Include="Image\IncludeFolder.png" />
+    <Content Include="Image\Previous.png" />
     <Content Include="License.txt" />
     <Content Include="Notes.txt" />
     <Content Include="ReadMe.txt" />
@@ -181,6 +193,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="v1\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

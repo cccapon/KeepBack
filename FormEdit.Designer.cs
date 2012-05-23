@@ -53,6 +53,17 @@ namespace KeepBack
 			this.imageListTree = new System.Windows.Forms.ImageList(this.components);
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.panelPattern = new System.Windows.Forms.Panel();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.labelPattern5Tag = new System.Windows.Forms.Label();
+			this.labelPattern4Tag = new System.Windows.Forms.Label();
+			this.labelPattern3Description = new System.Windows.Forms.Label();
+			this.labelPattern3Tag = new System.Windows.Forms.Label();
+			this.labelPattern2Description = new System.Windows.Forms.Label();
+			this.labelPattern2Tag = new System.Windows.Forms.Label();
+			this.labelPattern1Description = new System.Windows.Forms.Label();
+			this.labelPattern1Tag = new System.Windows.Forms.Label();
+			this.labelPattern5Description = new System.Windows.Forms.Label();
+			this.labelPattern4Description = new System.Windows.Forms.Label();
 			this.groupBoxCase = new System.Windows.Forms.GroupBox();
 			this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
 			this.radioButtonCaseIgnore = new System.Windows.Forms.RadioButton();
@@ -88,7 +99,7 @@ namespace KeepBack
 			this.labelFolderName = new System.Windows.Forms.Label();
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
-			this.buttonArchivePrevious = new System.Windows.Forms.Button();
+			this.buttonSave = new System.Windows.Forms.Button();
 			this.buttonArchivePath = new System.Windows.Forms.Button();
 			this.buttonFolderDelete = new System.Windows.Forms.Button();
 			this.buttonFolderAdd = new System.Windows.Forms.Button();
@@ -103,42 +114,19 @@ namespace KeepBack
 			this.labelArchiveHistory = new System.Windows.Forms.Label();
 			this.textBoxArchiveMonth = new System.Windows.Forms.TextBox();
 			this.labelArchiveMonth = new System.Windows.Forms.Label();
-			this.textBoxArchiveName = new System.Windows.Forms.TextBox();
 			this.textBoxArchivePath = new System.Windows.Forms.TextBox();
-			this.labelName = new System.Windows.Forms.Label();
 			this.labelArchivePath = new System.Windows.Forms.Label();
-			this.textBoxArchiveRoot = new System.Windows.Forms.TextBox();
-			this.C = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
-			this.panelRoot = new System.Windows.Forms.Panel();
-			this.buttonSave = new System.Windows.Forms.Button();
-			this.labelRoot = new System.Windows.Forms.Label();
-			this.labelListArchive = new System.Windows.Forms.Label();
-			this.buttonArchiveDelete = new System.Windows.Forms.Button();
-			this.buttonArchiveAdd = new System.Windows.Forms.Button();
-			this.listBoxArchives = new System.Windows.Forms.ListBox();
-			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.labelPattern1Tag = new System.Windows.Forms.Label();
-			this.labelPattern1Description = new System.Windows.Forms.Label();
-			this.labelPattern2Tag = new System.Windows.Forms.Label();
-			this.labelPattern2Description = new System.Windows.Forms.Label();
-			this.labelPattern3Tag = new System.Windows.Forms.Label();
-			this.labelPattern3Description = new System.Windows.Forms.Label();
-			this.labelPattern4Tag = new System.Windows.Forms.Label();
-			this.labelPattern5Description = new System.Windows.Forms.Label();
-			this.labelPattern5Tag = new System.Windows.Forms.Label();
-			this.labelPattern4Description = new System.Windows.Forms.Label();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.panelPattern.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.groupBoxCase.SuspendLayout();
 			this.groupBoxPatternMatch.SuspendLayout();
 			this.groupBoxPatternApply.SuspendLayout();
 			this.panelFolder.SuspendLayout();
 			this.panelArchive.SuspendLayout();
-			this.panelRoot.SuspendLayout();
-			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// treeViewControl
@@ -161,15 +149,14 @@ namespace KeepBack
 			// 
 			this.imageListTree.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListTree.ImageStream")));
 			this.imageListTree.TransparentColor = System.Drawing.Color.Transparent;
-			this.imageListTree.Images.SetKeyName(0, "Control.png");
-			this.imageListTree.Images.SetKeyName(1, "Archive.png");
-			this.imageListTree.Images.SetKeyName(2, "FolderOpen.png");
-			this.imageListTree.Images.SetKeyName(3, "IncludeFile.png");
-			this.imageListTree.Images.SetKeyName(4, "IncludeFolder.png");
-			this.imageListTree.Images.SetKeyName(5, "ExcludeFile.png");
-			this.imageListTree.Images.SetKeyName(6, "ExcludeFolder.png");
-			this.imageListTree.Images.SetKeyName(7, "HistoryFile.png");
-			this.imageListTree.Images.SetKeyName(8, "HistoryFolder.png");
+			this.imageListTree.Images.SetKeyName(0, "Archive.png");
+			this.imageListTree.Images.SetKeyName(1, "FolderOpen.png");
+			this.imageListTree.Images.SetKeyName(2, "IncludeFile.png");
+			this.imageListTree.Images.SetKeyName(3, "IncludeFolder.png");
+			this.imageListTree.Images.SetKeyName(4, "ExcludeFile.png");
+			this.imageListTree.Images.SetKeyName(5, "ExcludeFolder.png");
+			this.imageListTree.Images.SetKeyName(6, "HistoryFile.png");
+			this.imageListTree.Images.SetKeyName(7, "HistoryFolder.png");
 			// 
 			// splitContainer
 			// 
@@ -188,7 +175,6 @@ namespace KeepBack
 			this.splitContainer.Panel2.Controls.Add(this.panelPattern);
 			this.splitContainer.Panel2.Controls.Add(this.panelFolder);
 			this.splitContainer.Panel2.Controls.Add(this.panelArchive);
-			this.splitContainer.Panel2.Controls.Add(this.panelRoot);
 			this.splitContainer.Size = new System.Drawing.Size(805, 498);
 			this.splitContainer.SplitterDistance = 268;
 			this.splitContainer.TabIndex = 1;
@@ -205,10 +191,131 @@ namespace KeepBack
 			this.panelPattern.Controls.Add(this.textBoxPatternPattern);
 			this.panelPattern.Controls.Add(this.labelPatternPattern);
 			this.panelPattern.Controls.Add(this.labelPattern);
-			this.panelPattern.Location = new System.Drawing.Point(4, 170);
+			this.panelPattern.Location = new System.Drawing.Point(3, 351);
 			this.panelPattern.Name = "panelPattern";
 			this.panelPattern.Size = new System.Drawing.Size(483, 317);
 			this.panelPattern.TabIndex = 3;
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.76423F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.23577F));
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Tag, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Tag, 0, 3);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Description, 1, 2);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Tag, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Description, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Tag, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Description, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Tag, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Description, 0, 4);
+			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Description, 1, 3);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(84, 180);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 5;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(369, 109);
+			this.tableLayoutPanel1.TabIndex = 42;
+			// 
+			// labelPattern5Tag
+			// 
+			this.labelPattern5Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern5Tag.Location = new System.Drawing.Point(3, 89);
+			this.labelPattern5Tag.Name = "labelPattern5Tag";
+			this.labelPattern5Tag.Size = new System.Drawing.Size(77, 20);
+			this.labelPattern5Tag.TabIndex = 8;
+			this.labelPattern5Tag.Text = "/.../";
+			this.labelPattern5Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern4Tag
+			// 
+			this.labelPattern4Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern4Tag.Location = new System.Drawing.Point(3, 62);
+			this.labelPattern4Tag.Name = "labelPattern4Tag";
+			this.labelPattern4Tag.Size = new System.Drawing.Size(77, 23);
+			this.labelPattern4Tag.TabIndex = 6;
+			this.labelPattern4Tag.Text = "/";
+			this.labelPattern4Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern3Description
+			// 
+			this.labelPattern3Description.Location = new System.Drawing.Point(87, 38);
+			this.labelPattern3Description.Name = "labelPattern3Description";
+			this.labelPattern3Description.Size = new System.Drawing.Size(279, 24);
+			this.labelPattern3Description.TabIndex = 5;
+			this.labelPattern3Description.Text = "matches a directory path character";
+			this.labelPattern3Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern3Tag
+			// 
+			this.labelPattern3Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern3Tag.Location = new System.Drawing.Point(3, 38);
+			this.labelPattern3Tag.Name = "labelPattern3Tag";
+			this.labelPattern3Tag.Size = new System.Drawing.Size(77, 23);
+			this.labelPattern3Tag.TabIndex = 4;
+			this.labelPattern3Tag.Text = "\\";
+			this.labelPattern3Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern2Description
+			// 
+			this.labelPattern2Description.Location = new System.Drawing.Point(87, 19);
+			this.labelPattern2Description.Name = "labelPattern2Description";
+			this.labelPattern2Description.Size = new System.Drawing.Size(279, 19);
+			this.labelPattern2Description.TabIndex = 3;
+			this.labelPattern2Description.Text = "matches zero or one character";
+			this.labelPattern2Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern2Tag
+			// 
+			this.labelPattern2Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern2Tag.Location = new System.Drawing.Point(3, 19);
+			this.labelPattern2Tag.Name = "labelPattern2Tag";
+			this.labelPattern2Tag.Size = new System.Drawing.Size(77, 19);
+			this.labelPattern2Tag.TabIndex = 2;
+			this.labelPattern2Tag.Text = "?";
+			this.labelPattern2Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern1Description
+			// 
+			this.labelPattern1Description.Location = new System.Drawing.Point(87, 0);
+			this.labelPattern1Description.Name = "labelPattern1Description";
+			this.labelPattern1Description.Size = new System.Drawing.Size(279, 19);
+			this.labelPattern1Description.TabIndex = 1;
+			this.labelPattern1Description.Text = "matches zero or more characters";
+			this.labelPattern1Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern1Tag
+			// 
+			this.labelPattern1Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelPattern1Tag.Location = new System.Drawing.Point(3, 0);
+			this.labelPattern1Tag.Name = "labelPattern1Tag";
+			this.labelPattern1Tag.Size = new System.Drawing.Size(77, 19);
+			this.labelPattern1Tag.TabIndex = 0;
+			this.labelPattern1Tag.Text = "*";
+			this.labelPattern1Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelPattern5Description
+			// 
+			this.labelPattern5Description.Location = new System.Drawing.Point(87, 89);
+			this.labelPattern5Description.Name = "labelPattern5Description";
+			this.labelPattern5Description.Size = new System.Drawing.Size(279, 20);
+			this.labelPattern5Description.TabIndex = 7;
+			this.labelPattern5Description.Text = "match any number of intermediate directory levels";
+			this.labelPattern5Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelPattern4Description
+			// 
+			this.labelPattern4Description.Location = new System.Drawing.Point(87, 62);
+			this.labelPattern4Description.Name = "labelPattern4Description";
+			this.labelPattern4Description.Size = new System.Drawing.Size(279, 27);
+			this.labelPattern4Description.TabIndex = 9;
+			this.labelPattern4Description.Text = "matches a directory path character";
+			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// groupBoxCase
 			// 
@@ -388,7 +495,7 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(493, 3);
+			this.panelFolder.Location = new System.Drawing.Point(492, 299);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(483, 342);
 			this.panelFolder.TabIndex = 2;
@@ -414,7 +521,7 @@ namespace KeepBack
 			this.buttonFolderPath.FlatAppearance.BorderSize = 0;
 			this.buttonFolderPath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderPath.Image = global::KeepBack.Properties.Resources.FolderOpen;
-			this.buttonFolderPath.Location = new System.Drawing.Point(453, 38);
+			this.buttonFolderPath.Location = new System.Drawing.Point(455, 63);
 			this.buttonFolderPath.Name = "buttonFolderPath";
 			this.buttonFolderPath.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderPath.TabIndex = 37;
@@ -572,9 +679,9 @@ namespace KeepBack
 			// 
 			this.textBoxFolderPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxFolderPath.Location = new System.Drawing.Point(84, 66);
+			this.textBoxFolderPath.Location = new System.Drawing.Point(51, 66);
 			this.textBoxFolderPath.Name = "textBoxFolderPath";
-			this.textBoxFolderPath.Size = new System.Drawing.Size(393, 20);
+			this.textBoxFolderPath.Size = new System.Drawing.Size(404, 20);
 			this.textBoxFolderPath.TabIndex = 15;
 			// 
 			// labelFolderPath
@@ -588,7 +695,7 @@ namespace KeepBack
 			// 
 			// textBoxFolderName
 			// 
-			this.textBoxFolderName.Location = new System.Drawing.Point(84, 40);
+			this.textBoxFolderName.Location = new System.Drawing.Point(51, 40);
 			this.textBoxFolderName.Name = "textBoxFolderName";
 			this.textBoxFolderName.Size = new System.Drawing.Size(188, 20);
 			this.textBoxFolderName.TabIndex = 13;
@@ -616,7 +723,7 @@ namespace KeepBack
 			// panelArchive
 			// 
 			this.panelArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.panelArchive.Controls.Add(this.buttonArchivePrevious);
+			this.panelArchive.Controls.Add(this.buttonSave);
 			this.panelArchive.Controls.Add(this.buttonArchivePath);
 			this.panelArchive.Controls.Add(this.buttonFolderDelete);
 			this.panelArchive.Controls.Add(this.buttonFolderAdd);
@@ -631,31 +738,25 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveHistory);
 			this.panelArchive.Controls.Add(this.textBoxArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
-			this.panelArchive.Controls.Add(this.textBoxArchiveName);
 			this.panelArchive.Controls.Add(this.textBoxArchivePath);
-			this.panelArchive.Controls.Add(this.labelName);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
-			this.panelArchive.Controls.Add(this.textBoxArchiveRoot);
-			this.panelArchive.Controls.Add(this.C);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(493, 351);
+			this.panelArchive.Location = new System.Drawing.Point(3, 3);
 			this.panelArchive.Name = "panelArchive";
-			this.panelArchive.Size = new System.Drawing.Size(483, 305);
+			this.panelArchive.Size = new System.Drawing.Size(483, 259);
 			this.panelArchive.TabIndex = 1;
 			// 
-			// buttonArchivePrevious
+			// buttonSave
 			// 
-			this.buttonArchivePrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonArchivePrevious.AutoSize = true;
-			this.buttonArchivePrevious.FlatAppearance.BorderSize = 0;
-			this.buttonArchivePrevious.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonArchivePrevious.Image = global::KeepBack.Properties.Resources.Previous;
-			this.buttonArchivePrevious.Location = new System.Drawing.Point(453, 3);
-			this.buttonArchivePrevious.Name = "buttonArchivePrevious";
-			this.buttonArchivePrevious.Size = new System.Drawing.Size(24, 24);
-			this.buttonArchivePrevious.TabIndex = 41;
-			this.buttonArchivePrevious.UseVisualStyleBackColor = true;
-			this.buttonArchivePrevious.Click += new System.EventHandler(this.buttonArchivePrevious_Click);
+			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonSave.Enabled = false;
+			this.buttonSave.Location = new System.Drawing.Point(402, 3);
+			this.buttonSave.Name = "buttonSave";
+			this.buttonSave.Size = new System.Drawing.Size(75, 23);
+			this.buttonSave.TabIndex = 5;
+			this.buttonSave.Text = "Save";
+			this.buttonSave.UseVisualStyleBackColor = true;
+			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
 			// 
 			// buttonArchivePath
 			// 
@@ -664,7 +765,7 @@ namespace KeepBack
 			this.buttonArchivePath.FlatAppearance.BorderSize = 0;
 			this.buttonArchivePath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonArchivePath.Image = global::KeepBack.Properties.Resources.FolderOpen;
-			this.buttonArchivePath.Location = new System.Drawing.Point(453, 36);
+			this.buttonArchivePath.Location = new System.Drawing.Point(455, 36);
 			this.buttonArchivePath.Name = "buttonArchivePath";
 			this.buttonArchivePath.Size = new System.Drawing.Size(24, 24);
 			this.buttonArchivePath.TabIndex = 25;
@@ -678,7 +779,7 @@ namespace KeepBack
 			this.buttonFolderDelete.FlatAppearance.BorderSize = 0;
 			this.buttonFolderDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonFolderDelete.Location = new System.Drawing.Point(455, 232);
+			this.buttonFolderDelete.Location = new System.Drawing.Point(455, 188);
 			this.buttonFolderDelete.Name = "buttonFolderDelete";
 			this.buttonFolderDelete.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderDelete.TabIndex = 24;
@@ -693,7 +794,7 @@ namespace KeepBack
 			this.buttonFolderAdd.FlatAppearance.BorderSize = 0;
 			this.buttonFolderAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonFolderAdd.Location = new System.Drawing.Point(455, 203);
+			this.buttonFolderAdd.Location = new System.Drawing.Point(455, 159);
 			this.buttonFolderAdd.Name = "buttonFolderAdd";
 			this.buttonFolderAdd.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderAdd.TabIndex = 23;
@@ -703,7 +804,7 @@ namespace KeepBack
 			// labelListFolders
 			// 
 			this.labelListFolders.AutoSize = true;
-			this.labelListFolders.Location = new System.Drawing.Point(4, 187);
+			this.labelListFolders.Location = new System.Drawing.Point(4, 143);
 			this.labelListFolders.Name = "labelListFolders";
 			this.labelListFolders.Size = new System.Drawing.Size(193, 13);
 			this.labelListFolders.TabIndex = 22;
@@ -715,15 +816,15 @@ namespace KeepBack
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.listBoxFolders.FormattingEnabled = true;
-			this.listBoxFolders.Location = new System.Drawing.Point(7, 203);
+			this.listBoxFolders.Location = new System.Drawing.Point(7, 159);
 			this.listBoxFolders.Name = "listBoxFolders";
-			this.listBoxFolders.Size = new System.Drawing.Size(448, 95);
+			this.listBoxFolders.Size = new System.Drawing.Size(448, 82);
 			this.listBoxFolders.TabIndex = 21;
 			this.listBoxFolders.DoubleClick += new System.EventHandler(this.listBoxFolders_DoubleClick);
 			// 
 			// textBoxArchiveMinute
 			// 
-			this.textBoxArchiveMinute.Location = new System.Drawing.Point(385, 152);
+			this.textBoxArchiveMinute.Location = new System.Drawing.Point(391, 108);
 			this.textBoxArchiveMinute.Name = "textBoxArchiveMinute";
 			this.textBoxArchiveMinute.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveMinute.TabIndex = 20;
@@ -732,7 +833,7 @@ namespace KeepBack
 			// labelArchiveMinute
 			// 
 			this.labelArchiveMinute.AutoSize = true;
-			this.labelArchiveMinute.Location = new System.Drawing.Point(340, 155);
+			this.labelArchiveMinute.Location = new System.Drawing.Point(346, 111);
 			this.labelArchiveMinute.Name = "labelArchiveMinute";
 			this.labelArchiveMinute.Size = new System.Drawing.Size(44, 13);
 			this.labelArchiveMinute.TabIndex = 19;
@@ -741,7 +842,7 @@ namespace KeepBack
 			// 
 			// textBoxArchiveHour
 			// 
-			this.textBoxArchiveHour.Location = new System.Drawing.Point(277, 152);
+			this.textBoxArchiveHour.Location = new System.Drawing.Point(283, 108);
 			this.textBoxArchiveHour.Name = "textBoxArchiveHour";
 			this.textBoxArchiveHour.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveHour.TabIndex = 18;
@@ -750,7 +851,7 @@ namespace KeepBack
 			// labelArchiveHour
 			// 
 			this.labelArchiveHour.AutoSize = true;
-			this.labelArchiveHour.Location = new System.Drawing.Point(241, 155);
+			this.labelArchiveHour.Location = new System.Drawing.Point(247, 111);
 			this.labelArchiveHour.Name = "labelArchiveHour";
 			this.labelArchiveHour.Size = new System.Drawing.Size(35, 13);
 			this.labelArchiveHour.TabIndex = 17;
@@ -759,7 +860,7 @@ namespace KeepBack
 			// 
 			// textBoxArchiveDay
 			// 
-			this.textBoxArchiveDay.Location = new System.Drawing.Point(169, 152);
+			this.textBoxArchiveDay.Location = new System.Drawing.Point(175, 108);
 			this.textBoxArchiveDay.Name = "textBoxArchiveDay";
 			this.textBoxArchiveDay.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveDay.TabIndex = 16;
@@ -768,7 +869,7 @@ namespace KeepBack
 			// labelArchiveDay
 			// 
 			this.labelArchiveDay.AutoSize = true;
-			this.labelArchiveDay.Location = new System.Drawing.Point(137, 155);
+			this.labelArchiveDay.Location = new System.Drawing.Point(143, 111);
 			this.labelArchiveDay.Name = "labelArchiveDay";
 			this.labelArchiveDay.Size = new System.Drawing.Size(31, 13);
 			this.labelArchiveDay.TabIndex = 15;
@@ -778,7 +879,7 @@ namespace KeepBack
 			// labelArchiveHistory
 			// 
 			this.labelArchiveHistory.AutoSize = true;
-			this.labelArchiveHistory.Location = new System.Drawing.Point(4, 129);
+			this.labelArchiveHistory.Location = new System.Drawing.Point(4, 85);
 			this.labelArchiveHistory.Name = "labelArchiveHistory";
 			this.labelArchiveHistory.Size = new System.Drawing.Size(406, 13);
 			this.labelArchiveHistory.TabIndex = 14;
@@ -787,7 +888,7 @@ namespace KeepBack
 			// 
 			// textBoxArchiveMonth
 			// 
-			this.textBoxArchiveMonth.Location = new System.Drawing.Point(61, 152);
+			this.textBoxArchiveMonth.Location = new System.Drawing.Point(67, 108);
 			this.textBoxArchiveMonth.Name = "textBoxArchiveMonth";
 			this.textBoxArchiveMonth.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveMonth.TabIndex = 13;
@@ -796,63 +897,31 @@ namespace KeepBack
 			// labelArchiveMonth
 			// 
 			this.labelArchiveMonth.AutoSize = true;
-			this.labelArchiveMonth.Location = new System.Drawing.Point(18, 155);
+			this.labelArchiveMonth.Location = new System.Drawing.Point(24, 111);
 			this.labelArchiveMonth.Name = "labelArchiveMonth";
 			this.labelArchiveMonth.Size = new System.Drawing.Size(42, 13);
 			this.labelArchiveMonth.TabIndex = 12;
 			this.labelArchiveMonth.Text = "Months";
 			this.labelArchiveMonth.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
-			// textBoxArchiveName
-			// 
-			this.textBoxArchiveName.Location = new System.Drawing.Point(84, 88);
-			this.textBoxArchiveName.Name = "textBoxArchiveName";
-			this.textBoxArchiveName.Size = new System.Drawing.Size(188, 20);
-			this.textBoxArchiveName.TabIndex = 11;
-			this.textBoxArchiveName.TextChanged += new System.EventHandler(this.textBoxArchiveName_TextChanged);
-			// 
 			// textBoxArchivePath
 			// 
 			this.textBoxArchivePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxArchivePath.Location = new System.Drawing.Point(84, 62);
+			this.textBoxArchivePath.Location = new System.Drawing.Point(35, 40);
 			this.textBoxArchivePath.Name = "textBoxArchivePath";
-			this.textBoxArchivePath.Size = new System.Drawing.Size(393, 20);
+			this.textBoxArchivePath.Size = new System.Drawing.Size(420, 20);
 			this.textBoxArchivePath.TabIndex = 10;
-			// 
-			// labelName
-			// 
-			this.labelName.AutoSize = true;
-			this.labelName.Location = new System.Drawing.Point(4, 91);
-			this.labelName.Name = "labelName";
-			this.labelName.Size = new System.Drawing.Size(74, 13);
-			this.labelName.TabIndex = 9;
-			this.labelName.Text = "Archive Name";
+			this.textBoxArchivePath.TextChanged += new System.EventHandler(this.textBoxArchivePath_TextChanged);
 			// 
 			// labelArchivePath
 			// 
 			this.labelArchivePath.AutoSize = true;
-			this.labelArchivePath.Location = new System.Drawing.Point(4, 65);
+			this.labelArchivePath.Location = new System.Drawing.Point(4, 43);
 			this.labelArchivePath.Name = "labelArchivePath";
 			this.labelArchivePath.Size = new System.Drawing.Size(29, 13);
 			this.labelArchivePath.TabIndex = 8;
 			this.labelArchivePath.Text = "Path";
-			// 
-			// textBoxArchiveRoot
-			// 
-			this.textBoxArchiveRoot.Location = new System.Drawing.Point(84, 36);
-			this.textBoxArchiveRoot.Name = "textBoxArchiveRoot";
-			this.textBoxArchiveRoot.Size = new System.Drawing.Size(55, 20);
-			this.textBoxArchiveRoot.TabIndex = 7;
-			// 
-			// C
-			// 
-			this.C.AutoSize = true;
-			this.C.Location = new System.Drawing.Point(4, 39);
-			this.C.Name = "C";
-			this.C.Size = new System.Drawing.Size(58, 13);
-			this.C.TabIndex = 6;
-			this.C.Text = "Root Drive";
 			// 
 			// labelArchive
 			// 
@@ -863,214 +932,6 @@ namespace KeepBack
 			this.labelArchive.Size = new System.Drawing.Size(50, 13);
 			this.labelArchive.TabIndex = 5;
 			this.labelArchive.Text = "Archive";
-			// 
-			// panelRoot
-			// 
-			this.panelRoot.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.panelRoot.Controls.Add(this.buttonSave);
-			this.panelRoot.Controls.Add(this.labelRoot);
-			this.panelRoot.Controls.Add(this.labelListArchive);
-			this.panelRoot.Controls.Add(this.buttonArchiveDelete);
-			this.panelRoot.Controls.Add(this.buttonArchiveAdd);
-			this.panelRoot.Controls.Add(this.listBoxArchives);
-			this.panelRoot.Location = new System.Drawing.Point(4, 3);
-			this.panelRoot.Name = "panelRoot";
-			this.panelRoot.Size = new System.Drawing.Size(482, 161);
-			this.panelRoot.TabIndex = 0;
-			this.panelRoot.Tag = "";
-			// 
-			// buttonSave
-			// 
-			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonSave.Enabled = false;
-			this.buttonSave.Location = new System.Drawing.Point(378, 3);
-			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(75, 23);
-			this.buttonSave.TabIndex = 5;
-			this.buttonSave.Text = "Save";
-			this.buttonSave.UseVisualStyleBackColor = true;
-			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-			// 
-			// labelRoot
-			// 
-			this.labelRoot.AutoSize = true;
-			this.labelRoot.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelRoot.Location = new System.Drawing.Point(2, 2);
-			this.labelRoot.Name = "labelRoot";
-			this.labelRoot.Size = new System.Drawing.Size(73, 13);
-			this.labelRoot.TabIndex = 4;
-			this.labelRoot.Text = "Backup Set";
-			// 
-			// labelListArchive
-			// 
-			this.labelListArchive.AutoSize = true;
-			this.labelListArchive.Location = new System.Drawing.Point(3, 27);
-			this.labelListArchive.Name = "labelListArchive";
-			this.labelListArchive.Size = new System.Drawing.Size(97, 13);
-			this.labelListArchive.TabIndex = 3;
-			this.labelListArchive.Text = "Archives in this Set";
-			// 
-			// buttonArchiveDelete
-			// 
-			this.buttonArchiveDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonArchiveDelete.AutoSize = true;
-			this.buttonArchiveDelete.FlatAppearance.BorderSize = 0;
-			this.buttonArchiveDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonArchiveDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonArchiveDelete.Location = new System.Drawing.Point(453, 72);
-			this.buttonArchiveDelete.Name = "buttonArchiveDelete";
-			this.buttonArchiveDelete.Size = new System.Drawing.Size(24, 24);
-			this.buttonArchiveDelete.TabIndex = 2;
-			this.buttonArchiveDelete.Tag = "";
-			this.buttonArchiveDelete.UseVisualStyleBackColor = true;
-			this.buttonArchiveDelete.Click += new System.EventHandler(this.buttonArchiveDelete_Click);
-			// 
-			// buttonArchiveAdd
-			// 
-			this.buttonArchiveAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonArchiveAdd.AutoSize = true;
-			this.buttonArchiveAdd.FlatAppearance.BorderSize = 0;
-			this.buttonArchiveAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonArchiveAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonArchiveAdd.Location = new System.Drawing.Point(453, 43);
-			this.buttonArchiveAdd.Name = "buttonArchiveAdd";
-			this.buttonArchiveAdd.Size = new System.Drawing.Size(24, 24);
-			this.buttonArchiveAdd.TabIndex = 1;
-			this.buttonArchiveAdd.UseVisualStyleBackColor = true;
-			this.buttonArchiveAdd.Click += new System.EventHandler(this.buttonArchiveAdd_Click);
-			// 
-			// listBoxArchives
-			// 
-			this.listBoxArchives.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.listBoxArchives.FormattingEnabled = true;
-			this.listBoxArchives.Location = new System.Drawing.Point(6, 43);
-			this.listBoxArchives.Name = "listBoxArchives";
-			this.listBoxArchives.Size = new System.Drawing.Size(447, 108);
-			this.listBoxArchives.TabIndex = 0;
-			this.listBoxArchives.DoubleClick += new System.EventHandler(this.listBoxArchives_DoubleClick);
-			// 
-			// tableLayoutPanel1
-			// 
-			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.76423F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.23577F));
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Tag, 0, 4);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Tag, 0, 3);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Description, 1, 2);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern3Tag, 0, 2);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Description, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern2Tag, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Description, 1, 0);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern1Tag, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Description, 0, 4);
-			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Description, 1, 3);
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(84, 180);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 5;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(369, 109);
-			this.tableLayoutPanel1.TabIndex = 42;
-			// 
-			// labelPattern1Tag
-			// 
-			this.labelPattern1Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern1Tag.Location = new System.Drawing.Point(3, 0);
-			this.labelPattern1Tag.Name = "labelPattern1Tag";
-			this.labelPattern1Tag.Size = new System.Drawing.Size(77, 19);
-			this.labelPattern1Tag.TabIndex = 0;
-			this.labelPattern1Tag.Text = "*";
-			this.labelPattern1Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPattern1Description
-			// 
-			this.labelPattern1Description.Location = new System.Drawing.Point(86, 0);
-			this.labelPattern1Description.Name = "labelPattern1Description";
-			this.labelPattern1Description.Size = new System.Drawing.Size(280, 19);
-			this.labelPattern1Description.TabIndex = 1;
-			this.labelPattern1Description.Text = "matches zero or more characters";
-			this.labelPattern1Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelPattern2Tag
-			// 
-			this.labelPattern2Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern2Tag.Location = new System.Drawing.Point(3, 19);
-			this.labelPattern2Tag.Name = "labelPattern2Tag";
-			this.labelPattern2Tag.Size = new System.Drawing.Size(77, 19);
-			this.labelPattern2Tag.TabIndex = 2;
-			this.labelPattern2Tag.Text = "?";
-			this.labelPattern2Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPattern2Description
-			// 
-			this.labelPattern2Description.Location = new System.Drawing.Point(86, 19);
-			this.labelPattern2Description.Name = "labelPattern2Description";
-			this.labelPattern2Description.Size = new System.Drawing.Size(280, 19);
-			this.labelPattern2Description.TabIndex = 3;
-			this.labelPattern2Description.Text = "matches zero or one character";
-			this.labelPattern2Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelPattern3Tag
-			// 
-			this.labelPattern3Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern3Tag.Location = new System.Drawing.Point(3, 38);
-			this.labelPattern3Tag.Name = "labelPattern3Tag";
-			this.labelPattern3Tag.Size = new System.Drawing.Size(77, 23);
-			this.labelPattern3Tag.TabIndex = 4;
-			this.labelPattern3Tag.Text = "\\";
-			this.labelPattern3Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPattern3Description
-			// 
-			this.labelPattern3Description.Location = new System.Drawing.Point(86, 38);
-			this.labelPattern3Description.Name = "labelPattern3Description";
-			this.labelPattern3Description.Size = new System.Drawing.Size(280, 24);
-			this.labelPattern3Description.TabIndex = 5;
-			this.labelPattern3Description.Text = "matches a directory path character";
-			this.labelPattern3Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelPattern4Tag
-			// 
-			this.labelPattern4Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern4Tag.Location = new System.Drawing.Point(3, 62);
-			this.labelPattern4Tag.Name = "labelPattern4Tag";
-			this.labelPattern4Tag.Size = new System.Drawing.Size(77, 23);
-			this.labelPattern4Tag.TabIndex = 6;
-			this.labelPattern4Tag.Text = "/";
-			this.labelPattern4Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPattern5Description
-			// 
-			this.labelPattern5Description.Location = new System.Drawing.Point(86, 89);
-			this.labelPattern5Description.Name = "labelPattern5Description";
-			this.labelPattern5Description.Size = new System.Drawing.Size(280, 20);
-			this.labelPattern5Description.TabIndex = 7;
-			this.labelPattern5Description.Text = "match any number of intermediate directory levels";
-			this.labelPattern5Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// labelPattern5Tag
-			// 
-			this.labelPattern5Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern5Tag.Location = new System.Drawing.Point(3, 89);
-			this.labelPattern5Tag.Name = "labelPattern5Tag";
-			this.labelPattern5Tag.Size = new System.Drawing.Size(77, 20);
-			this.labelPattern5Tag.TabIndex = 8;
-			this.labelPattern5Tag.Text = "/.../";
-			this.labelPattern5Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// labelPattern4Description
-			// 
-			this.labelPattern4Description.Location = new System.Drawing.Point(86, 62);
-			this.labelPattern4Description.Name = "labelPattern4Description";
-			this.labelPattern4Description.Size = new System.Drawing.Size(280, 27);
-			this.labelPattern4Description.TabIndex = 9;
-			this.labelPattern4Description.Text = "matches a directory path character";
-			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// FormEdit
 			// 
@@ -1087,6 +948,7 @@ namespace KeepBack
 			this.splitContainer.ResumeLayout(false);
 			this.panelPattern.ResumeLayout(false);
 			this.panelPattern.PerformLayout();
+			this.tableLayoutPanel1.ResumeLayout(false);
 			this.groupBoxCase.ResumeLayout(false);
 			this.groupBoxCase.PerformLayout();
 			this.groupBoxPatternMatch.ResumeLayout(false);
@@ -1097,9 +959,6 @@ namespace KeepBack
 			this.panelFolder.PerformLayout();
 			this.panelArchive.ResumeLayout(false);
 			this.panelArchive.PerformLayout();
-			this.panelRoot.ResumeLayout(false);
-			this.panelRoot.PerformLayout();
-			this.tableLayoutPanel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1111,20 +970,10 @@ namespace KeepBack
 		private System.Windows.Forms.Panel panelPattern;
 		private System.Windows.Forms.Panel panelFolder;
 		private System.Windows.Forms.Panel panelArchive;
-		private System.Windows.Forms.Panel panelRoot;
-		private System.Windows.Forms.ListBox listBoxArchives;
-		private System.Windows.Forms.Button buttonArchiveAdd;
-		private System.Windows.Forms.Button buttonArchiveDelete;
 		private System.Windows.Forms.ImageList imageListTree;
-		private System.Windows.Forms.Label labelListArchive;
-		private System.Windows.Forms.Label labelRoot;
-		private System.Windows.Forms.Label C;
 		private System.Windows.Forms.Label labelArchive;
-		private System.Windows.Forms.TextBox textBoxArchiveRoot;
 		private System.Windows.Forms.Label labelArchivePath;
-		private System.Windows.Forms.TextBox textBoxArchiveName;
 		private System.Windows.Forms.TextBox textBoxArchivePath;
-		private System.Windows.Forms.Label labelName;
 		private System.Windows.Forms.TextBox textBoxArchiveMonth;
 		private System.Windows.Forms.Label labelArchiveMonth;
 		private System.Windows.Forms.Label labelArchiveHistory;
@@ -1167,7 +1016,6 @@ namespace KeepBack
 		private System.Windows.Forms.GroupBox groupBoxPatternApply;
 		private System.Windows.Forms.Button buttonFolderPath;
 		private System.Windows.Forms.Button buttonFolderPrevious;
-		private System.Windows.Forms.Button buttonArchivePrevious;
 		private System.Windows.Forms.Button buttonPatternPrevious;
 		private System.Windows.Forms.CheckBox checkBoxPatternDebug;
 		private System.Windows.Forms.Button buttonSave;

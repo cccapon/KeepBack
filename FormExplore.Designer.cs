@@ -47,13 +47,24 @@ namespace KeepBack
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormExplore));
 			this.treeViewFolders = new System.Windows.Forms.TreeView();
 			this.listViewFolder = new System.Windows.Forms.ListView();
+			this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnHeaderSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnHeaderCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.columnHeaderModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.menuStripMain = new System.Windows.Forms.MenuStrip();
 			this.toolStripMain = new System.Windows.Forms.ToolStrip();
 			this.statusStripInfo = new System.Windows.Forms.StatusStrip();
 			this.splitContainerFolder = new System.Windows.Forms.SplitContainer();
+			this.labelFolders = new System.Windows.Forms.Label();
+			this.labelHistory = new System.Windows.Forms.Label();
+			this.labelFolder = new System.Windows.Forms.Label();
 			this.listViewHistory = new System.Windows.Forms.ListView();
+			this.columnHeaderDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+			this.imageList = new System.Windows.Forms.ImageList(this.components);
 			this.splitContainerFolder.Panel1.SuspendLayout();
 			this.splitContainerFolder.Panel2.SuspendLayout();
 			this.splitContainerFolder.SuspendLayout();
@@ -61,24 +72,63 @@ namespace KeepBack
 			// 
 			// treeViewFolders
 			// 
-			this.treeViewFolders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.treeViewFolders.Location = new System.Drawing.Point(3, 3);
+			this.treeViewFolders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.treeViewFolders.FullRowSelect = true;
+			this.treeViewFolders.HideSelection = false;
+			this.treeViewFolders.ImageIndex = 0;
+			this.treeViewFolders.ImageList = this.imageList;
+			this.treeViewFolders.Location = new System.Drawing.Point(3, 25);
 			this.treeViewFolders.Name = "treeViewFolders";
-			this.treeViewFolders.Size = new System.Drawing.Size(306, 445);
+			this.treeViewFolders.SelectedImageIndex = 0;
+			this.treeViewFolders.Size = new System.Drawing.Size(306, 423);
 			this.treeViewFolders.TabIndex = 0;
+			this.treeViewFolders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewFolders_AfterSelect);
+			this.treeViewFolders.Enter += new System.EventHandler(this.treeViewFolders_Enter);
 			// 
 			// listViewFolder
 			// 
-			this.listViewFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.listViewFolder.Location = new System.Drawing.Point(3, 3);
+			this.listViewFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listViewFolder.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderFileName,
+            this.columnHeaderSize,
+            this.columnHeaderCount,
+            this.columnHeaderModified});
+			this.listViewFolder.HideSelection = false;
+			this.listViewFolder.Location = new System.Drawing.Point(3, 25);
+			this.listViewFolder.MultiSelect = false;
 			this.listViewFolder.Name = "listViewFolder";
-			this.listViewFolder.Size = new System.Drawing.Size(478, 445);
+			this.listViewFolder.Size = new System.Drawing.Size(478, 423);
+			this.listViewFolder.SmallImageList = this.imageList;
 			this.listViewFolder.TabIndex = 1;
 			this.listViewFolder.UseCompatibleStateImageBehavior = false;
+			this.listViewFolder.View = System.Windows.Forms.View.Details;
+			this.listViewFolder.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewFolder_ItemSelectionChanged);
+			this.listViewFolder.DoubleClick += new System.EventHandler(this.listViewFolder_DoubleClick);
+			this.listViewFolder.Enter += new System.EventHandler(this.listViewFolder_Enter);
+			// 
+			// columnHeaderFileName
+			// 
+			this.columnHeaderFileName.Text = "Filename";
+			this.columnHeaderFileName.Width = 230;
+			// 
+			// columnHeaderSize
+			// 
+			this.columnHeaderSize.Text = "Size";
+			this.columnHeaderSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// columnHeaderCount
+			// 
+			this.columnHeaderCount.Text = "Count";
+			this.columnHeaderCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			// 
+			// columnHeaderModified
+			// 
+			this.columnHeaderModified.Text = "Modified";
+			this.columnHeaderModified.Width = 105;
 			// 
 			// menuStripMain
 			// 
@@ -106,35 +156,87 @@ namespace KeepBack
 			// 
 			// splitContainerFolder
 			// 
-			this.splitContainerFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainerFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainerFolder.Location = new System.Drawing.Point(0, 52);
 			this.splitContainerFolder.Name = "splitContainerFolder";
 			// 
 			// splitContainerFolder.Panel1
 			// 
+			this.splitContainerFolder.Panel1.Controls.Add(this.labelFolders);
 			this.splitContainerFolder.Panel1.Controls.Add(this.treeViewFolders);
 			// 
 			// splitContainerFolder.Panel2
 			// 
+			this.splitContainerFolder.Panel2.Controls.Add(this.labelHistory);
+			this.splitContainerFolder.Panel2.Controls.Add(this.labelFolder);
 			this.splitContainerFolder.Panel2.Controls.Add(this.listViewHistory);
 			this.splitContainerFolder.Panel2.Controls.Add(this.listViewFolder);
 			this.splitContainerFolder.Size = new System.Drawing.Size(938, 451);
 			this.splitContainerFolder.SplitterDistance = 312;
 			this.splitContainerFolder.TabIndex = 5;
 			// 
+			// labelFolders
+			// 
+			this.labelFolders.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelFolders.Location = new System.Drawing.Point(3, 4);
+			this.labelFolders.Name = "labelFolders";
+			this.labelFolders.Size = new System.Drawing.Size(306, 18);
+			this.labelFolders.TabIndex = 1;
+			this.labelFolders.Text = "Folders";
+			this.labelFolders.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelHistory
+			// 
+			this.labelHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelHistory.Location = new System.Drawing.Point(484, 4);
+			this.labelHistory.Name = "labelHistory";
+			this.labelHistory.Size = new System.Drawing.Size(135, 18);
+			this.labelHistory.TabIndex = 4;
+			this.labelHistory.Text = "History";
+			this.labelHistory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelFolder
+			// 
+			this.labelFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelFolder.AutoEllipsis = true;
+			this.labelFolder.Location = new System.Drawing.Point(3, 4);
+			this.labelFolder.Name = "labelFolder";
+			this.labelFolder.Size = new System.Drawing.Size(478, 18);
+			this.labelFolder.TabIndex = 3;
+			this.labelFolder.Text = "Folder";
+			this.labelFolder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// listViewHistory
 			// 
-			this.listViewHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.listViewHistory.Location = new System.Drawing.Point(487, 3);
+			this.listViewHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.listViewHistory.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderDate});
+			this.listViewHistory.Location = new System.Drawing.Point(487, 25);
 			this.listViewHistory.Name = "listViewHistory";
-			this.listViewHistory.Size = new System.Drawing.Size(132, 445);
+			this.listViewHistory.Size = new System.Drawing.Size(132, 423);
 			this.listViewHistory.TabIndex = 2;
 			this.listViewHistory.UseCompatibleStateImageBehavior = false;
+			this.listViewHistory.View = System.Windows.Forms.View.Details;
 			// 
-			// FormHistory
+			// columnHeaderDate
+			// 
+			this.columnHeaderDate.Text = "Date";
+			this.columnHeaderDate.Width = 109;
+			// 
+			// imageList
+			// 
+			this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+			this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+			this.imageList.Images.SetKeyName(0, "FolderClose.png");
+			this.imageList.Images.SetKeyName(1, "FolderOpen.png");
+			this.imageList.Images.SetKeyName(2, "File.png");
+			// 
+			// FormExplore
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -144,8 +246,9 @@ namespace KeepBack
 			this.Controls.Add(this.toolStripMain);
 			this.Controls.Add(this.menuStripMain);
 			this.MainMenuStrip = this.menuStripMain;
-			this.Name = "FormHistory";
+			this.Name = "FormExplore";
 			this.Text = "Archive History Browser";
+			this.Shown += new System.EventHandler(this.FormExplore_Shown);
 			this.splitContainerFolder.Panel1.ResumeLayout(false);
 			this.splitContainerFolder.Panel2.ResumeLayout(false);
 			this.splitContainerFolder.ResumeLayout(false);
@@ -163,6 +266,15 @@ namespace KeepBack
 		private System.Windows.Forms.StatusStrip statusStripInfo;
 		private System.Windows.Forms.SplitContainer splitContainerFolder;
 		private System.Windows.Forms.ListView listViewHistory;
+		private System.Windows.Forms.ColumnHeader columnHeaderDate;
+		private System.Windows.Forms.ColumnHeader columnHeaderFileName;
+		private System.Windows.Forms.ColumnHeader columnHeaderSize;
+		private System.Windows.Forms.ColumnHeader columnHeaderCount;
+		private System.Windows.Forms.ColumnHeader columnHeaderModified;
+		private System.Windows.Forms.Label labelFolders;
+		private System.Windows.Forms.Label labelHistory;
+		private System.Windows.Forms.Label labelFolder;
+		private System.Windows.Forms.ImageList imageList;
 
 	}
 }

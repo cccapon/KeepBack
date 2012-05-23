@@ -45,9 +45,8 @@ namespace KeepBack
 
 		//--- define ----------------------------
 
-		public const string  ARCHIVE_PATTERN = @"????-??-??-????";
-		       const string  SECTION_DETAIL  = @"           ";
-		       const char    BLANK           = '-';
+		const string  SECTION_DETAIL  = @"           ";
+		const char    BLANK           = '-';
 
 		public enum Action
 		{
@@ -90,6 +89,7 @@ namespace KeepBack
 		//--- field -----------------------------
 	
 		ActionDelegate    action;
+		Ctrl              ctrl;
 		CtrlArchive       archive;
 		StreamWriter      log           = null;
 
@@ -123,10 +123,11 @@ namespace KeepBack
 
 		//--- constructor -----------------------
 
-		public Archive( ActionDelegate action, CtrlArchive archive, bool create, bool debug )
+		public Archive( ActionDelegate action, Ctrl ctrl, bool create, bool debug )
 		{
 			this.action   = action;
-			this.archive  = archive;
+			this.ctrl     = ctrl;
+			this.archive  = ctrl.Archive;
 			this.debug    = debug;
 
 			this.start    = DateTime.Now;
@@ -223,7 +224,7 @@ namespace KeepBack
 			current = DateFolderMinute( start );
 			history = null;
 			{
-				string[] a = ArchiveList();
+				string[] a = archive.ArchiveList();
 				if( a.Length > 0 )
 				{
 					history = a[a.Length - 1];
@@ -624,10 +625,10 @@ namespace KeepBack
 			Merge( MergeLevel.Year   );
 
 			//..remove old log files
-			string[] a = ArchiveList();
+			string[] a = archive.ArchiveList();
 			string   s = DateFolderSkipCurrent( MergeLevel.Minute );
 			int      z = DateFolderLength     ( MergeLevel.Minute );
-			foreach( string f in ArchiveLogList() )
+			foreach( string f in archive.ArchiveLogList() )
 			{
 				int i = a.Length;
 				do
@@ -657,7 +658,7 @@ namespace KeepBack
 			if( ! string.IsNullOrEmpty( s ) && (z > 0) )
 			{
 				//..merge directories
-				string[] a  = ArchiveList();
+				string[] a  = archive.ArchiveList();
 				int      i  = a.Length;
 				do
 				{
@@ -753,26 +754,6 @@ namespace KeepBack
 
 
 
-		string[] ArchiveList()
-		{
-			if( Directory.Exists( archive.FullPath ) )
-			{
-				List<string> a = new List<string>( ListDirectories( archive.FullPath, ARCHIVE_PATTERN + @"*" ) );
-				a.Sort();
-				return a.ToArray();
-			}
-			return new string[] { };
-		}
-		string[] ArchiveLogList()
-		{
-			if( Directory.Exists( archive.FullPath ) )
-			{
-				List<string> a = new List<string>( ListFiles( archive.FullPath, ARCHIVE_PATTERN + @"*.log" ) );
-				a.Sort();
-				return a.ToArray();
-			}
-			return new string[] { };
-		}
 
 		string[] ListDirectories( string dir )
 		{
@@ -960,7 +941,7 @@ namespace KeepBack
 			/* Separate out the parts of a DateFolder filename
 			 * based on the merge level.
 			 * 
-			 *   yyyy-MM-dd HHmmss
+			 *   yyyy-MM-dd-HHmmss
 			 *      |  |  |  | | |
 			 *   12345678901234567
 			 */
