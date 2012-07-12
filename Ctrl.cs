@@ -37,22 +37,20 @@ namespace KeepBack
 
 		//--- field -----------------------------
 
-		string        path     = null;
-		CtrlArchive   archive  = null;
+		bool          upgraded  = false;
+		string        path      = null;
+		CtrlArchive   archive   = null;
 
 		//--- property --------------------------
 
 		[XmlIgnore]
-		public string        Path     { get { return path   ; } set { path    = value; } }
+		public bool          Upgraded  { get { return upgraded; }                          }
+
+		[XmlIgnore]
+		public string        Path      { get { return path    ; } set { path    = value; } }
 
 		[XmlElement(ElementName="archive")]
-		public CtrlArchive   Archive  { get { return archive; } set { archive = value; } }
-
-		//--- constructor -----------------------
-
-		public Ctrl()
-		{
-		}
+		public CtrlArchive   Archive   { get { return archive ; } set { archive = value; } }
 
 		//--- method ----------------------------
 
@@ -74,10 +72,29 @@ namespace KeepBack
 			}
 			try
 			{
-				XmlSerializer x = new XmlSerializer( typeof(Ctrl) );
 				using( XmlReader r = XmlReader.Create( filename ) )
 				{
-					Ctrl c = (Ctrl)x.Deserialize( r );
+					Ctrl c;
+					switch( r.IsStartElement() ? r.NamespaceURI : string.Empty )
+					{
+						case Ctrl.XmlNamespace:
+						{
+							c = (Ctrl)(new XmlSerializer( typeof(Ctrl) )).Deserialize( r );
+							break;
+						}
+						case V1.Ctrl.XmlNamespace:
+						{
+							V1.Ctrl c1 = (V1.Ctrl)(new XmlSerializer( typeof(V1.Ctrl) )).Deserialize( r );
+							c = c1.Upgrade();
+							c.upgraded = true;
+							break;
+						}
+						default:
+						{
+							c = new Ctrl();
+							break;
+						}
+					}
 					c.Path = filename;
 					return c;
 				}
