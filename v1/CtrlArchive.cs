@@ -72,9 +72,17 @@ namespace KeepBack.V1
 
 		//--- method ----------------------------
 
-		public void Upgrade( KeepBack.Ctrl ctrl )
+		public void Upgrade( KeepBack.CtrlArchive archive )
 		{
-			KeepBack.CtrlArchive a = ctrl.ArchiveCreate();
+			archive.Path    = FullPath;
+			archive.Month   = Month;
+			archive.Day     = Day;
+			archive.Hour    = Hour;
+			archive.Minute  = Minute;
+			foreach( CtrlFolder f in folders )
+			{
+				f.Upgrade( archive.FolderAdd() );
+			}
 		}
 
 		//--- end -------------------------------

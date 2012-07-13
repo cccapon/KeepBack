@@ -50,6 +50,15 @@ namespace KeepBack.V1
 		[XmlIgnore]
 		public bool IsFolder   { get { return MatchPath.EndsWithDirectorySeparator  ( pattern ); } }
 
+		//--- method ----------------------------
+
+		public void Upgrade( KeepBack.CtrlPattern pattern )
+		{
+			pattern.Debug          = Debug;
+			pattern.CaseSensitive  = CaseSensitive;
+			pattern.Pattern        = Pattern;
+		}
+
 		//--- end -------------------------------
 	}
 }

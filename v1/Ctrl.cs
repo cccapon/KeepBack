@@ -53,7 +53,7 @@ namespace KeepBack.V1
 			{
 				foreach( CtrlArchive a in archives )
 				{
-					a.Upgrade( c );
+					a.Upgrade( c.ArchiveCreate() );
 				}
 			}
 			return c;

@@ -53,6 +53,26 @@ namespace KeepBack.V1
 		[XmlArray(ElementName="histories")] [XmlArrayItem(ElementName="history")]
 		public CtrlPattern[]  History  { get { return history; } set { history = value; } }
 
+		//--- method ----------------------------
+
+		public void Upgrade( KeepBack.CtrlFolder folder )
+		{
+			folder.Name    = Name;
+			folder.Path    = Path;
+			foreach( CtrlPattern p in include )
+			{
+				p.Upgrade( folder.IncludeAdd() );
+			}
+			foreach( CtrlPattern p in exclude )
+			{
+				p.Upgrade( folder.ExcludeAdd() );
+			}
+			foreach( CtrlPattern p in history )
+			{
+				p.Upgrade( folder.HistoryAdd() );
+			}
+		}
+
 		//--- end -------------------------------
 	}
 }

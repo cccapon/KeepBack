@@ -3,16 +3,25 @@
  Current
 ---------------------------------------
 
-- no idea
-- we were working on History, but started to merge 2.0 changes in
-- I think a start was made on isolating v1 control file format classes
-	- this to provide an upgrade path to v2 control files
-	- need logic to detect the file format and import to the right control files
-	- need logic to move v1 files to v2
-	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
-
 - Bug:
 	- with current KeepBack.keep test file, deleting the * include filter duplicates the tree on the left
+- provided an upgrade path to v2 control files
+	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
+	- warn user when first editing the file that it has changed.
+	- warn again before saving the file
+	- allow the user to run a backup without changing the file.  upgrading in place is good enough.
+	- Multiple archives in a .keep file is no longer supported in the editor.
+		- decide if we are keeping multiple archives or switching to single archives
+			- many features of 2.0 will be simpler with single archives
+			- multiple archives can be run serially using new batch command line parameters
+		- if keeping multiple, change editor to support multiple
+		- if keeping single,
+			- change upgrade script to detect when multiple archives are present
+			- ask user which archive they wish to upgrade, let them pick from a list
+			- force them to change the file name so it won't overwrite the old .keep
+- test the backup process, make sure everything is running again
+- we were working on History, but started to merge 2.0 changes in
+
 
 
  Quick Notes
