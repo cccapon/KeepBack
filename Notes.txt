@@ -14,6 +14,7 @@
 		- decide if we are keeping multiple archives or switching to single archives
 			- many features of 2.0 will be simpler with single archives
 			- multiple archives can be run serially using new batch command line parameters
+			- multiple is useful if running a whole series of backups from multiple machines over the network.
 		- if keeping multiple, change editor to support multiple
 		- if keeping single,
 			- change upgrade script to detect when multiple archives are present
@@ -26,7 +27,7 @@
 
  Quick Notes
 ---------------------------------------
-
+- add history to file menu, last 4 .keep files opened.
 
  Tip
 ---------------------------------------
