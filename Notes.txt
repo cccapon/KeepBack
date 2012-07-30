@@ -3,8 +3,6 @@
  Current
 ---------------------------------------
 
-- Bug:
-	- with current KeepBack.keep test file, deleting the * include filter duplicates the tree on the left
 - provided an upgrade path to v2 control files
 	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
 	- warn user when first editing the file that it has changed.
@@ -28,6 +26,7 @@
  Quick Notes
 ---------------------------------------
 - add history to file menu, last 4 .keep files opened.
+- grey out Currently scanning... and Most recently changed file. when not doing a Backup.
 
  Tip
 ---------------------------------------
@@ -40,12 +39,6 @@
 
  Bug
 ---------------------------------------
-- Adding a folder to a new archive
-  - select folder with directory browser
-  - change name
-  - exit without saving, Yes to save changes
-  - does not retain folder changes
-  - happens for archive path as well
 - when a folder is excluded using a filter and that folder already exists in the backup, it will not be cleared out properly by history.
 - Add new "exclude folder" to existing archive
   - when exclude folder is added, the file exclude icon is displayed rather than folder exclude

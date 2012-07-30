@@ -40,6 +40,17 @@ namespace KeepBack
 		const int IMAGE_EXCLUDE_FOLDER  = 5;
 		const int IMAGE_HISTORY_FILE    = 6;
 		const int IMAGE_HISTORY_FOLDER  = 7;
+
+		class FolderPattern
+		{
+			public CtrlFolder   folder;
+			public CtrlPattern  pattern;
+			public FolderPattern( CtrlFolder folder, CtrlPattern pattern )
+			{
+				this.folder   = folder;
+				this.pattern  = pattern;
+			}
+		}
 		//--- field -----------------------------
 		Ctrl  ctrl;
 		bool  modified           = false;
@@ -67,8 +78,9 @@ namespace KeepBack
 			TreeUpdate( null );
 		}
 
-		private void FormEdit_FormClosing(object sender, FormClosingEventArgs e)
+		private void FormEdit_FormClosing( object sender, FormClosingEventArgs e )
 		{
+			Accept();
 			if( modified )
 			{
 				if( MessageBox.Show( "Settings have changed.\r\n\r\nWould you like them saved?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
@@ -80,6 +92,7 @@ namespace KeepBack
 
 		private void TreeUpdate( object select )
 		{
+			treeViewControl.Nodes.Clear();
 			if( ctrl != null )
 			{
 				this.Text = ctrl.Path;
@@ -205,13 +218,20 @@ namespace KeepBack
 			this.panelFolder  .Visible  = false;
 			this.panelPattern .Visible  = false;
 
-			Accept();
+			TreeNode node = this.treeViewControl.SelectedNode;
+
+			object o = Accept();
+			if( o != null )
+			{
+				o = ((node != null) && (node.Tag != null)) ? node.Tag : o;
+				TreeUpdate( o );
+				return;
+			}
 
 			this.panelArchive .Tag      = null;
 			this.panelFolder  .Tag      = null;
 			this.panelPattern .Tag      = null;
 
-			TreeNode node = this.treeViewControl.SelectedNode;
 			if( (node != null) && (node.Tag != null) )
 			{
 				Type t = node.Tag.GetType();
@@ -254,7 +274,8 @@ namespace KeepBack
 						default:                                              labelPattern.Text = "Pattern";  break;
 					}
 					CtrlPattern p = (CtrlPattern)node.Tag;
-					this.panelPattern.Tag = p;
+					CtrlFolder  f = (CtrlFolder )node.Parent.Tag;
+					this.panelPattern.Tag = new FolderPattern( f, p );
 					checkBoxPatternDebug    .Checked =   p.Debug;
 					textBoxPatternPattern   .Text    =   p.Pattern;
 					radioButtonCaseSensitive.Checked =   p.CaseSensitive;
@@ -263,11 +284,20 @@ namespace KeepBack
 				}
 			}
 		}
-		private void Accept()
+		private object Accept()
 		{
-			AcceptArchive();
-			AcceptFolder();
-			AcceptPattern();
+			/* Accept() returns an object when one of the panels
+			 * has changed the tree structure (because it deleted
+			 * something).  The object returned is the parent of
+			 * the deleted item.  The deleted TreeNode must have
+			 * its .Tag set to null as well.
+			 */
+			object o = null;
+			object x;
+			x = AcceptArchive();  o = o ?? x;
+			x = AcceptFolder ();  o = o ?? x;
+			x = AcceptPattern();  o = o ?? x;
+			return o;
 		}
 		private void Save()
 		{
@@ -295,7 +325,7 @@ namespace KeepBack
 		 *    PanelArchive
 		 * ------------------
 		 */
-		private void AcceptArchive()
+		private object AcceptArchive()
 		{
 			CtrlArchive a = this.panelArchive.Tag as CtrlArchive;
 			if( a != null )
@@ -308,10 +338,12 @@ namespace KeepBack
 				s = textBoxArchiveHour  .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Hour   ) { a.Hour   = i; modified = true; } } catch { } }
 				s = textBoxArchiveMinute.Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Minute ) { a.Minute = i; modified = true; } } catch { } }
 			}
+			return null;
 		}
 
 		private void buttonSave_Click( object sender, EventArgs e )
 		{
+			Accept();
 			Save();
 		}
 
@@ -372,12 +404,9 @@ namespace KeepBack
 			CtrlFolder  f = this.listBoxFolders.SelectedItem as CtrlFolder;
 			if( (a != null) && (f != null) )
 			{
-				if( MessageBox.Show( "Delete Folder:\r\n\r\n" + f.Name + "\r\n" + f.Path + "\r\n\r\nAre you Sure?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
-				{
-					a.FolderDelete( f );
-					modified = true;
-					TreeUpdate( a );
-				}
+				a.FolderDelete( f );
+				modified = true;
+				TreeUpdate( a );
 			}
 		}
 
@@ -395,7 +424,7 @@ namespace KeepBack
 		 *    PanelFolder
 		 * ------------------
 		 */
-		private void AcceptFolder()
+		private object AcceptFolder()
 		{
 			CtrlFolder f = this.panelFolder.Tag as CtrlFolder;
 			if( f != null )
@@ -405,6 +434,7 @@ namespace KeepBack
 				s = textBoxFolderName.Text.Trim();  if( s != f.Name ) { if( ! string.IsNullOrEmpty( s ) ) { f.Name = s; modified = true; } TreeText( f, f.Name ); }
 				s = textBoxFolderPath.Text.Trim();  if( s != f.Path ) { if( ! string.IsNullOrEmpty( s ) ) { f.Path = s; modified = true; }                          }
 			}
+			return null;
 		}
 
 		private void buttonFolderPrevious_Click( object sender, EventArgs e )
@@ -444,7 +474,7 @@ namespace KeepBack
 			if( f != null )
 			{
 				CtrlPattern p = f.IncludeAdd();
-				p.Pattern = @"*";
+				p.Pattern = string.Empty;
 				modified = true;
 				TreeUpdate( p );
 			}
@@ -455,7 +485,7 @@ namespace KeepBack
 			if( f != null )
 			{
 				CtrlPattern p = f.ExcludeAdd();
-				p.Pattern = @"*";
+				p.Pattern = string.Empty;
 				modified = true;
 				TreeUpdate( p );
 			}
@@ -466,7 +496,7 @@ namespace KeepBack
 			if( f != null )
 			{
 				CtrlPattern p = f.HistoryAdd();
-				p.Pattern = @"*";
+				p.Pattern = string.Empty;
 				modified = true;
 				TreeUpdate( p );
 			}
@@ -478,12 +508,9 @@ namespace KeepBack
 			CtrlPattern p = this.listBoxInclude.SelectedItem as CtrlPattern;
 			if( (f != null) && (p != null) )
 			{
-				if( MessageBox.Show( "Delete Include Pattern:\r\n\r\n" + p.Pattern + "\r\n\r\nAre you Sure?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
-				{
-					f.IncludeDelete( p );
-					modified = true;
-					TreeUpdate( f );
-				}
+				f.IncludeDelete( p );
+				modified = true;
+				TreeUpdate( f );
 			}
 		}
 		private void buttonExcludeDelete_Click( object sender, EventArgs e )
@@ -492,12 +519,9 @@ namespace KeepBack
 			CtrlPattern p = this.listBoxExclude.SelectedItem as CtrlPattern;
 			if( (f != null) && (p != null) )
 			{
-				if( MessageBox.Show( "Delete Exclude Pattern:\r\n\r\n" + p.Pattern + "\r\n\r\nAre you Sure?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
-				{
-					f.ExcludeDelete( p );
-					modified = true;
-					TreeUpdate( f );
-				}
+				f.ExcludeDelete( p );
+				modified = true;
+				TreeUpdate( f );
 			}
 		}
 		private void buttonHistoryDelete_Click( object sender, EventArgs e )
@@ -506,12 +530,9 @@ namespace KeepBack
 			CtrlPattern p = this.listBoxHistory.SelectedItem as CtrlPattern;
 			if( (f != null) && (p != null) )
 			{
-				if( MessageBox.Show( "Delete History Pattern:\r\n\r\n" + p.Pattern + "\r\n\r\nAre you Sure?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
-				{
-					f.HistoryDelete( p );
-					modified = true;
-					TreeUpdate( f );
-				}
+				f.HistoryDelete( p );
+				modified = true;
+				TreeUpdate( f );
 			}
 		}
 
@@ -545,20 +566,27 @@ namespace KeepBack
 		 *    PanelPattern
 		 * ------------------
 		 */
-		private void AcceptPattern()
+		private object AcceptPattern()
 		{
-			CtrlPattern p = this.panelPattern.Tag as CtrlPattern;
-			if( p != null )
+			FolderPattern fp = this.panelPattern.Tag as FolderPattern;
+			if( fp != null )
 			{
+				CtrlFolder  f = fp.folder;
+				CtrlPattern p = fp.pattern;
 				string s;
 				s = textBoxPatternPattern.Text.Trim();
+				if( string.IsNullOrEmpty( s ) )
+				{
+					modified |= f.IncludeDelete( p );
+					modified |= f.ExcludeDelete( p );
+					modified |= f.HistoryDelete( p );
+					this.panelPattern.Tag = null;
+					return f;
+				}
 				if( s != p.Pattern )
 				{
-					if( ! string.IsNullOrEmpty( s ) )
-					{
-						p.Pattern = s;
-						modified = true;
-					}
+					p.Pattern = s;
+					modified = true;
 					TreeText( p, p.Pattern );
 				}
 				if( p.Debug != checkBoxPatternDebug.Checked )
@@ -572,18 +600,19 @@ namespace KeepBack
 					modified = true;
 				}
 			}
+			return null;
 		}
 
 		private void buttonPatternPrevious_Click( object sender, EventArgs e )
 		{
-			TreeSelectParent( this.panelPattern.Tag );
+			TreeSelectParent( ((FolderPattern)this.panelPattern.Tag).pattern  );
 		}
 
 		private void textBoxPatternPattern_TextChanged( object sender, EventArgs e )
 		{
 			if( ! ignoreChangeState )
 			{
-				TreeText( this.panelPattern.Tag, textBoxPatternPattern.Text );
+				TreeText( ((FolderPattern)this.panelPattern.Tag).pattern, textBoxPatternPattern.Text );
 				PatternSetRadioButtons();
 			}
 		}

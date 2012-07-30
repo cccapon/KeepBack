@@ -65,14 +65,38 @@ namespace KeepBack
 			array = a.ToArray();
 			return p;
 		}
-		public static void Delete( ref CtrlPattern[] array, CtrlPattern pattern )
+		public static bool Delete( ref CtrlPattern[] array, CtrlPattern pattern )
 		{
+			bool b = false;
 			if( array != null )
 			{
 				List<CtrlPattern> a = new List<CtrlPattern>( array );
-				a.Remove( pattern );
+				b = a.Remove( pattern );
 				array = (a.Count > 0) ? a.ToArray() : null;
 			}
+			return b;
+		}
+		public static bool Validate( ref CtrlPattern[] array )
+		{
+			bool b = false;
+			if( array != null )
+			{
+				List<CtrlPattern> a = new List<CtrlPattern>( array );
+				int i = a.Count;
+				while( --i >= 0 )
+				{
+					if( string.IsNullOrEmpty( a[i].pattern ) )
+					{
+						a.RemoveAt( i );
+						b = true;
+					}
+				}
+				if( b )
+				{
+					array = (a.Count > 0) ? a.ToArray() : null;
+				}
+			}
+			return b;
 		}
 
 		//--- interface -------------------------

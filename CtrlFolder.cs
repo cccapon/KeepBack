@@ -70,9 +70,18 @@ namespace KeepBack
 		public CtrlPattern ExcludeAdd() { return CtrlPattern.Add( ref exclude ); }
 		public CtrlPattern HistoryAdd() { return CtrlPattern.Add( ref history ); }
 
-		public void IncludeDelete( CtrlPattern pattern ) { CtrlPattern.Delete( ref include, pattern ); }
-		public void ExcludeDelete( CtrlPattern pattern ) { CtrlPattern.Delete( ref exclude, pattern ); }
-		public void HistoryDelete( CtrlPattern pattern ) { CtrlPattern.Delete( ref history, pattern ); }
+		public bool IncludeDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref include, pattern ); }
+		public bool ExcludeDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref exclude, pattern ); }
+		public bool HistoryDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref history, pattern ); }
+
+		public bool Validate()
+		{
+			bool b = false;
+			b |= CtrlPattern.Validate( ref include );
+			b |= CtrlPattern.Validate( ref exclude );
+			b |= CtrlPattern.Validate( ref history );
+			return b;
+		}
 
 		//--- interface -------------------------
 

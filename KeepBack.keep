@@ -3,9 +3,6 @@
   <archive path="C:\temp\KeepBack" month="6" day="7" hour="24" minute="60">
     <folders>
       <folder name="KeepBack" path="C:\Users\Chris\Develop\KeepBack">
-        <includes>
-          <include debug="false" case-sensitive="false">*</include>
-        </includes>
         <excludes>
           <exclude debug="true" case-sensitive="false">.svn\</exclude>
         </excludes>
