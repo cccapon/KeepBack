@@ -345,7 +345,19 @@ namespace KeepBack
 
 		void Info( Exception ex )
 		{
-			Info( IsDebug ? ex.ToString() : ex.Message );
+			if( IsDebug )
+			{
+				Info( ex.ToString() );
+			}
+			else
+			{
+				StringBuilder sb = new StringBuilder( ex.Message );
+				while( (ex = ex.InnerException) != null )
+				{
+					sb.AppendFormat( "\r\n{0}", ex.Message );
+				}
+				Info( sb.ToString() );
+			}
 		}
 		void Info( string message )
 		{

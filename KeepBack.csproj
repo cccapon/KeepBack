@@ -119,6 +119,12 @@
     <Compile Include="v1\CtrlArchive.cs" />
     <Compile Include="v1\CtrlFolder.cs" />
     <Compile Include="v1\CtrlPattern.cs" />
+    <Compile Include="v1\FormSelectArchive.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="v1\FormSelectArchive.Designer.cs">
+      <DependentUpon>FormSelectArchive.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +152,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="v1\FormSelectArchive.resx">
+      <DependentUpon>FormSelectArchive.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="KeepBack.keep">
       <SubType>Designer</SubType>
     </None>

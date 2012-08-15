@@ -49,12 +49,24 @@ namespace KeepBack.V1
 		public KeepBack.Ctrl Upgrade()
 		{
 			KeepBack.Ctrl c = new KeepBack.Ctrl();
-			if( archives != null )
+			if( (archives != null) && (archives.Length > 0) )
 			{
-				foreach( CtrlArchive a in archives )
+				int i = 0;
+				if( archives.Length > 1 )
 				{
-					a.Upgrade( c.ArchiveCreate() );
+					List<string> list = new List<string>();
+					foreach( CtrlArchive a in archives )
+					{
+						list.Add( a.Name );
+					}
+					v1.FormSelectArchive f = new v1.FormSelectArchive( list.ToArray() );
+					if( f.ShowDialog() == DialogResult.OK )
+					{
+						int j = f.SelectedArchive();
+						i = (j >= 0) ? j : i;
+					}
 				}
+				archives[i].Upgrade( c.ArchiveCreate() );
 			}
 			return c;
 		}

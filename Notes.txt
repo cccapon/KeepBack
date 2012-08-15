@@ -4,6 +4,8 @@
 ---------------------------------------
 
 - provided an upgrade path to v2 control files
+	- just added dialog to force selection of Archive
+	- work with Editor next
 	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
 	- warn user when first editing the file that it has changed.
 	- warn again before saving the file
@@ -18,8 +20,10 @@
 			- change upgrade script to detect when multiple archives are present
 			- ask user which archive they wish to upgrade, let them pick from a list
 			- force them to change the file name so it won't overwrite the old .keep
+	- merge all the File pattern types.
+		- may as well support nested patterns.
 - test the backup process, make sure everything is running again
-- we were working on History, but started to merge 2.0 changes in
+- we were working on History Explorer, but started to merge 2.0 changes in
 
 
 
