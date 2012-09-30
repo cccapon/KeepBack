@@ -5,23 +5,11 @@
 
 - provided an upgrade path to v2 control files
 	- just added dialog to force selection of Archive
-	- work with Editor next
-	- force user to save changed file when first loaded (or maybe just after editing it warn it will become a v2 file)
-	- warn user when first editing the file that it has changed.
-	- warn again before saving the file
-	- allow the user to run a backup without changing the file.  upgrading in place is good enough.
-	- Multiple archives in a .keep file is no longer supported in the editor.
-		- decide if we are keeping multiple archives or switching to single archives
-			- many features of 2.0 will be simpler with single archives
-			- multiple archives can be run serially using new batch command line parameters
-			- multiple is useful if running a whole series of backups from multiple machines over the network.
-		- if keeping multiple, change editor to support multiple
-		- if keeping single,
-			- change upgrade script to detect when multiple archives are present
-			- ask user which archive they wish to upgrade, let them pick from a list
-			- force them to change the file name so it won't overwrite the old .keep
+	- just updated Editor to warn about upgrade and force save.
+
 	- merge all the File pattern types.
 		- may as well support nested patterns.
+
 - test the backup process, make sure everything is running again
 - we were working on History Explorer, but started to merge 2.0 changes in
 
@@ -34,7 +22,7 @@
 
  Tip
 ---------------------------------------
-- to quickly produce a directory tree with no files (for an initial archive file format)
+- to quickly produce a directory tree with no files (for an initial archive file hierarchy)
 	- set up .keep as you would for a complete backup
 	- add an exclude filter which pattern matches files '*'
 	- this will reproduce the folder hierarchy without backing up any files

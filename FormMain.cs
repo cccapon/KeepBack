@@ -153,6 +153,7 @@ namespace KeepBack
 				{
 					FormEdit f = new FormEdit( Ctrl.Import( filename ) );
 					f.ShowDialog();
+					Filename = f.Filename;
 				}
 			}
 			catch( Exception ex )
@@ -359,8 +360,14 @@ namespace KeepBack
 				Info( sb.ToString() );
 			}
 		}
+		delegate void InfoCallback( string message );
 		void Info( string message )
 		{
+			if( this.InvokeRequired )
+			{
+				this.Invoke( new InfoCallback( Info ), message );
+				return;
+			}
 			richTextBoxInfo.AppendText( message + "\r\n" );
 			richTextBoxInfo.ScrollToCaret();
 		}

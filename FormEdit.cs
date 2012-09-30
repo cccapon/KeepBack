@@ -55,6 +55,8 @@ namespace KeepBack
 		Ctrl  ctrl;
 		bool  modified           = false;
 		bool  ignoreChangeState  = false;
+		//--- property --------------------------
+		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.Path; } }
 		//--- constructor -----------------------
 		public FormEdit( Ctrl ctrl )
 		{
@@ -75,6 +77,13 @@ namespace KeepBack
 			panelArchive.SetBounds( r.X, r.Y, r.Width, r.Height );  panelArchive.Anchor = st;
 			panelFolder .SetBounds( r.X, r.Y, r.Width, r.Height );  panelFolder .Anchor = st;
 			panelPattern.SetBounds( r.X, r.Y, r.Width, r.Height );  panelPattern.Anchor = st;
+
+			if( ctrl.Upgraded )
+			{
+				MessageBox.Show( ctrl.Path + "\r\nThis KeepBack file is being upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "File has been Upgraded", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
+				modified = true;
+			}
+
 			TreeUpdate( null );
 		}
 
@@ -299,16 +308,36 @@ namespace KeepBack
 			x = AcceptPattern();  o = o ?? x;
 			return o;
 		}
-		private void Save()
+		private bool Save()
 		{
 			try
 			{
 				if( ctrl != null )
 				{
+					if( ctrl.Upgraded )
+					{
+						SaveFileDialog f = new SaveFileDialog();
+						f.AddExtension = true;
+						f.CheckPathExists = true;
+						f.DefaultExt = ".keep";
+						f.FileName = Path.GetFileName( ctrl.Path );
+						f.Filter = "KeepBack files (*.keep)|*.keep";
+						f.FilterIndex = 0;
+						f.InitialDirectory = Path.GetDirectoryName( ctrl.Path );
+						f.OverwritePrompt = true;
+						f.RestoreDirectory = true;
+						f.Title = "Save upgraded KeepBack file.";
+						if( f.ShowDialog() != System.Windows.Forms.DialogResult.OK )
+						{
+							return false;
+						}
+						ctrl.Path = f.FileName;
+					}
 					ctrl.Export( ctrl.Path );
 				}
 				modified = false;
 				buttonSave.Enabled = false;
+				return true;
 			}
 			catch( Exception ex )
 			{
@@ -317,6 +346,7 @@ namespace KeepBack
 #else
 				MessageBox.Show( ex.Message );
 #endif
+				return false;
 			}
 		}
 
