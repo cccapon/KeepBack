@@ -19,6 +19,33 @@
 ---------------------------------------
 - add history to file menu, last 4 .keep files opened.
 - grey out Currently scanning... and Most recently changed file. when not doing a Backup.
+	- get rid of most recently changed file
+	- display count of files in folder and count of which file is currently being processed
+- some files are being backed up repeatedly even if they haven't changed.
+	- could it be date related somehow?
+	- if we can detect the condition, we should do a full file comparison
+		- file comparison should be a flag option to allow a backup to be verified
+	- could merge do a bit level compare to see if a file has changed?
+- option to force merge all backup folders
+	- instead, have an option in explorer to selectively merge backup history folders
+- Source and Destination folders
+	- if we always store the .keep file in the archive folder
+		- we can tell the archive location by the path to the open .keep file
+	- the location of the source files doesn't change
+	- so we should be able to auto adjust when the archive path changes (as in a USB drive)
+- rather than a verify option
+	- have a backup flag which does a full byte-by-byte file compare instead
+- system tray tool
+	- monitors drive mounts
+	- keeps a list of paths to registered .keep files
+	- when a new drive is mounted, scan those folder paths
+	- if found, auto start backup
+	- display message off tray icon for 10 seconds that backup has commenced
+	- when complete
+		- display completion message off tray icon until closed
+		- have button on message to unmount the drive.
+
+
 
  Tip
 ---------------------------------------
