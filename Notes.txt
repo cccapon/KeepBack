@@ -44,6 +44,8 @@
 	- when complete
 		- display completion message off tray icon until closed
 		- have button on message to unmount the drive.
+- Add a notes field in the editor for
+	- Archive, Folder, Filter
 
 
 
