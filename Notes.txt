@@ -17,6 +17,9 @@
 
  Quick Notes
 ---------------------------------------
+- Edit Archive
+	- when displaying number of units for each period (minute, hour, day, month, year)
+	- display examples next to each field using current date/time
 - add history to file menu, last 4 .keep files opened.
 - grey out Currently scanning... and Most recently changed file. when not doing a Backup.
 	- get rid of most recently changed file
