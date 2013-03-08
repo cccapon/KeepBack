@@ -29,13 +29,8 @@ namespace KeepBack
 {
 	public class CtrlArchive
 	{
-		//--- define ----------------------------
-
-		public const string  ARCHIVE_PATTERN = @"????-??-??-????";
-
 		//--- field -----------------------------
 
-		string        path      = "";
 		int           month     = 0;
 		int           day       = 0;
 		int           hour      = 0;
@@ -43,15 +38,6 @@ namespace KeepBack
 		CtrlFolder[]  folders   = null;
 
 		//--- property --------------------------
-
-		[XmlIgnore]
-		public string       Name      { get { return System.IO.Path.GetFileName( path ?? "" ); } }
-
-		[XmlAttribute(AttributeName="path")]
-		public string       Path      { get { return path   ; } set { path    = value; } }
-
-		[XmlIgnore]
-		public string       FullPath  { get { return System.IO.Path.GetFullPath( path ?? "" ); } }
 
 		[XmlAttribute(AttributeName="month")]
 		public int          Month     { get { return month  ; } set { month   = value; } }
@@ -70,10 +56,6 @@ namespace KeepBack
 
 		//--- method ----------------------------
 
-		public override string ToString()
-		{
-			return Name;
-		}
 		public void FolderSort()
 		{
 			if( folders != null )
@@ -99,62 +81,6 @@ namespace KeepBack
 			}
 		}
 
-
-		public string[] ArchiveList()
-		{
-			if( Directory.Exists( FullPath ) )
-			{
-				try
-				{
-					List<string> a = new List<string>();
-					foreach( string x in Directory.GetDirectories( FullPath, ARCHIVE_PATTERN + @"*" ) )
-					{
-						a.Add( System.IO.Path.GetFileName( x ) );
-					}
-					a.Sort();
-					return a.ToArray();
-				}
-				catch( Exception )
-				{
-				}
-			}
-			return new string[] { };
-		}
-		public string[] ArchiveLogList()
-		{
-			if( Directory.Exists( FullPath ) )
-			{
-				try
-				{
-					List<string> a = new List<string>();
-					foreach( string x in Directory.GetFiles( FullPath, ARCHIVE_PATTERN + @"*.log" ) )
-					{
-						a.Add( System.IO.Path.GetFileName( x ) );
-					}
-					a.Sort();
-					return a.ToArray();
-				}
-				catch( Exception )
-				{
-				}
-			}
-			return new string[] { };
-		}
-
-		public static string ArchiveDisplay( string folder )
-		{
-			/*  012345678901234567890
-			 * "2011-09-23-1145"
-			 * "2011-09-23-114528"
-			 * "2011-09-23-114528.log"
-			 */
-			folder = folder.ToLower().Replace( ".log", "" );
-			if( folder.Length > 15 )
-			{
-				folder = folder.Insert( 15, ":" );
-			}
-			return folder.Insert( 13, ":" ).Remove( 10, 1 ).Insert( 10, " (" ) + ")";
-		}
 
 		//--- end -------------------------------
 	}

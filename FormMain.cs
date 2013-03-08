@@ -288,7 +288,17 @@ namespace KeepBack
 				if( IsFilename )
 				{
 					Ctrl c = Ctrl.Import( filename );
-					if( c.Archive != null )
+					if( c.Upgraded )
+					{
+						MessageBox.Show(
+							"Your control file has been upgraded from a previous version.\r\n\r\n"
+							+ "Before running a backup, please verify the settings using the\r\n"
+							+ "configuration editor and save the file to the archive folder."
+							, "Upgrade Wizard"
+							, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 
+							);
+					}
+					else if( c.Archive != null )
 					{
 						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), c, true, IsDebug ) )
 						{

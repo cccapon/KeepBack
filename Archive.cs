@@ -90,7 +90,6 @@ namespace KeepBack
 	
 		ActionDelegate    action;
 		Ctrl              ctrl;
-		CtrlArchive       archive;
 		StreamWriter      log           = null;
 
 		bool              debug         = false;
@@ -127,21 +126,20 @@ namespace KeepBack
 		{
 			this.action   = action;
 			this.ctrl     = ctrl;
-			this.archive  = ctrl.Archive;
 			this.debug    = debug;
 
 			this.start    = DateTime.Now;
 
-			if( create && ! DirectoryCreateDirectory( archive.FullPath ) )
+			if( create && ! DirectoryCreateDirectory( this.ctrl.Path ) )
 			{
-				LogInfo( "Can not create archive path [ " + archive.FullPath + " ]." );
+				LogInfo( "Can not create archive path [ " + this.ctrl.Path + " ]." );
 			}
-			if( Directory.Exists( archive.FullPath ) )
+			if( Directory.Exists( this.ctrl.Path ) )
 			{
-				this.log = new StreamWriter( Path.Combine( archive.FullPath, DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
+				this.log = new StreamWriter( Path.Combine( this.ctrl.Path, DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
 			}
 			LogInfo( "---------------" );
-			LogInfo( Status( "Archive", archive.FullPath ) );
+			LogInfo( Status( "Archive", this.ctrl.Path ) );
 		}
 
 		//--- method ----------------------------
@@ -216,15 +214,15 @@ namespace KeepBack
 		{
 			Log( "" );
 			LogInfo( "Backup..." );
-			if( ! Directory.Exists( archive.FullPath ) )
+			if( ! Directory.Exists( ctrl.Path ) )
 			{
-				LogInfo( "The archive path [ " + archive.FullPath + " ] is not accessible." );
+				LogInfo( "The archive path [ " + ctrl.Path + " ] is not accessible." );
 				return;
 			}
 			current = DateFolderMinute( start );
 			history = null;
 			{
-				string[] a = archive.ArchiveList();
+				string[] a = ctrl.HistoryFolders();
 				if( a.Length > 0 )
 				{
 					history = a[a.Length - 1];
@@ -239,10 +237,10 @@ namespace KeepBack
 					}
 				}
 			}
-			current = Path.Combine( archive.FullPath, current );
+			current = Path.Combine( ctrl.Path, current );
 			if( history != null )
 			{
-				history = Path.Combine( archive.FullPath, history );
+				history = Path.Combine( ctrl.Path, history );
 				LogInfo( Status( "  previous", history ) );
 				if( ! DirectoryMove( history, current ) )
 				{
@@ -260,7 +258,7 @@ namespace KeepBack
 			}
 			LogInfo( Status( "  current", current ) );
 
-			if( ! TestArchiveDriveProperties( archive.FullPath ) )
+			if( ! TestArchiveDriveProperties( ctrl.Path ) )
 			{
 				LogInfo( "Was not able to test archive filesystem properties." );
 				return;
@@ -284,10 +282,13 @@ namespace KeepBack
 				}
 			}
 
+			CtrlArchive archive = ctrl.Archive;
+			if( archive != null )
 			{
 				/* backup each folder in archive set
 				 */
 				List<string> a = new List<string>( ListDirectories( current ) );
+
 				if( archive.Folders != null )
 				{
 					foreach( CtrlFolder folder in archive.Folders )
@@ -613,9 +614,9 @@ namespace KeepBack
 		{
 			Log( "" );
 			LogInfo( "Merge..." );
-			if( ! Directory.Exists( archive.FullPath ) )
+			if( ! Directory.Exists( ctrl.Path ) )
 			{
-				LogInfo( "The archive path [ " + archive.FullPath + " ] is not accessible." );
+				LogInfo( "The archive path [ " + ctrl.Path + " ] is not accessible." );
 				return;
 			}
 			Merge( MergeLevel.Minute );
@@ -625,10 +626,10 @@ namespace KeepBack
 			Merge( MergeLevel.Year   );
 
 			//..remove old log files
-			string[] a = archive.ArchiveList();
+			string[] a = ctrl.HistoryFolders();
 			string   s = DateFolderSkipCurrent( MergeLevel.Minute );
 			int      z = DateFolderLength     ( MergeLevel.Minute );
-			foreach( string f in archive.ArchiveLogList() )
+			foreach( string f in ctrl.HistoryLogFiles() )
 			{
 				int i = a.Length;
 				do
@@ -638,7 +639,7 @@ namespace KeepBack
 					{
 						if( string.Compare( f, s, true ) < 0 )
 						{
-							FileDelete( Path.Combine( archive.FullPath, f ) );
+							FileDelete( Path.Combine( ctrl.Path, f ) );
 						}
 						break;
 					}
@@ -658,7 +659,7 @@ namespace KeepBack
 			if( ! string.IsNullOrEmpty( s ) && (z > 0) )
 			{
 				//..merge directories
-				string[] a  = archive.ArchiveList();
+				string[] a  = ctrl.HistoryFolders();
 				int      i  = a.Length;
 				do
 				{
@@ -688,7 +689,7 @@ namespace KeepBack
 					{
 						string t = a[j].Substring( 0, z );
 						LogInfo( Status( "  ..rename", a[j] + "   " + t ) );
-						DirectoryMove( Path.Combine( archive.FullPath, a[j] ), Path.Combine( archive.FullPath, t ) );
+						DirectoryMove( Path.Combine( ctrl.Path, a[j] ), Path.Combine( ctrl.Path, t ) );
 					}
 				}
 			}
@@ -696,8 +697,8 @@ namespace KeepBack
 		bool Merge( string src, string dst )
 		{
 			if( cancel ) { return false; }
-			string sp = Path.Combine( archive.FullPath, src );
-			string dp = Path.Combine( archive.FullPath, dst );
+			string sp = Path.Combine( ctrl.Path, src );
+			string dp = Path.Combine( ctrl.Path, dst );
 			if( ! Directory.Exists( dp ) )
 			{
 				LogInfo( "Destination folder missing : " + DisplayDirectory( dp ) );
@@ -958,13 +959,17 @@ namespace KeepBack
 		string DateFolderSkipCurrent( MergeLevel level )
 		{
 			DateTime dt = DateTime.MinValue;
-			switch( level )
+			CtrlArchive archive = ctrl.Archive;
+			if( archive != null )
 			{
-				case MergeLevel.Year  :  if( archive.Month  > 0 ) { dt = start.AddMonths  ( 0 - archive.Month  ); } break;
-				case MergeLevel.Month :  if( archive.Day    > 0 ) { dt = start.AddDays    ( 0 - archive.Day    ); } break;
-				case MergeLevel.Day   :  if( archive.Hour   > 0 ) { dt = start.AddHours   ( 0 - archive.Hour   ); } break;
-				case MergeLevel.Hour  :  if( archive.Minute > 0 ) { dt = start.AddMinutes ( 0 - archive.Minute ); } break;
-				case MergeLevel.Minute:  dt = start;                                                                break;
+				switch( level )
+				{
+					case MergeLevel.Year  :  if( archive.Month  > 0 ) { dt = start.AddMonths  ( 0 - archive.Month  ); } break;
+					case MergeLevel.Month :  if( archive.Day    > 0 ) { dt = start.AddDays    ( 0 - archive.Day    ); } break;
+					case MergeLevel.Day   :  if( archive.Hour   > 0 ) { dt = start.AddHours   ( 0 - archive.Hour   ); } break;
+					case MergeLevel.Hour  :  if( archive.Minute > 0 ) { dt = start.AddMinutes ( 0 - archive.Minute ); } break;
+					case MergeLevel.Minute:  dt = start;                                                                break;
+				}
 			}
 			return (dt == DateTime.MinValue) ? null : DateFolderSecond( dt );
 		}

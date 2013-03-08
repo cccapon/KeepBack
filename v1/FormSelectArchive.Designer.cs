@@ -60,11 +60,10 @@
 			this.labelInformation.AutoSize = true;
 			this.labelInformation.Location = new System.Drawing.Point(12, 116);
 			this.labelInformation.Name = "labelInformation";
-			this.labelInformation.Size = new System.Drawing.Size(426, 68);
+			this.labelInformation.Size = new System.Drawing.Size(371, 68);
 			this.labelInformation.TabIndex = 2;
-			this.labelInformation.Text = "Your backup set is being upgraded from an older version.\r\nNewer versions do not s" +
-    "upport more than one archive per backup.\r\n\r\nPlease choose an archive to work wit" +
-    "h.";
+			this.labelInformation.Text = "Your backup set is being upgraded from an older version.\r\nNewer versions support " +
+    "only one archive per backup.\r\n\r\nPlease choose an archive to work with.";
 			// 
 			// FormSelectArchive
 			// 
@@ -80,7 +79,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "FormSelectArchive";
-			this.Text = "Select Archive";
+			this.Text = "Upgrade Wizard";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

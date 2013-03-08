@@ -147,20 +147,20 @@ namespace KeepBack
 		{
 			try
 			{
-				if( (ctrl != null) && (ctrl.Archive != null) )
+				if( ctrl != null )
 				{
-					List<string> a = new List<string>( ctrl.Archive.ArchiveList() );
+					List<string> a = new List<string>( ctrl.HistoryFolders() );
 					a.Sort( new Comparison<string>( InvertStrings ) );
 
 					//scan folders
-					string path = ctrl.Archive.FullPath;
+					string path = ctrl.Path;
 					HistoryFolder root = new HistoryFolder( a.Count, "" );
 					listViewHistory.Items.Clear();
 					for( int i = 0; i < a.Count; ++i )
 					{
 						string s = a[i];
 						root = Scan( root, Path.Combine( path, s ), i );
-						ListViewItem li = listViewHistory.Items.Add( CtrlArchive.ArchiveDisplay( s ) );
+						ListViewItem li = listViewHistory.Items.Add( Ctrl.HistoryNameFormatted( s ) );
 						li.Tag = s;
 					}
 

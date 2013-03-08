@@ -36,11 +36,11 @@ namespace KeepBack
 				listViewLogs.Clear();
 				if( (ctrl != null) && (ctrl.Archive != null) )
 				{
-					this.Text = "Log Files - " + ctrl.Archive.FullPath;
-					foreach( string s in ctrl.Archive.ArchiveLogList() )
+					this.Text = "Log Files - " + ctrl.Path;
+					foreach( string s in ctrl.HistoryLogFiles() )
 					{
 						// "2011-09-23-114528.log"
-						ListViewItem li = listViewLogs.Items.Add( CtrlArchive.ArchiveDisplay( s ) );
+						ListViewItem li = listViewLogs.Items.Add( Ctrl.HistoryNameFormatted( s ) );
 						li.Tag = s;
 					}
 					listViewLogs.Sorting = SortOrder.Descending;
@@ -66,7 +66,7 @@ namespace KeepBack
 					if( ! string.IsNullOrEmpty( s ) )
 					{
 						labelLog.Text = li.Text;
-						richTextBoxLog.LoadFile( System.IO.Path.Combine( ctrl.Archive.FullPath, s ), RichTextBoxStreamType.PlainText );
+						richTextBoxLog.LoadFile( System.IO.Path.Combine( ctrl.Path, s ), RichTextBoxStreamType.PlainText );
 					}
 				}
 			}

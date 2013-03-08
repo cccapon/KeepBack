@@ -33,12 +33,14 @@ namespace KeepBack
 	{
 		//--- define ----------------------------
 
-		public const string XmlNamespace = "urn:keepback:schema:2011-09";
+		public const string XmlNamespace         = "urn:keepback:schema:2013-02";
+		public const string HistoryFolderPattern = @"????-??-??-????";
+
 
 		//--- field -----------------------------
 
 		bool          upgraded  = false;
-		string        path      = null;
+		string        filename  = null;
 		CtrlArchive   archive   = null;
 
 		//--- property --------------------------
@@ -47,10 +49,13 @@ namespace KeepBack
 		public bool          Upgraded  { get { return upgraded; }                          }
 
 		[XmlIgnore]
-		public string        Path      { get { return path    ; } set { path    = value; } }
+		public string        Path      { get { return System.IO.Path.GetDirectoryName( filename ); } }
+
+		[XmlIgnore]
+		public string        FileName  { get { return filename; } set { filename = System.IO.Path.GetFullPath( value ); } }
 
 		[XmlElement(ElementName="archive")]
-		public CtrlArchive   Archive   { get { return archive ; } set { archive = value; } }
+		public CtrlArchive   Archive   { get { return archive ; } set { archive  = value; } }
 
 		//--- method ----------------------------
 
@@ -95,7 +100,7 @@ namespace KeepBack
 							break;
 						}
 					}
-					c.Path = filename;
+					c.FileName = filename;
 					return c;
 				}
 			}
@@ -132,6 +137,67 @@ namespace KeepBack
 		{
 			archive = null;
 		}
+
+		public string[] HistoryFolders()
+		{
+			if( Directory.Exists( Path ) )
+			{
+				try
+				{
+					List<string> a = new List<string>();
+					foreach( string x in Directory.GetDirectories( Path, HistoryFolderPattern + @"*" ) )
+					{
+						a.Add( System.IO.Path.GetFileName( x ) );
+					}
+					a.Sort();
+					return a.ToArray();
+				}
+				catch( Exception )
+				{
+				}
+			}
+			return new string[] { };
+		}
+		public string[] HistoryLogFiles()
+		{
+			if( Directory.Exists( Path ) )
+			{
+				try
+				{
+					List<string> a = new List<string>();
+					foreach( string x in Directory.GetFiles( Path, HistoryFolderPattern + @"*.log" ) )
+					{
+						a.Add( System.IO.Path.GetFileName( x ) );
+					}
+					a.Sort();
+					return a.ToArray();
+				}
+				catch( Exception )
+				{
+				}
+			}
+			return new string[] { };
+		}
+
+		public static string HistoryNameFormatted( string folder )
+		{
+			/*  012345678901234567890
+			 * "2011-09-23-1145"
+			 * "2011-09-23-114528"
+			 * "2011-09-23-114528.log"
+			 * 
+			 * "2011-09-23 (11:45:28)"
+			 */
+			folder = folder.ToLower().Replace( ".log", "" );
+			if( folder.Length > 15 )
+			{
+				folder = folder.Insert( 15, ":" );
+			}
+			return folder.Insert( 13, ":" ).Remove( 10, 1 ).Insert( 10, " (" ) + ")";
+		}
+
+
+
 
 		//--- end -------------------------------
 	}

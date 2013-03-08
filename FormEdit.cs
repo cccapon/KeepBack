@@ -56,7 +56,7 @@ namespace KeepBack
 		bool  modified           = false;
 		bool  ignoreChangeState  = false;
 		//--- property --------------------------
-		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.Path; } }
+		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.FileName; } }
 		//--- constructor -----------------------
 		public FormEdit( Ctrl ctrl )
 		{
@@ -80,7 +80,7 @@ namespace KeepBack
 
 			if( ctrl.Upgraded )
 			{
-				MessageBox.Show( ctrl.Path + "\r\nThis KeepBack file is being upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "File has been Upgraded", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
+				MessageBox.Show( ctrl.FileName + "\r\n\r\nThis KeepBack file has been upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "Upgrade Wizard", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
 				modified = true;
 			}
 
@@ -104,13 +104,12 @@ namespace KeepBack
 			treeViewControl.Nodes.Clear();
 			if( ctrl != null )
 			{
-				this.Text = ctrl.Path;
+				this.Text = ctrl.FileName;
 
 				CtrlArchive a;
 				if( ctrl.Archive == null )
 				{
 					a = ctrl.ArchiveCreate();
-					a.Path   = "Archive";
 					a.Month  =  6;
 					a.Day    = 15;
 					a.Hour   = 24;
@@ -118,7 +117,7 @@ namespace KeepBack
 					modified = true;
 				}
 				a = ctrl.Archive;
-				TreeNode archive = new TreeNode( a.Name, IMAGE_ARCHIVE, IMAGE_ARCHIVE );
+				TreeNode archive = new TreeNode( "Archive", IMAGE_ARCHIVE, IMAGE_ARCHIVE );
 				archive.Tag = a;
 				this.treeViewControl.Nodes.Add( archive );
 				if( a.Folders != null )
@@ -251,7 +250,7 @@ namespace KeepBack
 					CtrlArchive a = (CtrlArchive)node.Tag;
 					this.panelArchive.Tag = a;
 					buttonSave.Enabled = modified;
-					textBoxArchivePath  .Text  = a.Path             ;
+					textBoxArchivePath  .Text  = "MyPath";
 					textBoxArchiveMonth .Text  = a.Month .ToString();
 					textBoxArchiveDay   .Text  = a.Day   .ToString();
 					textBoxArchiveHour  .Text  = a.Hour  .ToString();
@@ -320,10 +319,10 @@ namespace KeepBack
 						f.AddExtension = true;
 						f.CheckPathExists = true;
 						f.DefaultExt = ".keep";
-						f.FileName = Path.GetFileName( ctrl.Path );
+						f.FileName = Path.GetFileName( ctrl.FileName );
 						f.Filter = "KeepBack files (*.keep)|*.keep";
 						f.FilterIndex = 0;
-						f.InitialDirectory = Path.GetDirectoryName( ctrl.Path );
+						f.InitialDirectory = Path.GetDirectoryName( ctrl.FileName );
 						f.OverwritePrompt = true;
 						f.RestoreDirectory = true;
 						f.Title = "Save upgraded KeepBack file.";
@@ -331,9 +330,9 @@ namespace KeepBack
 						{
 							return false;
 						}
-						ctrl.Path = f.FileName;
+						ctrl.FileName = f.FileName;
 					}
-					ctrl.Export( ctrl.Path );
+					ctrl.Export( ctrl.FileName );
 				}
 				modified = false;
 				buttonSave.Enabled = false;
@@ -362,7 +361,7 @@ namespace KeepBack
 			{
 				string s;
 				int    i;
-				s = textBoxArchivePath  .Text.Trim(); if( s != a.Path ) { if( ! string.IsNullOrEmpty( s ) ) { a.Path = s; modified = true; } TreeText( a, a.Name ); }
+//				s = textBoxArchivePath  .Text.Trim(); if( s != a.Path ) { if( ! string.IsNullOrEmpty( s ) ) { a.Path = s; modified = true; } TreeText( a, a.Name ); }
 				s = textBoxArchiveMonth .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Month  ) { a.Month  = i; modified = true; } } catch { } }
 				s = textBoxArchiveDay   .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Day    ) { a.Day    = i; modified = true; } } catch { } }
 				s = textBoxArchiveHour  .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Hour   ) { a.Hour   = i; modified = true; } } catch { } }

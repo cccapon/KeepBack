@@ -19,9 +19,9 @@
 -->
 <xs:schema id="KeepBack"
 	elementFormDefault="qualified"
-	targetNamespace="urn:keepback:schema:2011-09"
-	xmlns          ="urn:keepback:schema:2011-09"
-	xmlns:mstns    ="urn:keepback:schema:2011-09"
+	targetNamespace="urn:keepback:schema:2013-02"
+	xmlns          ="urn:keepback:schema:2013-02"
+	xmlns:mstns    ="urn:keepback:schema:2013-02"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	>
 
@@ -38,7 +38,6 @@
 			<xs:sequence>
 				<xs:element ref="folders" maxOccurs="1" minOccurs="0" />
 			</xs:sequence>
-			<xs:attribute name="path"   type="xs:string"  />
 			<xs:attribute name="month"  type="xs:integer" />
 			<xs:attribute name="day"    type="xs:integer" />
 			<xs:attribute name="hour"   type="xs:integer" />

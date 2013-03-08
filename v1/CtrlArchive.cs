@@ -74,7 +74,6 @@ namespace KeepBack.V1
 
 		public void Upgrade( KeepBack.CtrlArchive archive )
 		{
-			archive.Path    = FullPath;
 			archive.Month   = Month;
 			archive.Day     = Day;
 			archive.Hour    = Hour;
