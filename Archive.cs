@@ -1111,10 +1111,11 @@ namespace KeepBack
 
 		bool DateCompare( DateTime a, DateTime b )
 		{
-			/* the dates are checked to see if they are within 1 second of each other.
+			/* the dates are checked to see if they are within 3 second of each other.
 			 * this allows for differences in date handling for different filesystems.
+			 * up to 2 seconds difference has been observed going from NTFS to FAT32.
 			 */
-			return (a.AddSeconds( -1 ) < b) && (a.AddSeconds( 1 ) > b);
+			return (a.AddSeconds( -3 ) < b) && (a.AddSeconds( 3 ) > b);
 		}
 		DateTime DateAdjust( DateTime date )
 		{

@@ -52,6 +52,9 @@ namespace KeepBack
 		public string        Path      { get { return System.IO.Path.GetDirectoryName( filename ); } }
 
 		[XmlIgnore]
+		public string        Name      { get { return System.IO.Path.GetFileNameWithoutExtension( filename ); } }
+
+		[XmlIgnore]
 		public string        FileName  { get { return filename; } set { filename = System.IO.Path.GetFullPath( value ); } }
 
 		[XmlElement(ElementName="archive")]

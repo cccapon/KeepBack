@@ -104,7 +104,7 @@ namespace KeepBack
 			treeViewControl.Nodes.Clear();
 			if( ctrl != null )
 			{
-				this.Text = ctrl.FileName;
+				this.Text = ctrl.Name;
 
 				CtrlArchive a;
 				if( ctrl.Archive == null )
@@ -117,7 +117,7 @@ namespace KeepBack
 					modified = true;
 				}
 				a = ctrl.Archive;
-				TreeNode archive = new TreeNode( "Archive", IMAGE_ARCHIVE, IMAGE_ARCHIVE );
+				TreeNode archive = new TreeNode( ctrl.Name, IMAGE_ARCHIVE, IMAGE_ARCHIVE );
 				archive.Tag = a;
 				this.treeViewControl.Nodes.Add( archive );
 				if( a.Folders != null )
@@ -250,7 +250,7 @@ namespace KeepBack
 					CtrlArchive a = (CtrlArchive)node.Tag;
 					this.panelArchive.Tag = a;
 					buttonSave.Enabled = modified;
-					textBoxArchivePath  .Text  = "MyPath";
+					labelArchiveFullPath.Text  = ctrl.Path;
 					textBoxArchiveMonth .Text  = a.Month .ToString();
 					textBoxArchiveDay   .Text  = a.Day   .ToString();
 					textBoxArchiveHour  .Text  = a.Hour  .ToString();
@@ -374,32 +374,6 @@ namespace KeepBack
 		{
 			Accept();
 			Save();
-		}
-
-		private void buttonArchivePath_Click( object sender, EventArgs e )
-		{
-			FolderBrowserDialog f = new FolderBrowserDialog();
-			f.Description = "Select drive and path where archive will be stored.";
-			f.ShowNewFolderButton = true;
-			try
-			{
-				f.SelectedPath = textBoxArchivePath.Text;
-			}
-			catch
-			{
-			}
-			if( f.ShowDialog() == DialogResult.OK )
-			{
-				textBoxArchivePath.Text = Path.GetFullPath( f.SelectedPath );
-			}
-		}
-
-		private void textBoxArchivePath_TextChanged( object sender, EventArgs e )
-		{
-			if( ! ignoreChangeState )
-			{
-				TreeText( this.panelArchive.Tag, Path.GetFileName( textBoxArchivePath.Text ) );
-			}
 		}
 
 		private void buttonFolderAdd_Click( object sender, EventArgs e )

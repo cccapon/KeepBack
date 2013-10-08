@@ -14,6 +14,7 @@
 - merge all the File pattern types.
 	- may as well support nested patterns.
 
+
 - we were working on History Explorer, but started to merge 2.0 changes in
 
 
@@ -25,6 +26,14 @@
 		- we can tell the archive location by the path to the open .keep file
 	- the location of the source files doesn't change
 	- so we should be able to auto adjust when the archive path changes (as in a USB drive)
+- Delete Duplicates functionality
+	- new window from History Explorer
+	- scan all folders, generate SHA5 sum for each file
+	- do full byte scan/compare of all files with the same SHA5
+	- display list of files which have exactly the same content
+	- allow some sort of selection tool which allows various history folders to be included or excluded
+	- set flag to keep version from most current history but flag all others for deletion.
+	- with one button, delete the versions flagged for deletion.
 
 
 

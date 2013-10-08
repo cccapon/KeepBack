@@ -100,7 +100,6 @@ namespace KeepBack
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
 			this.buttonSave = new System.Windows.Forms.Button();
-			this.buttonArchivePath = new System.Windows.Forms.Button();
 			this.buttonFolderDelete = new System.Windows.Forms.Button();
 			this.buttonFolderAdd = new System.Windows.Forms.Button();
 			this.labelListFolders = new System.Windows.Forms.Label();
@@ -114,9 +113,10 @@ namespace KeepBack
 			this.labelArchiveHistory = new System.Windows.Forms.Label();
 			this.textBoxArchiveMonth = new System.Windows.Forms.TextBox();
 			this.labelArchiveMonth = new System.Windows.Forms.Label();
-			this.textBoxArchivePath = new System.Windows.Forms.TextBox();
 			this.labelArchivePath = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
+			this.labelArchiveFullPath = new System.Windows.Forms.Label();
+			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
@@ -139,7 +139,7 @@ namespace KeepBack
 			this.treeViewControl.ImageIndex = 0;
 			this.treeViewControl.ImageList = this.imageListTree;
 			this.treeViewControl.Location = new System.Drawing.Point(0, 0);
-			this.treeViewControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.treeViewControl.Margin = new System.Windows.Forms.Padding(4);
 			this.treeViewControl.Name = "treeViewControl";
 			this.treeViewControl.SelectedImageIndex = 0;
 			this.treeViewControl.Size = new System.Drawing.Size(352, 608);
@@ -165,7 +165,7 @@ namespace KeepBack
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainer.Location = new System.Drawing.Point(1, 2);
-			this.splitContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.splitContainer.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer.Name = "splitContainer";
 			// 
 			// splitContainer.Panel1
@@ -195,7 +195,7 @@ namespace KeepBack
 			this.panelPattern.Controls.Add(this.labelPatternPattern);
 			this.panelPattern.Controls.Add(this.labelPattern);
 			this.panelPattern.Location = new System.Drawing.Point(4, 432);
-			this.panelPattern.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panelPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.panelPattern.Name = "panelPattern";
 			this.panelPattern.Size = new System.Drawing.Size(643, 390);
 			this.panelPattern.TabIndex = 3;
@@ -216,7 +216,7 @@ namespace KeepBack
 			this.tableLayoutPanel1.Controls.Add(this.labelPattern5Description, 0, 4);
 			this.tableLayoutPanel1.Controls.Add(this.labelPattern4Description, 1, 3);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(112, 222);
-			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 5;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -337,9 +337,9 @@ namespace KeepBack
 			this.groupBoxCase.Controls.Add(this.radioButtonCaseSensitive);
 			this.groupBoxCase.Controls.Add(this.radioButtonCaseIgnore);
 			this.groupBoxCase.Location = new System.Drawing.Point(457, 81);
-			this.groupBoxCase.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxCase.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxCase.Name = "groupBoxCase";
-			this.groupBoxCase.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxCase.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxCase.Size = new System.Drawing.Size(147, 84);
 			this.groupBoxCase.TabIndex = 26;
 			this.groupBoxCase.TabStop = false;
@@ -349,9 +349,9 @@ namespace KeepBack
 			// 
 			this.radioButtonCaseSensitive.AutoSize = true;
 			this.radioButtonCaseSensitive.Location = new System.Drawing.Point(8, 23);
-			this.radioButtonCaseSensitive.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonCaseSensitive.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-			this.radioButtonCaseSensitive.Size = new System.Drawing.Size(115, 26);
+			this.radioButtonCaseSensitive.Size = new System.Drawing.Size(86, 21);
 			this.radioButtonCaseSensitive.TabIndex = 21;
 			this.radioButtonCaseSensitive.TabStop = true;
 			this.radioButtonCaseSensitive.Text = "Sensitive";
@@ -361,9 +361,9 @@ namespace KeepBack
 			// 
 			this.radioButtonCaseIgnore.AutoSize = true;
 			this.radioButtonCaseIgnore.Location = new System.Drawing.Point(8, 52);
-			this.radioButtonCaseIgnore.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonCaseIgnore.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonCaseIgnore.Name = "radioButtonCaseIgnore";
-			this.radioButtonCaseIgnore.Size = new System.Drawing.Size(92, 26);
+			this.radioButtonCaseIgnore.Size = new System.Drawing.Size(69, 21);
 			this.radioButtonCaseIgnore.TabIndex = 22;
 			this.radioButtonCaseIgnore.TabStop = true;
 			this.radioButtonCaseIgnore.Text = "Ignore";
@@ -373,7 +373,7 @@ namespace KeepBack
 			// 
 			this.checkBoxPatternDebug.AutoSize = true;
 			this.checkBoxPatternDebug.Location = new System.Drawing.Point(120, 172);
-			this.checkBoxPatternDebug.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.checkBoxPatternDebug.Margin = new System.Windows.Forms.Padding(4);
 			this.checkBoxPatternDebug.Name = "checkBoxPatternDebug";
 			this.checkBoxPatternDebug.Size = new System.Drawing.Size(417, 21);
 			this.checkBoxPatternDebug.TabIndex = 41;
@@ -388,7 +388,7 @@ namespace KeepBack
 			this.buttonPatternPrevious.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonPatternPrevious.Image = global::KeepBack.Properties.Resources.Previous;
 			this.buttonPatternPrevious.Location = new System.Drawing.Point(604, 4);
-			this.buttonPatternPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonPatternPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonPatternPrevious.Name = "buttonPatternPrevious";
 			this.buttonPatternPrevious.Size = new System.Drawing.Size(32, 30);
 			this.buttonPatternPrevious.TabIndex = 40;
@@ -400,9 +400,9 @@ namespace KeepBack
 			this.groupBoxPatternMatch.Controls.Add(this.radioButtonMatchFolder);
 			this.groupBoxPatternMatch.Controls.Add(this.radioButtonMatchFile);
 			this.groupBoxPatternMatch.Location = new System.Drawing.Point(296, 81);
-			this.groupBoxPatternMatch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxPatternMatch.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternMatch.Name = "groupBoxPatternMatch";
-			this.groupBoxPatternMatch.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxPatternMatch.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternMatch.Size = new System.Drawing.Size(115, 84);
 			this.groupBoxPatternMatch.TabIndex = 25;
 			this.groupBoxPatternMatch.TabStop = false;
@@ -412,9 +412,9 @@ namespace KeepBack
 			// 
 			this.radioButtonMatchFolder.AutoSize = true;
 			this.radioButtonMatchFolder.Location = new System.Drawing.Point(8, 23);
-			this.radioButtonMatchFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonMatchFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonMatchFolder.Name = "radioButtonMatchFolder";
-			this.radioButtonMatchFolder.Size = new System.Drawing.Size(101, 26);
+			this.radioButtonMatchFolder.Size = new System.Drawing.Size(76, 21);
 			this.radioButtonMatchFolder.TabIndex = 21;
 			this.radioButtonMatchFolder.TabStop = true;
 			this.radioButtonMatchFolder.Text = "Folders";
@@ -425,9 +425,9 @@ namespace KeepBack
 			// 
 			this.radioButtonMatchFile.AutoSize = true;
 			this.radioButtonMatchFile.Location = new System.Drawing.Point(8, 52);
-			this.radioButtonMatchFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonMatchFile.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonMatchFile.Name = "radioButtonMatchFile";
-			this.radioButtonMatchFile.Size = new System.Drawing.Size(77, 26);
+			this.radioButtonMatchFile.Size = new System.Drawing.Size(58, 21);
 			this.radioButtonMatchFile.TabIndex = 22;
 			this.radioButtonMatchFile.TabStop = true;
 			this.radioButtonMatchFile.Text = "Files";
@@ -439,9 +439,9 @@ namespace KeepBack
 			this.groupBoxPatternApply.Controls.Add(this.radioButtonApplyAbsolute);
 			this.groupBoxPatternApply.Controls.Add(this.radioButtonApplyRelative);
 			this.groupBoxPatternApply.Location = new System.Drawing.Point(112, 81);
-			this.groupBoxPatternApply.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxPatternApply.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternApply.Name = "groupBoxPatternApply";
-			this.groupBoxPatternApply.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.groupBoxPatternApply.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternApply.Size = new System.Drawing.Size(140, 84);
 			this.groupBoxPatternApply.TabIndex = 24;
 			this.groupBoxPatternApply.TabStop = false;
@@ -451,9 +451,9 @@ namespace KeepBack
 			// 
 			this.radioButtonApplyAbsolute.AutoSize = true;
 			this.radioButtonApplyAbsolute.Location = new System.Drawing.Point(8, 23);
-			this.radioButtonApplyAbsolute.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonApplyAbsolute.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonApplyAbsolute.Name = "radioButtonApplyAbsolute";
-			this.radioButtonApplyAbsolute.Size = new System.Drawing.Size(136, 26);
+			this.radioButtonApplyAbsolute.Size = new System.Drawing.Size(102, 21);
 			this.radioButtonApplyAbsolute.TabIndex = 18;
 			this.radioButtonApplyAbsolute.TabStop = true;
 			this.radioButtonApplyAbsolute.Text = "Fixed Paths";
@@ -464,9 +464,9 @@ namespace KeepBack
 			// 
 			this.radioButtonApplyRelative.AutoSize = true;
 			this.radioButtonApplyRelative.Location = new System.Drawing.Point(8, 52);
-			this.radioButtonApplyRelative.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.radioButtonApplyRelative.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonApplyRelative.Name = "radioButtonApplyRelative";
-			this.radioButtonApplyRelative.Size = new System.Drawing.Size(160, 26);
+			this.radioButtonApplyRelative.Size = new System.Drawing.Size(120, 21);
 			this.radioButtonApplyRelative.TabIndex = 19;
 			this.radioButtonApplyRelative.TabStop = true;
 			this.radioButtonApplyRelative.Text = "Relative Paths";
@@ -478,7 +478,7 @@ namespace KeepBack
 			this.textBoxPatternPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxPatternPattern.Location = new System.Drawing.Point(112, 49);
-			this.textBoxPatternPattern.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxPatternPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxPatternPattern.Name = "textBoxPatternPattern";
 			this.textBoxPatternPattern.Size = new System.Drawing.Size(523, 22);
 			this.textBoxPatternPattern.TabIndex = 17;
@@ -528,7 +528,7 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
 			this.panelFolder.Location = new System.Drawing.Point(656, 368);
-			this.panelFolder.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(643, 420);
 			this.panelFolder.TabIndex = 2;
@@ -541,7 +541,7 @@ namespace KeepBack
 			this.buttonFolderPrevious.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderPrevious.Image = global::KeepBack.Properties.Resources.Previous;
 			this.buttonFolderPrevious.Location = new System.Drawing.Point(605, 4);
-			this.buttonFolderPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonFolderPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPrevious.Name = "buttonFolderPrevious";
 			this.buttonFolderPrevious.Size = new System.Drawing.Size(32, 30);
 			this.buttonFolderPrevious.TabIndex = 39;
@@ -556,7 +556,7 @@ namespace KeepBack
 			this.buttonFolderPath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderPath.Image = global::KeepBack.Properties.Resources.FolderOpen;
 			this.buttonFolderPath.Location = new System.Drawing.Point(607, 78);
-			this.buttonFolderPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPath.Name = "buttonFolderPath";
 			this.buttonFolderPath.Size = new System.Drawing.Size(32, 30);
 			this.buttonFolderPath.TabIndex = 37;
@@ -581,7 +581,7 @@ namespace KeepBack
 			this.buttonHistoryDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonHistoryDelete.Image = global::KeepBack.Properties.Resources.Delete;
 			this.buttonHistoryDelete.Location = new System.Drawing.Point(607, 270);
-			this.buttonHistoryDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonHistoryDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonHistoryDelete.Name = "buttonHistoryDelete";
 			this.buttonHistoryDelete.Size = new System.Drawing.Size(32, 30);
 			this.buttonHistoryDelete.TabIndex = 35;
@@ -597,7 +597,7 @@ namespace KeepBack
 			this.buttonHistoryAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonHistoryAdd.Image = global::KeepBack.Properties.Resources.Add;
 			this.buttonHistoryAdd.Location = new System.Drawing.Point(607, 234);
-			this.buttonHistoryAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonHistoryAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonHistoryAdd.Name = "buttonHistoryAdd";
 			this.buttonHistoryAdd.Size = new System.Drawing.Size(32, 30);
 			this.buttonHistoryAdd.TabIndex = 34;
@@ -611,7 +611,7 @@ namespace KeepBack
 			this.listBoxHistory.FormattingEnabled = true;
 			this.listBoxHistory.ItemHeight = 16;
 			this.listBoxHistory.Location = new System.Drawing.Point(9, 234);
-			this.listBoxHistory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.listBoxHistory.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxHistory.Name = "listBoxHistory";
 			this.listBoxHistory.Size = new System.Drawing.Size(596, 68);
 			this.listBoxHistory.TabIndex = 33;
@@ -635,7 +635,7 @@ namespace KeepBack
 			this.buttonExcludeDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonExcludeDelete.Image = global::KeepBack.Properties.Resources.Delete;
 			this.buttonExcludeDelete.Location = new System.Drawing.Point(607, 368);
-			this.buttonExcludeDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonExcludeDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExcludeDelete.Name = "buttonExcludeDelete";
 			this.buttonExcludeDelete.Size = new System.Drawing.Size(32, 30);
 			this.buttonExcludeDelete.TabIndex = 31;
@@ -651,7 +651,7 @@ namespace KeepBack
 			this.buttonExcludeAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonExcludeAdd.Image = global::KeepBack.Properties.Resources.Add;
 			this.buttonExcludeAdd.Location = new System.Drawing.Point(607, 332);
-			this.buttonExcludeAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonExcludeAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExcludeAdd.Name = "buttonExcludeAdd";
 			this.buttonExcludeAdd.Size = new System.Drawing.Size(32, 30);
 			this.buttonExcludeAdd.TabIndex = 30;
@@ -665,7 +665,7 @@ namespace KeepBack
 			this.listBoxExclude.FormattingEnabled = true;
 			this.listBoxExclude.ItemHeight = 16;
 			this.listBoxExclude.Location = new System.Drawing.Point(9, 332);
-			this.listBoxExclude.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.listBoxExclude.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxExclude.Name = "listBoxExclude";
 			this.listBoxExclude.Size = new System.Drawing.Size(596, 68);
 			this.listBoxExclude.TabIndex = 29;
@@ -689,7 +689,7 @@ namespace KeepBack
 			this.buttonIncludeDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonIncludeDelete.Image = global::KeepBack.Properties.Resources.Delete;
 			this.buttonIncludeDelete.Location = new System.Drawing.Point(607, 171);
-			this.buttonIncludeDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonIncludeDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonIncludeDelete.Name = "buttonIncludeDelete";
 			this.buttonIncludeDelete.Size = new System.Drawing.Size(32, 30);
 			this.buttonIncludeDelete.TabIndex = 27;
@@ -705,7 +705,7 @@ namespace KeepBack
 			this.buttonIncludeAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonIncludeAdd.Image = global::KeepBack.Properties.Resources.Add;
 			this.buttonIncludeAdd.Location = new System.Drawing.Point(607, 135);
-			this.buttonIncludeAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonIncludeAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonIncludeAdd.Name = "buttonIncludeAdd";
 			this.buttonIncludeAdd.Size = new System.Drawing.Size(32, 30);
 			this.buttonIncludeAdd.TabIndex = 26;
@@ -719,7 +719,7 @@ namespace KeepBack
 			this.listBoxInclude.FormattingEnabled = true;
 			this.listBoxInclude.ItemHeight = 16;
 			this.listBoxInclude.Location = new System.Drawing.Point(9, 135);
-			this.listBoxInclude.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.listBoxInclude.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxInclude.Name = "listBoxInclude";
 			this.listBoxInclude.Size = new System.Drawing.Size(596, 68);
 			this.listBoxInclude.TabIndex = 25;
@@ -730,7 +730,7 @@ namespace KeepBack
 			this.textBoxFolderPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.textBoxFolderPath.Location = new System.Drawing.Point(68, 81);
-			this.textBoxFolderPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderPath.Name = "textBoxFolderPath";
 			this.textBoxFolderPath.Size = new System.Drawing.Size(537, 22);
 			this.textBoxFolderPath.TabIndex = 15;
@@ -748,7 +748,7 @@ namespace KeepBack
 			// textBoxFolderName
 			// 
 			this.textBoxFolderName.Location = new System.Drawing.Point(68, 49);
-			this.textBoxFolderName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxFolderName.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderName.Name = "textBoxFolderName";
 			this.textBoxFolderName.Size = new System.Drawing.Size(249, 22);
 			this.textBoxFolderName.TabIndex = 13;
@@ -778,8 +778,8 @@ namespace KeepBack
 			// panelArchive
 			// 
 			this.panelArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelArchive.Controls.Add(this.labelArchiveFullPath);
 			this.panelArchive.Controls.Add(this.buttonSave);
-			this.panelArchive.Controls.Add(this.buttonArchivePath);
 			this.panelArchive.Controls.Add(this.buttonFolderDelete);
 			this.panelArchive.Controls.Add(this.buttonFolderAdd);
 			this.panelArchive.Controls.Add(this.labelListFolders);
@@ -793,11 +793,10 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveHistory);
 			this.panelArchive.Controls.Add(this.textBoxArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
-			this.panelArchive.Controls.Add(this.textBoxArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchive);
 			this.panelArchive.Location = new System.Drawing.Point(4, 4);
-			this.panelArchive.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
 			this.panelArchive.Size = new System.Drawing.Size(643, 318);
 			this.panelArchive.TabIndex = 1;
@@ -807,28 +806,13 @@ namespace KeepBack
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonSave.Enabled = false;
 			this.buttonSave.Location = new System.Drawing.Point(536, 4);
-			this.buttonSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(100, 28);
 			this.buttonSave.TabIndex = 5;
 			this.buttonSave.Text = "Save";
 			this.buttonSave.UseVisualStyleBackColor = true;
 			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-			// 
-			// buttonArchivePath
-			// 
-			this.buttonArchivePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonArchivePath.AutoSize = true;
-			this.buttonArchivePath.FlatAppearance.BorderSize = 0;
-			this.buttonArchivePath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonArchivePath.Image = global::KeepBack.Properties.Resources.FolderOpen;
-			this.buttonArchivePath.Location = new System.Drawing.Point(607, 44);
-			this.buttonArchivePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.buttonArchivePath.Name = "buttonArchivePath";
-			this.buttonArchivePath.Size = new System.Drawing.Size(32, 30);
-			this.buttonArchivePath.TabIndex = 25;
-			this.buttonArchivePath.UseVisualStyleBackColor = true;
-			this.buttonArchivePath.Click += new System.EventHandler(this.buttonArchivePath_Click);
 			// 
 			// buttonFolderDelete
 			// 
@@ -838,7 +822,7 @@ namespace KeepBack
 			this.buttonFolderDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderDelete.Image = global::KeepBack.Properties.Resources.Delete;
 			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 231);
-			this.buttonFolderDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonFolderDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderDelete.Name = "buttonFolderDelete";
 			this.buttonFolderDelete.Size = new System.Drawing.Size(32, 30);
 			this.buttonFolderDelete.TabIndex = 24;
@@ -854,7 +838,7 @@ namespace KeepBack
 			this.buttonFolderAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderAdd.Image = global::KeepBack.Properties.Resources.Add;
 			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 196);
-			this.buttonFolderAdd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.buttonFolderAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderAdd.Name = "buttonFolderAdd";
 			this.buttonFolderAdd.Size = new System.Drawing.Size(32, 30);
 			this.buttonFolderAdd.TabIndex = 23;
@@ -879,7 +863,7 @@ namespace KeepBack
 			this.listBoxFolders.FormattingEnabled = true;
 			this.listBoxFolders.ItemHeight = 16;
 			this.listBoxFolders.Location = new System.Drawing.Point(9, 196);
-			this.listBoxFolders.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.listBoxFolders.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxFolders.Name = "listBoxFolders";
 			this.listBoxFolders.Size = new System.Drawing.Size(596, 100);
 			this.listBoxFolders.TabIndex = 21;
@@ -888,11 +872,13 @@ namespace KeepBack
 			// textBoxArchiveMinute
 			// 
 			this.textBoxArchiveMinute.Location = new System.Drawing.Point(521, 133);
-			this.textBoxArchiveMinute.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxArchiveMinute.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMinute.Name = "textBoxArchiveMinute";
 			this.textBoxArchiveMinute.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveMinute.TabIndex = 20;
 			this.textBoxArchiveMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups will be merged together in" +
+        "to hours.");
 			// 
 			// labelArchiveMinute
 			// 
@@ -908,11 +894,12 @@ namespace KeepBack
 			// textBoxArchiveHour
 			// 
 			this.textBoxArchiveHour.Location = new System.Drawing.Point(377, 133);
-			this.textBoxArchiveHour.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxArchiveHour.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveHour.Name = "textBoxArchiveHour";
 			this.textBoxArchiveHour.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveHour.TabIndex = 18;
 			this.textBoxArchiveHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups will be merged together into days.");
 			// 
 			// labelArchiveHour
 			// 
@@ -928,11 +915,12 @@ namespace KeepBack
 			// textBoxArchiveDay
 			// 
 			this.textBoxArchiveDay.Location = new System.Drawing.Point(233, 133);
-			this.textBoxArchiveDay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxArchiveDay.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveDay.Name = "textBoxArchiveDay";
 			this.textBoxArchiveDay.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveDay.TabIndex = 16;
 			this.textBoxArchiveDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups will be merged together into months.");
 			// 
 			// labelArchiveDay
 			// 
@@ -951,19 +939,20 @@ namespace KeepBack
 			this.labelArchiveHistory.Location = new System.Drawing.Point(5, 105);
 			this.labelArchiveHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveHistory.Name = "labelArchiveHistory";
-			this.labelArchiveHistory.Size = new System.Drawing.Size(549, 17);
+			this.labelArchiveHistory.Size = new System.Drawing.Size(515, 17);
 			this.labelArchiveHistory.TabIndex = 14;
-			this.labelArchiveHistory.Text = "After a period of time, historical backups are merged.  History is merged at four" +
-    " levels.";
+			this.labelArchiveHistory.Text = "Historical backups are merged together at four levels after these periods of time" +
+    ":";
 			// 
 			// textBoxArchiveMonth
 			// 
 			this.textBoxArchiveMonth.Location = new System.Drawing.Point(89, 133);
-			this.textBoxArchiveMonth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.textBoxArchiveMonth.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMonth.Name = "textBoxArchiveMonth";
 			this.textBoxArchiveMonth.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveMonth.TabIndex = 13;
 			this.textBoxArchiveMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups will be merged together into years.");
 			// 
 			// labelArchiveMonth
 			// 
@@ -976,26 +965,15 @@ namespace KeepBack
 			this.labelArchiveMonth.Text = "Months";
 			this.labelArchiveMonth.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
-			// textBoxArchivePath
-			// 
-			this.textBoxArchivePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxArchivePath.Location = new System.Drawing.Point(47, 49);
-			this.textBoxArchivePath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.textBoxArchivePath.Name = "textBoxArchivePath";
-			this.textBoxArchivePath.Size = new System.Drawing.Size(559, 22);
-			this.textBoxArchivePath.TabIndex = 10;
-			this.textBoxArchivePath.TextChanged += new System.EventHandler(this.textBoxArchivePath_TextChanged);
-			// 
 			// labelArchivePath
 			// 
 			this.labelArchivePath.AutoSize = true;
-			this.labelArchivePath.Location = new System.Drawing.Point(5, 53);
+			this.labelArchivePath.Location = new System.Drawing.Point(6, 40);
 			this.labelArchivePath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchivePath.Name = "labelArchivePath";
-			this.labelArchivePath.Size = new System.Drawing.Size(37, 17);
+			this.labelArchivePath.Size = new System.Drawing.Size(66, 17);
 			this.labelArchivePath.TabIndex = 8;
-			this.labelArchivePath.Text = "Path";
+			this.labelArchivePath.Text = "Location:";
 			// 
 			// labelArchive
 			// 
@@ -1008,13 +986,31 @@ namespace KeepBack
 			this.labelArchive.TabIndex = 5;
 			this.labelArchive.Text = "Archive";
 			// 
+			// labelArchiveFullPath
+			// 
+			this.labelArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.labelArchiveFullPath.Location = new System.Drawing.Point(9, 60);
+			this.labelArchiveFullPath.Name = "labelArchiveFullPath";
+			this.labelArchiveFullPath.Size = new System.Drawing.Size(596, 22);
+			this.labelArchiveFullPath.TabIndex = 25;
+			this.labelArchiveFullPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// toolTip
+			// 
+			this.toolTip.AutoPopDelay = 15000;
+			this.toolTip.InitialDelay = 100;
+			this.toolTip.IsBalloon = true;
+			this.toolTip.ReshowDelay = 100;
+			// 
 			// FormEdit
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1076, 617);
 			this.Controls.Add(this.splitContainer);
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "FormEdit";
 			this.Text = "Backup Selection";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEdit_FormClosing);
@@ -1049,7 +1045,6 @@ namespace KeepBack
 		private System.Windows.Forms.ImageList imageListTree;
 		private System.Windows.Forms.Label labelArchive;
 		private System.Windows.Forms.Label labelArchivePath;
-		private System.Windows.Forms.TextBox textBoxArchivePath;
 		private System.Windows.Forms.TextBox textBoxArchiveMonth;
 		private System.Windows.Forms.Label labelArchiveMonth;
 		private System.Windows.Forms.Label labelArchiveHistory;
@@ -1063,7 +1058,6 @@ namespace KeepBack
 		private System.Windows.Forms.ListBox listBoxFolders;
 		private System.Windows.Forms.Button buttonFolderDelete;
 		private System.Windows.Forms.Button buttonFolderAdd;
-		private System.Windows.Forms.Button buttonArchivePath;
 		private System.Windows.Forms.TextBox textBoxFolderPath;
 		private System.Windows.Forms.Label labelFolderPath;
 		private System.Windows.Forms.TextBox textBoxFolderName;
@@ -1109,5 +1103,7 @@ namespace KeepBack
 		private System.Windows.Forms.Label labelPattern1Tag;
 		private System.Windows.Forms.Label labelPattern5Tag;
 		private System.Windows.Forms.Label labelPattern4Description;
+		private System.Windows.Forms.Label labelArchiveFullPath;
+		private System.Windows.Forms.ToolTip toolTip;
 	}
 }
