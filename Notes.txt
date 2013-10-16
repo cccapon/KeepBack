@@ -11,8 +11,16 @@
 
 - test the backup process, make sure everything is running again
 
-- merge all the File pattern types.
-	- may as well support nested patterns.
+- converting to use archive .keep filename as path to where archive is stored.
+	- during upgrade, make sure user is prompted to save the .keep file in the archive directory
+		- read the archive directory from the V1 path components
+		- allow them to change the file name
+		- warn them if the archive path is different from where they save the .keep file
+	- Edit dialog displays the path to the archive
+		- have the title bar only contain the .keep filename rather than entire path
+
+	- merge all the File pattern types.
+		- may as well support nested patterns.
 
 
 - we were working on History Explorer, but started to merge 2.0 changes in
