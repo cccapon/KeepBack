@@ -24,7 +24,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Windows.Forms;
 
-namespace KeepBack.V1
+namespace KeepBack.v1
 {
 	public class CtrlFolder
 	{

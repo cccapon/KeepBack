@@ -26,7 +26,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace KeepBack.V1
+namespace KeepBack.v1
 {
 	[XmlRoot(ElementName="keepback",Namespace=Ctrl.XmlNamespace)]
 	public class Ctrl

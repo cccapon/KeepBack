@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace KeepBack.V1
+namespace KeepBack.v1
 {
 	public class CtrlPattern
 	{

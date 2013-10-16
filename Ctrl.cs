@@ -90,9 +90,9 @@ namespace KeepBack
 							c = (Ctrl)(new XmlSerializer( typeof(Ctrl) )).Deserialize( r );
 							break;
 						}
-						case V1.Ctrl.XmlNamespace:
+						case v1.Ctrl.XmlNamespace:
 						{
-							V1.Ctrl c1 = (V1.Ctrl)(new XmlSerializer( typeof(V1.Ctrl) )).Deserialize( r );
+							v1.Ctrl c1 = (v1.Ctrl)(new XmlSerializer( typeof(v1.Ctrl) )).Deserialize( r );
 							c = c1.Upgrade();
 							c.upgraded = true;
 							break;
