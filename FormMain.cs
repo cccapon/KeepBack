@@ -80,8 +80,8 @@ namespace KeepBack
 				f.AddExtension = true;
 				f.CheckPathExists = true;
 				f.CreatePrompt = false;
-				f.DefaultExt = "ctrl";
-				f.Filter           = "control files (*.keep)|*.keep";
+				f.DefaultExt = Archive.EXTENSION;
+				f.Filter           = "control files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION;
 				f.FilterIndex      = 1;
 				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
 				f.OverwritePrompt = true;
@@ -106,8 +106,9 @@ namespace KeepBack
 			{
 				OpenFileDialog f = new OpenFileDialog();
 				f.CheckFileExists  = true;
+				f.DefaultExt       = Archive.EXTENSION;
 				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
-				f.Filter           = "control files (*.keep)|*.keep|All files (*.*)|*.*";
+				f.Filter           = "control files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION + "|All files (*.*)|*.*";
 				f.FilterIndex      = 1;
 				f.RestoreDirectory = true;
 				f.Title = "Select a backup control file to work with.";
@@ -300,7 +301,7 @@ namespace KeepBack
 					}
 					else if( c.Archive != null )
 					{
-						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), c, true, IsDebug ) )
+						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), c, IsDebug ) )
 						{
 							if( current != null )
 							{

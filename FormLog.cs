@@ -66,7 +66,7 @@ namespace KeepBack
 					if( ! string.IsNullOrEmpty( s ) )
 					{
 						labelLog.Text = li.Text;
-						richTextBoxLog.LoadFile( System.IO.Path.Combine( ctrl.Path, s ), RichTextBoxStreamType.PlainText );
+						richTextBoxLog.LoadFile( Archive.PathCombine( ctrl.Path, s ), RichTextBoxStreamType.PlainText );
 					}
 				}
 			}

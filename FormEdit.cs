@@ -318,9 +318,9 @@ namespace KeepBack
 						SaveFileDialog f = new SaveFileDialog();
 						f.AddExtension = true;
 						f.CheckPathExists = true;
-						f.DefaultExt = ".keep";
+						f.DefaultExt = Archive.EXTENSION;
 						f.FileName = Path.GetFileName( ctrl.FileName );
-						f.Filter = "KeepBack files (*.keep)|*.keep";
+						f.Filter = "KeepBack files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION;
 						f.FilterIndex = 0;
 						f.InitialDirectory = Path.GetDirectoryName( ctrl.FileName );
 						f.OverwritePrompt = true;

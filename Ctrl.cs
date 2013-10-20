@@ -62,15 +62,6 @@ namespace KeepBack
 
 		//--- method ----------------------------
 
-		public static string RelativePath( string root, string path )
-		{
-			if( string.IsNullOrEmpty( path ) )
-			{
-				return root;
-			}
-			return (string.IsNullOrEmpty( root ) || System.IO.Path.IsPathRooted( path )) ? path : System.IO.Path.Combine( root, path );
-		}
-
 		public static Ctrl Import( string filename )
 		{
 			filename = System.IO.Path.GetFullPath( filename );
@@ -88,6 +79,7 @@ namespace KeepBack
 						case Ctrl.XmlNamespace:
 						{
 							c = (Ctrl)(new XmlSerializer( typeof(Ctrl) )).Deserialize( r );
+							c.FileName = filename;
 							break;
 						}
 						case v1.Ctrl.XmlNamespace:
@@ -100,10 +92,10 @@ namespace KeepBack
 						default:
 						{
 							c = new Ctrl();
+							c.FileName = filename;
 							break;
 						}
 					}
-					c.FileName = filename;
 					return c;
 				}
 			}

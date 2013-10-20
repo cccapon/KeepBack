@@ -2,7 +2,7 @@
 <keepback xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:keepback:schema:2013-02">
   <archive month="6" day="7" hour="24" minute="60">
     <folders>
-      <folder name="KeepBack" path="C:\Users\Chris\Develop\KeepBack">
+      <folder name="KeepBack" path="C:\Users\cc\Projects\KeepBack">
         <excludes>
           <exclude debug="true" case-sensitive="false">.svn\</exclude>
         </excludes>

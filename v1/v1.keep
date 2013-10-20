@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<keepback xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://keepback.org/2008-09/keepback">
+  <archives>
+    <archive root="C:\" path="Temp" name="cctop" month="6" day="15" hour="24" minute="60">
+      <folders>
+        <folder name="cc" path="C:\Users\cc">
+          <excludes>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Temp\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Google\Chrome\User Data\Default\Cache\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Microsoft\Windows\Temporary Internet Files\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Mozilla\Firefox\Profiles\*\Cache\</exclude>
+            <exclude debug="false" case-sensitive="false">DVDFab/</exclude>
+            <exclude debug="false" case-sensitive="false">Virtual Machines\</exclude>
+          </excludes>
+          <histories>
+            <history debug="false" case-sensitive="false">AppData\Roaming\Thunderbird\Profiles\</history>
+            <history debug="false" case-sensitive="false">Music\iTunes\</history>
+          </histories>
+        </folder>
+      </folders>
+    </archive>
+    <archive root="C:\" path="Temp" name="u260" month="6" day="15" hour="24" minute="60">
+      <folders>
+        <folder name="Users" path="C:\Users">
+          <excludes>
+            <exclude debug="false" case-sensitive="false">VirtualBox\...\*.vdi</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Google\Chrome\User Data\Default\Cache\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Microsoft\Windows\Temporary Internet Files\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Mozilla\Firefox\Profiles\*\Cache\</exclude>
+            <exclude debug="false" case-sensitive="false">AppData\Local\Temp\</exclude>
+          </excludes>
+        </folder>
+      </folders>
+    </archive>
+  </archives>
+</keepback>

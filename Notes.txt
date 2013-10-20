@@ -3,24 +3,11 @@
  Current
 ---------------------------------------
 
-- provided an upgrade path to v2 control files
-	- just added dialog to force selection of Archive
-	- just updated Editor to warn about upgrade and force save.
-	- changing destination path to match the location of the .keep file
-
-
 - test the backup process, make sure everything is running again
 
-- converting to use archive .keep filename as path to where archive is stored.
-	- during upgrade, make sure user is prompted to save the .keep file in the archive directory
-		- read the archive directory from the V1 path components
-		- allow them to change the file name
-		- warn them if the archive path is different from where they save the .keep file
-	- Edit dialog displays the path to the archive
-		- have the title bar only contain the .keep filename rather than entire path
-
-	- merge all the File pattern types.
-		- may as well support nested patterns.
+- merge all the File pattern types.
+	- may as well support nested patterns.
+- Add Skip files to the log and legend as character 'S'
 
 
 - we were working on History Explorer, but started to merge 2.0 changes in
@@ -29,19 +16,6 @@
 
  Quick Notes
 ---------------------------------------
-- Source and Destination folders
-	- if we always store the .keep file in the archive folder
-		- we can tell the archive location by the path to the open .keep file
-	- the location of the source files doesn't change
-	- so we should be able to auto adjust when the archive path changes (as in a USB drive)
-- Delete Duplicates functionality
-	- new window from History Explorer
-	- scan all folders, generate SHA5 sum for each file
-	- do full byte scan/compare of all files with the same SHA5
-	- display list of files which have exactly the same content
-	- allow some sort of selection tool which allows various history folders to be included or excluded
-	- set flag to keep version from most current history but flag all others for deletion.
-	- with one button, delete the versions flagged for deletion.
 
 
 
@@ -59,11 +33,6 @@
 - when a folder is excluded using a filter and that folder already exists in the backup, it will not be cleared out properly by history.
 - Add new "exclude folder" to existing archive
   - when exclude folder is added, the file exclude icon is displayed rather than folder exclude
-- When backup drive is just 'E' instead of 'E:' then a folder is created called E\backup\directory rather than E:\backup\directory
-  - verify that all drive numbers end with the ':' character.
-  - maybe the separation of drive letter and path should be rethought, it isn't that difficult to change a drive letter programatically.
-  - if path is E:\ and root is E:\ then paths have two drive prefixes : E:\E:\
-	- should have parsing rules for these fields
 - remove default pattern
   - default pattern of "*" matches everything and on an exclude is disasterous
   - make default pattern "" instead
@@ -84,10 +53,12 @@
 		- display them at the end of processing (or the log file), make them easy to find.
 	- display warning/error counter as part of statistics
 		- offer to display reduced (no files that didn't produce errors) or full log file if there were warnings or errors
+			- could this just be a flag in the log file viewer?
 	- separate filenames from log
 		- log top should contain all error and status messages
 		- list of files backed up should be at the bottom or in a separate file
 		- write the file list in such a way that in the future there could be options to rollback files or even folders to a specific point in time.
+		- ??skip this, make it a feature of the log viewer?
 
 ... Functionality
 
@@ -95,16 +66,10 @@
 		- when there are no conflicting names, allow merge to rename date/time folders to just date folders
 			eg: 2010-11-05-1903  to  2010-11-05
 			especially the monthly merge if not the daily
-			handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05
+			handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05-1900 to 2010-11-05 to 2010-11 to 2010
 	- if we have eliminated the 'already exists' problem
 		- can we go back to comparing filenames rather than asking the filesystem to pattern match the names?
 		- use the filter match object with the case sensitive flag from our filesystem test
-	- Support for multiple archives per backup set
-		- should we keep this or revert to a single archive per backup set
-			- multiple archives complicates log file and history explorer
-			- also, multi-threading gets weird.
-		- For log files, display list of archives on left, log files on right.
-		- for explorer, dropdown for archive?, all archives in one tree? that would kill scan time though.
 	- connecting to a network drive
 		- when a failure occurs, retry over a short period to see if network interuptions can be overcome
 			System.IO.IOException: The specified network name is no longer available.
@@ -215,14 +180,6 @@
 		- history remains NULL
 		- full backup takes place and no history interaction takes place
 		- then its business as usual
-	- provide an easy way to move the backup destination
-		- USB drives could end up being mounted in a variety of places
-		- when control file is run, a test is made to see if the destination path
-			exists.  If not, then two options are presented:
-			- create destination
-			- search for destination
-				- search could be automatic, hunt each valid root for /folder/name
-				- skip floppy drives if possible
 	- registry backup
 		- registry is always locked for current user
 		- windows only
@@ -231,8 +188,14 @@
 		- looks for any information which can be derrived from a file
 		- will report anything new or unknown to the console.
 			- attributes, file dates, properties, security information, size, accessibility, permissions, etc.
-	- try to identify files which should never be backed up
-		- devices, links, pipes
+	- Delete Duplicates functionality
+		- new window from History Explorer
+		- scan all folders, generate SHA5 sum for each file
+		- do full byte scan/compare of all files with the same SHA5
+		- display list of files which have exactly the same content
+		- allow some sort of selection tool which allows various history folders to be included or excluded
+		- set flag to keep version from most current history but flag all others for deletion.
+		- with one button, delete the versions flagged for deletion.
 
 
 ... Main Display
@@ -268,7 +231,6 @@
 	- when adding a new folder, leave name empty
 		- if browser selects folder and name is empty, set name = foldername of path
 		- if we leave the folder without naming it, automatically set name = foldername of path
-	- no two archives should have the same destination path
 	- no two folders should have the same archive name
 	- check for empty paths
 	- check for invalid characters in each field
@@ -286,6 +248,8 @@
 	- display a list of all log files related to the loaded backup.keep
 	- let the user select one
 	- display the log file in a scrollable window.
+	- add filter options to remove bulk lines like Created, Modified, Deleted
+		- lets you quickly see any error messages
 
 ... History Explorer
 	- history explorer shows a combined tree which merges all file paths from all dated folders.

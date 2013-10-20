@@ -99,6 +99,7 @@ namespace KeepBack
 			this.labelFolderName = new System.Windows.Forms.Label();
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
+			this.labelArchiveFullPath = new System.Windows.Forms.Label();
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.buttonFolderDelete = new System.Windows.Forms.Button();
 			this.buttonFolderAdd = new System.Windows.Forms.Button();
@@ -115,7 +116,6 @@ namespace KeepBack
 			this.labelArchiveMonth = new System.Windows.Forms.Label();
 			this.labelArchivePath = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
-			this.labelArchiveFullPath = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -527,7 +527,7 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(656, 368);
+			this.panelFolder.Location = new System.Drawing.Point(655, 360);
 			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(643, 420);
@@ -801,6 +801,17 @@ namespace KeepBack
 			this.panelArchive.Size = new System.Drawing.Size(643, 318);
 			this.panelArchive.TabIndex = 1;
 			// 
+			// labelArchiveFullPath
+			// 
+			this.labelArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.labelArchiveFullPath.Location = new System.Drawing.Point(9, 60);
+			this.labelArchiveFullPath.Name = "labelArchiveFullPath";
+			this.labelArchiveFullPath.Size = new System.Drawing.Size(596, 22);
+			this.labelArchiveFullPath.TabIndex = 25;
+			this.labelArchiveFullPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
 			// buttonSave
 			// 
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -985,17 +996,6 @@ namespace KeepBack
 			this.labelArchive.Size = new System.Drawing.Size(62, 17);
 			this.labelArchive.TabIndex = 5;
 			this.labelArchive.Text = "Archive";
-			// 
-			// labelArchiveFullPath
-			// 
-			this.labelArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelArchiveFullPath.Location = new System.Drawing.Point(9, 60);
-			this.labelArchiveFullPath.Name = "labelArchiveFullPath";
-			this.labelArchiveFullPath.Size = new System.Drawing.Size(596, 22);
-			this.labelArchiveFullPath.TabIndex = 25;
-			this.labelArchiveFullPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// toolTip
 			// 

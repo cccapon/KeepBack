@@ -159,7 +159,7 @@ namespace KeepBack
 					for( int i = 0; i < a.Count; ++i )
 					{
 						string s = a[i];
-						root = Scan( root, Path.Combine( path, s ), i );
+						root = Scan( root, Archive.PathCombine( path, s ), i );
 						ListViewItem li = listViewHistory.Items.Add( Ctrl.HistoryNameFormatted( s ) );
 						li.Tag = s;
 					}
@@ -191,7 +191,7 @@ namespace KeepBack
 						string        s = Path.GetFileName( p );
 						int           i = folder.FolderFind( s );
 						HistoryFolder f = (i >= 0) ? folder.folders[i] : new HistoryFolder( folder.history.Count, s );
-						f = Scan( f, Path.Combine( path, s ), history );
+						f = Scan( f, Archive.PathCombine( path, s ), history );
 						if( i >= 0 )
 						{
 							folder.folders[i] = f;
@@ -348,7 +348,7 @@ namespace KeepBack
 					while( ((node = node.Parent) != null) && (node.Tag != null) )
 					{
 						folder = (HistoryFolder)node.Tag;
-						path = Path.Combine( folder.name, path );
+						path = Archive.PathCombine( folder.name, path );
 					}
 					labelFolder.Text = path;
 				}

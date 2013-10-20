@@ -18,6 +18,14 @@
 
 */
 
+/*
+	When compiling under Mono - include reference to Mono.Posix
+*/
+
+#if true //tracking a bug in history processing
+#define CHECK_HISTORY_BUG
+#endif
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -40,13 +48,16 @@ namespace KeepBack
 		 * - When a backup is processed:
 		 *   - "history" is set to the most recent dated folder (if one exists)
 		 *   - "current" is set to the name of a new dated folder based on the current time.
-		 *   - "history" is renamed to "current".
+		 *   - the "history" folder is renamed to "current".
+		 *   - a new "history" folder is created to contain old versions of any file which has changed.
+		 *   - this way, the "current" folder always contains the most recent copies of all files.
 		 */
 
 		//--- define ----------------------------
 
-		const string  SECTION_DETAIL  = @"           ";
-		const char    BLANK           = '-';
+		const string         SECTION_DETAIL  = @"           ";
+		const char           BLANK           = '-';
+		public const string  EXTENSION       = "keep";
 
 		public enum Action
 		{
@@ -61,6 +72,7 @@ namespace KeepBack
 			Created   = 1,
 			Modified  = 2,
 			Deleted   = 3,
+			Skipped   = 4,
 		}
 		public enum MergeLevel
 		{
@@ -122,7 +134,7 @@ namespace KeepBack
 
 		//--- constructor -----------------------
 
-		public Archive( ActionDelegate action, Ctrl ctrl, bool create, bool debug )
+		public Archive( ActionDelegate action, Ctrl ctrl, bool debug )
 		{
 			this.action   = action;
 			this.ctrl     = ctrl;
@@ -130,14 +142,7 @@ namespace KeepBack
 
 			this.start    = DateTime.Now;
 
-			if( create && ! DirectoryCreateDirectory( this.ctrl.Path ) )
-			{
-				LogInfo( "Can not create archive path [ " + this.ctrl.Path + " ]." );
-			}
-			if( Directory.Exists( this.ctrl.Path ) )
-			{
-				this.log = new StreamWriter( Path.Combine( this.ctrl.Path, DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
-			}
+			this.log = new StreamWriter( PathCombine( this.ctrl.Path, DateFolderSecond( start ) + ".log" ), false, Encoding.ASCII );
 			LogInfo( "---------------" );
 			LogInfo( Status( "Archive", this.ctrl.Path ) );
 		}
@@ -152,7 +157,7 @@ namespace KeepBack
 				 * by creating a temporary file then attempting
 				 * to access it using a different case name.
 				 */
-				string p = Path.Combine( path, "__TemporaryFile__.txt" );
+				string p = PathCombine( path, "__TemporaryFile__.txt" );
 				if( File.Exists( p.ToLower() ) )
 				{
 					File.Delete( p.ToLower() );
@@ -237,10 +242,10 @@ namespace KeepBack
 					}
 				}
 			}
-			current = Path.Combine( ctrl.Path, current );
+			current = PathCombine( ctrl.Path, current );
 			if( history != null )
 			{
-				history = Path.Combine( ctrl.Path, history );
+				history = PathCombine( ctrl.Path, history );
 				LogInfo( Status( "  previous", history ) );
 				if( ! DirectoryMove( history, current ) )
 				{
@@ -313,7 +318,7 @@ namespace KeepBack
 					DirectoryCreateDirectory( history );
 					foreach( string n in a )
 					{
-						LogReason( Reason.Deleted, n, DirectoryMove( Path.Combine( current, n ), Path.Combine( history, n ) ) );
+						LogReason( Reason.Deleted, n, DirectoryMove( PathCombine( current, n ), PathCombine( history, n ) ) );
 					}
 				}
 			}
@@ -332,8 +337,8 @@ namespace KeepBack
 				LogInfo( "  incomplete folder definition" );
 				return;
 			}
-			this.curr  = Path.Combine( current, folder.Name );
-			this.hist  = (history == null) ? null : Path.Combine( history, folder.Name );
+			this.curr  = PathCombine( current, folder.Name );
+			this.hist  = (history == null) ? null : PathCombine( history, folder.Name );
 			this.fold  = folder.Path;
 			MatchSet.MatchDelegate md = new MatchSet.MatchDelegate( LogMatch );
 			this.inc   = new MatchSet( MatchSet.SetType.Include, folder.Include, md );
@@ -358,7 +363,7 @@ namespace KeepBack
 			if(   history && his.MatchDirectory( path ) ) { history = false; }
 
 			if( cancel ) { return include; }
-			string cp = Path.Combine( curr, path );
+			string cp = PathCombine( curr, path );
 			if( ! Directory.Exists( cp ) )
 			{
 				//..if directory doesn't exist in current, then the entire tree can simply be copied.
@@ -366,13 +371,24 @@ namespace KeepBack
 			}
 			bool         rc = include;
 			List<string> a  = new List<string>( ListDirectories( cp ) );
-			string       fp = Path.Combine( fold, path );
-			string       hp = (hist == null) ? null : Path.Combine( hist, path );
+			string       fp = PathCombine( fold, path );
+			string       hp = (hist == null) ? null : PathCombine( hist, path );
 			foreach( string n in ListDirectories( fp ) )
 			{
 				if( cancel ) { return rc; }
 				//..check each sub-directory in folder.
-				if( BackupCompareFolder( Path.Combine( path, n ), include, history ) )
+#if __MonoCS__
+				{
+					string fpn = PathCombine( fp, n );
+					Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
+					if( ! i.Exists || ! i.IsDirectory )
+					{
+						Log( "directory not found: " + fpn );
+						continue;
+					}
+				}
+#endif
+				if( BackupCompareFolder( PathCombine( path, n ), include, history ) )
 				{
 					foreach( string s in ListDirectories( cp, n ) )
 					{
@@ -392,14 +408,14 @@ namespace KeepBack
 					{
 						if( cancel ) { return rc; }
 						action( Action.File, DisplayDirectory( n ) );
-						string pn = Path.Combine( path, n );
+						string pn = PathCombine( path, n );
 						if( ! history || his.MatchDirectory( pn ) )
 						{
-							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryDelete( Path.Combine( cp, n ), true ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryDelete( PathCombine( cp, n ), true ) );
 						}
 						else
 						{
-							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryMove( Path.Combine( cp, n ), Path.Combine( hp, n ) ) );
+							LogReason( Reason.Deleted, DisplayDirectory( pn ), DirectoryMove( PathCombine( cp, n ), PathCombine( hp, n ) ) );
 						}
 					}
 				}
@@ -409,7 +425,7 @@ namespace KeepBack
 			foreach( string n in ListFiles( fp ) )
 			{
 				if( cancel ) { return rc; }
-				string  pn  = Path.Combine( path, n );
+				string  pn  = PathCombine( path, n );
 				if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
 				{
 					foreach( string s in ListFiles( cp, n ) )
@@ -428,7 +444,7 @@ namespace KeepBack
 					foreach( string n in a )
 					{
 						if( cancel ) { return rc; }
-						string pn = Path.Combine( path, n );
+						string pn = PathCombine( path, n );
 						RemoveFile( cp, hp, pn, n, history && ! his.MatchFile( pn ) );
 					}
 				}
@@ -448,7 +464,7 @@ namespace KeepBack
 			if( ! include && inc.MatchDirectory( path ) ) { include = true; }
 			if(              exc.MatchDirectory( path ) ) { return false; }
 			bool   rc = include;
-			string cp = Path.Combine( curr, path );
+			string cp = PathCombine( curr, path );
 			if( ! include || DirectoryCreateDirectory( cp ) )
 			{
 				if( include )
@@ -456,25 +472,46 @@ namespace KeepBack
 					LogReason( Reason.Created, DisplayDirectory( path ), true );
 					rc = true;
 				}
-				string fp = Path.Combine( fold, path );
+				string fp = PathCombine( fold, path );
 				foreach( string n in ListDirectories( fp ) )
 				{
 					if( cancel ) { return rc; }
-					string p = Path.Combine( path, n );
-					rc |= CopyFolder( p, include );
+#if __MonoCS__
+					{
+						string fpn = PathCombine( fp, n );
+						Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
+						if( ! i.Exists || ! i.IsDirectory )
+						{
+							Log( "directory not found: " + fpn );
+							continue;
+						}
+					}
+#endif
+					rc |= CopyFolder( PathCombine( path, n ), include );
 				}
 				action( Action.Directory, path );
 //				action( Action.File, "" );
 				foreach( string n in ListFiles( fp ) )
 				{
 					if( cancel ) { return rc; }
-					string pn = Path.Combine( path, n );
+#if __MonoCS__
+					{
+						string fpn = PathCombine( fp, n );
+						Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
+						if( ! i.Exists || ! i.IsRegularFile )
+						{
+							Log( "file not found: " + fpn );
+							continue;
+						}
+					}
+#endif
+					string pn = PathCombine( path, n );
 					if( (include || inc.MatchFile( pn )) && ! exc.MatchFile( pn ) )
 					{
 						if( include || DirectoryCreateDirectory( cp ) )
 						{
 							action( Action.File, n );
-							LogReason( Reason.Created, pn, FileCopy( Path.Combine( fp, n ), Path.Combine( cp, n ), false ) );
+							LogReason( Reason.Created, pn, FileCopy( PathCombine( fp, n ), PathCombine( cp, n ), false ) );
 							rc = true;
 						}
 					}
@@ -485,8 +522,8 @@ namespace KeepBack
 
 		void BackupFile( string fp, string cp, string hp, string pn, string n, bool history )
 		{
-			string   fpn  = Path.Combine( fp, n );
-			string   cpn  = Path.Combine( cp, n );
+			string   fpn  = PathCombine( fp, n );
+			string   cpn  = PathCombine( cp, n );
 
 			FileInfo ffi  = FileInfo( fpn );
 			FileInfo cfi  = FileInfo( cpn );
@@ -494,6 +531,17 @@ namespace KeepBack
 			{
 				return;
 			}
+#if __MonoCS__
+			{
+				Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
+				if( ! i.Exists || ! i.IsRegularFile )
+				{
+					Log( "file not found: " + fpn );
+					action( Action.Skip, "" );
+					return;
+				}
+			}
+#endif
 			if( ! cfi.Exists )
 			{
 				//..file does not exist in current, simply copy
@@ -558,8 +606,8 @@ namespace KeepBack
 				return;
 			}
 			//..move old file from current to history
-			string hpn = Path.Combine( hp, n );
-#if true //history bug
+			string hpn = PathCombine( hp, n );
+#if CHECK_HISTORY_BUG
 			if( File.Exists( hpn ) )
 			{
 				LogInfo( "Backup. file already exists in history [" + hpn + "], replacing" );
@@ -583,15 +631,15 @@ namespace KeepBack
 		void RemoveFile( string cp, string hp, string pn, string n, bool history )
 		{
 			action( Action.File, n );
-			string cpn = Path.Combine( cp, n );
+			string cpn = PathCombine( cp, n );
 			if( history )
 			{
 				if( (hp == null) || ! DirectoryCreateDirectory( hp ) )
 				{
 					return;
 				}
-				string hpn = Path.Combine( hp, n );
-#if true //history bug
+				string hpn = PathCombine( hp, n );
+#if CHECK_HISTORY_BUG
 				if( File.Exists( hpn ) )
 				{
 					LogInfo( "Remove. file already exists in history [" + hpn + "], replacing" );
@@ -639,7 +687,7 @@ namespace KeepBack
 					{
 						if( string.Compare( f, s, true ) < 0 )
 						{
-							FileDelete( Path.Combine( ctrl.Path, f ) );
+							FileDelete( PathCombine( ctrl.Path, f ) );
 						}
 						break;
 					}
@@ -689,7 +737,7 @@ namespace KeepBack
 					{
 						string t = a[j].Substring( 0, z );
 						LogInfo( Status( "  ..rename", a[j] + "   " + t ) );
-						DirectoryMove( Path.Combine( ctrl.Path, a[j] ), Path.Combine( ctrl.Path, t ) );
+						DirectoryMove( PathCombine( ctrl.Path, a[j] ), PathCombine( ctrl.Path, t ) );
 					}
 				}
 			}
@@ -697,8 +745,8 @@ namespace KeepBack
 		bool Merge( string src, string dst )
 		{
 			if( cancel ) { return false; }
-			string sp = Path.Combine( ctrl.Path, src );
-			string dp = Path.Combine( ctrl.Path, dst );
+			string sp = PathCombine( ctrl.Path, src );
+			string dp = PathCombine( ctrl.Path, dst );
 			if( ! Directory.Exists( dp ) )
 			{
 				LogInfo( "Destination folder missing : " + DisplayDirectory( dp ) );
@@ -713,30 +761,30 @@ namespace KeepBack
 			foreach( string n in ListDirectories( sp ) )
 			{
 				if( cancel ) { return false; }
-				string dpn = Path.Combine( dp, n );
+				string dpn = PathCombine( dp, n );
 				if( Directory.Exists( dpn ) )
 				{
-					ret &= Merge( Path.Combine( src, n ), Path.Combine( dst, n ) );
+					ret &= Merge( PathCombine( src, n ), PathCombine( dst, n ) );
 				}
 				else
 				{
-					ret &= DirectoryMove( Path.Combine( sp, n ), dpn );
+					ret &= DirectoryMove( PathCombine( sp, n ), dpn );
 				}
 			}
 			foreach( string n in ListFiles( sp ) )
 			{
 				if( cancel ) { return false; }
-				string dpn = Path.Combine( dp, n );
+				string dpn = PathCombine( dp, n );
 				if( File.Exists( dpn ) )
 				{
-					ret &= FileDelete( Path.Combine( sp, n ) );
+					ret &= FileDelete( PathCombine( sp, n ) );
 				}
 				else
 				{
-					bool b = FileMove( Path.Combine( sp, n ), dpn );
+					bool b = FileMove( PathCombine( sp, n ), dpn );
 					if( ! b )
 					{
-						LogInfo( "failed moving source [" + Path.Combine( sp, n ) + "] to destination [" + Path.Combine( dp, n ) + "]" );
+						LogInfo( "failed moving source [" + PathCombine( sp, n ) + "] to destination [" + PathCombine( dp, n ) + "]" );
 					}
 					ret &= b;
 				}
@@ -818,7 +866,7 @@ namespace KeepBack
 		{
 			try
 			{
-#if true //tracking a bug in history processing
+#if CHECK_HISTORY_BUG
 				if( Directory.Exists( dst ) )
 				{
 					LogInfo( "Directory already exists at destination [ " + dst + " ]" );
@@ -875,7 +923,7 @@ namespace KeepBack
 		{
 			try
 			{
-#if true //tracking a bug in history processing
+#if CHECK_HISTORY_BUG
 				if( File.Exists( dst ) )
 				{
 					LogInfo( "FileMove. file already exists at destination " + DisplayCombined( src, dst ) + ", replacing" );
@@ -1107,6 +1155,31 @@ namespace KeepBack
 		string DisplayTime( TimeSpan time )
 		{
 			return string.Format( "{0:D2}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds );
+		}
+
+		public static string PathCombine( params string[] path )
+		{
+			string t = string.Empty;
+			int i = 0;
+			if( i < path.Length )
+			{
+				t = path[i];
+				while( ++i < path.Length )
+				{
+					string s = path[i];
+					if( System.IO.Path.IsPathRooted( s ) )
+					{
+						string r = System.IO.Path.GetPathRoot( s );
+						if( ! s.StartsWith( r ) )
+						{
+							throw new ArgumentException( "Rooted path '" + s + "' does not start with root '" + r + "'." );
+						}
+						s = s.Substring( r.Length );
+					}
+					t = Path.Combine( t, s );
+				}
+			}
+			return t;
 		}
 
 		bool DateCompare( DateTime a, DateTime b )
