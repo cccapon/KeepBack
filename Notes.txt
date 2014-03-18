@@ -7,7 +7,6 @@
 
 - merge all the File pattern types.
 	- may as well support nested patterns.
-- Add Skip files to the log and legend as character 'S'
 
 
 - we were working on History Explorer, but started to merge 2.0 changes in
@@ -132,6 +131,7 @@
 		- when history option selected, backing up a file means the previous copy is being overwritten
 		- if the copy fails, the old file will be lost
 		- should we rename the file first then copy the new file, then delete the old file?
+			- move file to history folder as usual, copy new file, delete from history folder
 	- Include, Exclude, History
 		- test all combinations
 			- file, directory

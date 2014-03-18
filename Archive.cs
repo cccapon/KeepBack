@@ -383,7 +383,7 @@ namespace KeepBack
 					Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
 					if( ! i.Exists || ! i.IsDirectory )
 					{
-						Log( "directory not found: " + fpn );
+						LogReason( Reason.Skipped, fpn, false );
 						continue;
 					}
 				}
@@ -482,7 +482,7 @@ namespace KeepBack
 						Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
 						if( ! i.Exists || ! i.IsDirectory )
 						{
-							Log( "directory not found: " + fpn );
+							LogReason( Reason.Skipped, fpn, false );
 							continue;
 						}
 					}
@@ -500,7 +500,7 @@ namespace KeepBack
 						Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
 						if( ! i.Exists || ! i.IsRegularFile )
 						{
-							Log( "file not found: " + fpn );
+							LogReason( Reason.Skipped, fpn, false );
 							continue;
 						}
 					}
@@ -536,8 +536,7 @@ namespace KeepBack
 				Mono.Unix.UnixSymbolicLinkInfo i = new Mono.Unix.UnixSymbolicLinkInfo( fpn );
 				if( ! i.Exists || ! i.IsRegularFile )
 				{
-					Log( "file not found: " + fpn );
-					action( Action.Skip, "" );
+					LogReason( Reason.Skipped, fpn, false );
 					return;
 				}
 			}
@@ -622,7 +621,7 @@ namespace KeepBack
 			//..copy new file from folder to current
 			if( ! FileCopy( fpn, cpn, replace ) )
 			{
-				action( Action.Skip, "" );
+				LogReason( Reason.Skipped, pn, false );
 				return;
 			}
 			LogReason( Reason.Modified, pn, true );
@@ -1083,6 +1082,7 @@ namespace KeepBack
 			}
 			else
 			{
+				Log( Status( Reason.Skipped, 0, filename ) );
 				action( Action.Skip, "" );
 			}
 		}
