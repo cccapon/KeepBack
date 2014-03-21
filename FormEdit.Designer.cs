@@ -142,7 +142,7 @@ namespace KeepBack
 			this.treeViewControl.Margin = new System.Windows.Forms.Padding(4);
 			this.treeViewControl.Name = "treeViewControl";
 			this.treeViewControl.SelectedImageIndex = 0;
-			this.treeViewControl.Size = new System.Drawing.Size(352, 608);
+			this.treeViewControl.Size = new System.Drawing.Size(264, 495);
 			this.treeViewControl.TabIndex = 0;
 			this.treeViewControl.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewControl_AfterSelect);
 			// 
@@ -177,9 +177,8 @@ namespace KeepBack
 			this.splitContainer.Panel2.Controls.Add(this.panelPattern);
 			this.splitContainer.Panel2.Controls.Add(this.panelFolder);
 			this.splitContainer.Panel2.Controls.Add(this.panelArchive);
-			this.splitContainer.Size = new System.Drawing.Size(1073, 613);
-			this.splitContainer.SplitterDistance = 357;
-			this.splitContainer.SplitterWidth = 5;
+			this.splitContainer.Size = new System.Drawing.Size(805, 498);
+			this.splitContainer.SplitterDistance = 267;
 			this.splitContainer.TabIndex = 1;
 			// 
 			// panelPattern
@@ -197,7 +196,7 @@ namespace KeepBack
 			this.panelPattern.Location = new System.Drawing.Point(4, 432);
 			this.panelPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.panelPattern.Name = "panelPattern";
-			this.panelPattern.Size = new System.Drawing.Size(643, 390);
+			this.panelPattern.Size = new System.Drawing.Size(483, 317);
 			this.panelPattern.TabIndex = 3;
 			// 
 			// tableLayoutPanel1
@@ -221,19 +220,18 @@ namespace KeepBack
 			this.tableLayoutPanel1.RowCount = 5;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(492, 134);
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(369, 109);
 			this.tableLayoutPanel1.TabIndex = 42;
 			// 
 			// labelPattern5Tag
 			// 
 			this.labelPattern5Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern5Tag.Location = new System.Drawing.Point(4, 109);
-			this.labelPattern5Tag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern5Tag.Location = new System.Drawing.Point(3, 89);
 			this.labelPattern5Tag.Name = "labelPattern5Tag";
-			this.labelPattern5Tag.Size = new System.Drawing.Size(103, 25);
+			this.labelPattern5Tag.Size = new System.Drawing.Size(77, 20);
 			this.labelPattern5Tag.TabIndex = 8;
 			this.labelPattern5Tag.Text = "/.../";
 			this.labelPattern5Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -241,20 +239,18 @@ namespace KeepBack
 			// labelPattern4Tag
 			// 
 			this.labelPattern4Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern4Tag.Location = new System.Drawing.Point(4, 76);
-			this.labelPattern4Tag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern4Tag.Location = new System.Drawing.Point(3, 62);
 			this.labelPattern4Tag.Name = "labelPattern4Tag";
-			this.labelPattern4Tag.Size = new System.Drawing.Size(103, 28);
+			this.labelPattern4Tag.Size = new System.Drawing.Size(77, 23);
 			this.labelPattern4Tag.TabIndex = 6;
 			this.labelPattern4Tag.Text = "/";
 			this.labelPattern4Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelPattern3Description
 			// 
-			this.labelPattern3Description.Location = new System.Drawing.Point(116, 46);
-			this.labelPattern3Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern3Description.Location = new System.Drawing.Point(87, 38);
 			this.labelPattern3Description.Name = "labelPattern3Description";
-			this.labelPattern3Description.Size = new System.Drawing.Size(372, 30);
+			this.labelPattern3Description.Size = new System.Drawing.Size(279, 24);
 			this.labelPattern3Description.TabIndex = 5;
 			this.labelPattern3Description.Text = "matches a directory path character";
 			this.labelPattern3Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -262,20 +258,18 @@ namespace KeepBack
 			// labelPattern3Tag
 			// 
 			this.labelPattern3Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern3Tag.Location = new System.Drawing.Point(4, 46);
-			this.labelPattern3Tag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern3Tag.Location = new System.Drawing.Point(3, 38);
 			this.labelPattern3Tag.Name = "labelPattern3Tag";
-			this.labelPattern3Tag.Size = new System.Drawing.Size(103, 28);
+			this.labelPattern3Tag.Size = new System.Drawing.Size(77, 23);
 			this.labelPattern3Tag.TabIndex = 4;
 			this.labelPattern3Tag.Text = "\\";
 			this.labelPattern3Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelPattern2Description
 			// 
-			this.labelPattern2Description.Location = new System.Drawing.Point(116, 23);
-			this.labelPattern2Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern2Description.Location = new System.Drawing.Point(87, 19);
 			this.labelPattern2Description.Name = "labelPattern2Description";
-			this.labelPattern2Description.Size = new System.Drawing.Size(372, 23);
+			this.labelPattern2Description.Size = new System.Drawing.Size(279, 19);
 			this.labelPattern2Description.TabIndex = 3;
 			this.labelPattern2Description.Text = "matches zero or one character";
 			this.labelPattern2Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -283,20 +277,18 @@ namespace KeepBack
 			// labelPattern2Tag
 			// 
 			this.labelPattern2Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern2Tag.Location = new System.Drawing.Point(4, 23);
-			this.labelPattern2Tag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern2Tag.Location = new System.Drawing.Point(3, 19);
 			this.labelPattern2Tag.Name = "labelPattern2Tag";
-			this.labelPattern2Tag.Size = new System.Drawing.Size(103, 23);
+			this.labelPattern2Tag.Size = new System.Drawing.Size(77, 19);
 			this.labelPattern2Tag.TabIndex = 2;
 			this.labelPattern2Tag.Text = "?";
 			this.labelPattern2Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelPattern1Description
 			// 
-			this.labelPattern1Description.Location = new System.Drawing.Point(116, 0);
-			this.labelPattern1Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern1Description.Location = new System.Drawing.Point(87, 0);
 			this.labelPattern1Description.Name = "labelPattern1Description";
-			this.labelPattern1Description.Size = new System.Drawing.Size(372, 23);
+			this.labelPattern1Description.Size = new System.Drawing.Size(279, 19);
 			this.labelPattern1Description.TabIndex = 1;
 			this.labelPattern1Description.Text = "matches zero or more characters";
 			this.labelPattern1Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -304,30 +296,27 @@ namespace KeepBack
 			// labelPattern1Tag
 			// 
 			this.labelPattern1Tag.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern1Tag.Location = new System.Drawing.Point(4, 0);
-			this.labelPattern1Tag.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern1Tag.Location = new System.Drawing.Point(3, 0);
 			this.labelPattern1Tag.Name = "labelPattern1Tag";
-			this.labelPattern1Tag.Size = new System.Drawing.Size(103, 23);
+			this.labelPattern1Tag.Size = new System.Drawing.Size(77, 19);
 			this.labelPattern1Tag.TabIndex = 0;
 			this.labelPattern1Tag.Text = "*";
 			this.labelPattern1Tag.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelPattern5Description
 			// 
-			this.labelPattern5Description.Location = new System.Drawing.Point(116, 109);
-			this.labelPattern5Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern5Description.Location = new System.Drawing.Point(87, 89);
 			this.labelPattern5Description.Name = "labelPattern5Description";
-			this.labelPattern5Description.Size = new System.Drawing.Size(372, 25);
+			this.labelPattern5Description.Size = new System.Drawing.Size(279, 20);
 			this.labelPattern5Description.TabIndex = 7;
 			this.labelPattern5Description.Text = "match any number of intermediate directory levels";
 			this.labelPattern5Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelPattern4Description
 			// 
-			this.labelPattern4Description.Location = new System.Drawing.Point(116, 76);
-			this.labelPattern4Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern4Description.Location = new System.Drawing.Point(87, 62);
 			this.labelPattern4Description.Name = "labelPattern4Description";
-			this.labelPattern4Description.Size = new System.Drawing.Size(372, 33);
+			this.labelPattern4Description.Size = new System.Drawing.Size(279, 27);
 			this.labelPattern4Description.TabIndex = 9;
 			this.labelPattern4Description.Text = "matches a directory path character";
 			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -375,7 +364,7 @@ namespace KeepBack
 			this.checkBoxPatternDebug.Location = new System.Drawing.Point(120, 172);
 			this.checkBoxPatternDebug.Margin = new System.Windows.Forms.Padding(4);
 			this.checkBoxPatternDebug.Name = "checkBoxPatternDebug";
-			this.checkBoxPatternDebug.Size = new System.Drawing.Size(417, 21);
+			this.checkBoxPatternDebug.Size = new System.Drawing.Size(310, 17);
 			this.checkBoxPatternDebug.TabIndex = 41;
 			this.checkBoxPatternDebug.Text = "Log all matches of this filter pattern (for diagnostic purposes).";
 			this.checkBoxPatternDebug.UseVisualStyleBackColor = true;
@@ -390,7 +379,7 @@ namespace KeepBack
 			this.buttonPatternPrevious.Location = new System.Drawing.Point(604, 4);
 			this.buttonPatternPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonPatternPrevious.Name = "buttonPatternPrevious";
-			this.buttonPatternPrevious.Size = new System.Drawing.Size(32, 30);
+			this.buttonPatternPrevious.Size = new System.Drawing.Size(24, 24);
 			this.buttonPatternPrevious.TabIndex = 40;
 			this.buttonPatternPrevious.UseVisualStyleBackColor = true;
 			this.buttonPatternPrevious.Click += new System.EventHandler(this.buttonPatternPrevious_Click);
@@ -480,17 +469,16 @@ namespace KeepBack
 			this.textBoxPatternPattern.Location = new System.Drawing.Point(112, 49);
 			this.textBoxPatternPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxPatternPattern.Name = "textBoxPatternPattern";
-			this.textBoxPatternPattern.Size = new System.Drawing.Size(523, 22);
+			this.textBoxPatternPattern.Size = new System.Drawing.Size(393, 20);
 			this.textBoxPatternPattern.TabIndex = 17;
 			this.textBoxPatternPattern.TextChanged += new System.EventHandler(this.textBoxPatternPattern_TextChanged);
 			// 
 			// labelPatternPattern
 			// 
 			this.labelPatternPattern.AutoSize = true;
-			this.labelPatternPattern.Location = new System.Drawing.Point(5, 53);
-			this.labelPatternPattern.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPatternPattern.Location = new System.Drawing.Point(4, 43);
 			this.labelPatternPattern.Name = "labelPatternPattern";
-			this.labelPatternPattern.Size = new System.Drawing.Size(54, 17);
+			this.labelPatternPattern.Size = new System.Drawing.Size(41, 13);
 			this.labelPatternPattern.TabIndex = 16;
 			this.labelPatternPattern.Text = "Pattern";
 			// 
@@ -498,10 +486,9 @@ namespace KeepBack
 			// 
 			this.labelPattern.AutoSize = true;
 			this.labelPattern.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern.Location = new System.Drawing.Point(4, 4);
-			this.labelPattern.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelPattern.Location = new System.Drawing.Point(3, 3);
 			this.labelPattern.Name = "labelPattern";
-			this.labelPattern.Size = new System.Drawing.Size(61, 17);
+			this.labelPattern.Size = new System.Drawing.Size(48, 13);
 			this.labelPattern.TabIndex = 7;
 			this.labelPattern.Text = "Pattern";
 			// 
@@ -530,7 +517,7 @@ namespace KeepBack
 			this.panelFolder.Location = new System.Drawing.Point(655, 360);
 			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
-			this.panelFolder.Size = new System.Drawing.Size(643, 420);
+			this.panelFolder.Size = new System.Drawing.Size(483, 342);
 			this.panelFolder.TabIndex = 2;
 			// 
 			// buttonFolderPrevious
@@ -543,7 +530,7 @@ namespace KeepBack
 			this.buttonFolderPrevious.Location = new System.Drawing.Point(605, 4);
 			this.buttonFolderPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPrevious.Name = "buttonFolderPrevious";
-			this.buttonFolderPrevious.Size = new System.Drawing.Size(32, 30);
+			this.buttonFolderPrevious.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderPrevious.TabIndex = 39;
 			this.buttonFolderPrevious.UseVisualStyleBackColor = true;
 			this.buttonFolderPrevious.Click += new System.EventHandler(this.buttonFolderPrevious_Click);
@@ -558,7 +545,7 @@ namespace KeepBack
 			this.buttonFolderPath.Location = new System.Drawing.Point(607, 78);
 			this.buttonFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPath.Name = "buttonFolderPath";
-			this.buttonFolderPath.Size = new System.Drawing.Size(32, 30);
+			this.buttonFolderPath.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderPath.TabIndex = 37;
 			this.buttonFolderPath.UseVisualStyleBackColor = true;
 			this.buttonFolderPath.Click += new System.EventHandler(this.buttonFolderPath_Click);
@@ -566,10 +553,9 @@ namespace KeepBack
 			// labelListHistory
 			// 
 			this.labelListHistory.AutoSize = true;
-			this.labelListHistory.Location = new System.Drawing.Point(5, 214);
-			this.labelListHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelListHistory.Location = new System.Drawing.Point(4, 174);
 			this.labelListHistory.Name = "labelListHistory";
-			this.labelListHistory.Size = new System.Drawing.Size(416, 17);
+			this.labelListHistory.Size = new System.Drawing.Size(309, 13);
 			this.labelListHistory.TabIndex = 36;
 			this.labelListHistory.Text = "Backup Once: File and Folder patterns (no History is maintained)";
 			// 
@@ -583,7 +569,7 @@ namespace KeepBack
 			this.buttonHistoryDelete.Location = new System.Drawing.Point(607, 270);
 			this.buttonHistoryDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonHistoryDelete.Name = "buttonHistoryDelete";
-			this.buttonHistoryDelete.Size = new System.Drawing.Size(32, 30);
+			this.buttonHistoryDelete.Size = new System.Drawing.Size(24, 24);
 			this.buttonHistoryDelete.TabIndex = 35;
 			this.buttonHistoryDelete.Tag = "";
 			this.buttonHistoryDelete.UseVisualStyleBackColor = true;
@@ -599,7 +585,7 @@ namespace KeepBack
 			this.buttonHistoryAdd.Location = new System.Drawing.Point(607, 234);
 			this.buttonHistoryAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonHistoryAdd.Name = "buttonHistoryAdd";
-			this.buttonHistoryAdd.Size = new System.Drawing.Size(32, 30);
+			this.buttonHistoryAdd.Size = new System.Drawing.Size(24, 24);
 			this.buttonHistoryAdd.TabIndex = 34;
 			this.buttonHistoryAdd.UseVisualStyleBackColor = true;
 			this.buttonHistoryAdd.Click += new System.EventHandler(this.buttonHistoryAdd_Click);
@@ -613,17 +599,16 @@ namespace KeepBack
 			this.listBoxHistory.Location = new System.Drawing.Point(9, 234);
 			this.listBoxHistory.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxHistory.Name = "listBoxHistory";
-			this.listBoxHistory.Size = new System.Drawing.Size(596, 68);
+			this.listBoxHistory.Size = new System.Drawing.Size(448, 56);
 			this.listBoxHistory.TabIndex = 33;
 			this.listBoxHistory.DoubleClick += new System.EventHandler(this.listBoxHistory_DoubleClick);
 			// 
 			// labelListExclude
 			// 
 			this.labelListExclude.AutoSize = true;
-			this.labelListExclude.Location = new System.Drawing.Point(5, 313);
-			this.labelListExclude.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelListExclude.Location = new System.Drawing.Point(4, 254);
 			this.labelListExclude.Name = "labelListExclude";
-			this.labelListExclude.Size = new System.Drawing.Size(380, 17);
+			this.labelListExclude.Size = new System.Drawing.Size(285, 13);
 			this.labelListExclude.TabIndex = 32;
 			this.labelListExclude.Text = "Exclude: File and Folder patterns (will not be in the backup)";
 			// 
@@ -637,7 +622,7 @@ namespace KeepBack
 			this.buttonExcludeDelete.Location = new System.Drawing.Point(607, 368);
 			this.buttonExcludeDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExcludeDelete.Name = "buttonExcludeDelete";
-			this.buttonExcludeDelete.Size = new System.Drawing.Size(32, 30);
+			this.buttonExcludeDelete.Size = new System.Drawing.Size(24, 24);
 			this.buttonExcludeDelete.TabIndex = 31;
 			this.buttonExcludeDelete.Tag = "";
 			this.buttonExcludeDelete.UseVisualStyleBackColor = true;
@@ -653,7 +638,7 @@ namespace KeepBack
 			this.buttonExcludeAdd.Location = new System.Drawing.Point(607, 332);
 			this.buttonExcludeAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonExcludeAdd.Name = "buttonExcludeAdd";
-			this.buttonExcludeAdd.Size = new System.Drawing.Size(32, 30);
+			this.buttonExcludeAdd.Size = new System.Drawing.Size(24, 24);
 			this.buttonExcludeAdd.TabIndex = 30;
 			this.buttonExcludeAdd.UseVisualStyleBackColor = true;
 			this.buttonExcludeAdd.Click += new System.EventHandler(this.buttonExcludeAdd_Click);
@@ -667,17 +652,16 @@ namespace KeepBack
 			this.listBoxExclude.Location = new System.Drawing.Point(9, 332);
 			this.listBoxExclude.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxExclude.Name = "listBoxExclude";
-			this.listBoxExclude.Size = new System.Drawing.Size(596, 68);
+			this.listBoxExclude.Size = new System.Drawing.Size(448, 56);
 			this.listBoxExclude.TabIndex = 29;
 			this.listBoxExclude.DoubleClick += new System.EventHandler(this.listBoxExclude_DoubleClick);
 			// 
 			// labelListInclude
 			// 
 			this.labelListInclude.AutoSize = true;
-			this.labelListInclude.Location = new System.Drawing.Point(5, 116);
-			this.labelListInclude.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelListInclude.Location = new System.Drawing.Point(4, 94);
 			this.labelListInclude.Name = "labelListInclude";
-			this.labelListInclude.Size = new System.Drawing.Size(352, 17);
+			this.labelListInclude.Size = new System.Drawing.Size(264, 13);
 			this.labelListInclude.TabIndex = 28;
 			this.labelListInclude.Text = "Include: File and Folder patterns (will be in the backup)";
 			// 
@@ -691,7 +675,7 @@ namespace KeepBack
 			this.buttonIncludeDelete.Location = new System.Drawing.Point(607, 171);
 			this.buttonIncludeDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonIncludeDelete.Name = "buttonIncludeDelete";
-			this.buttonIncludeDelete.Size = new System.Drawing.Size(32, 30);
+			this.buttonIncludeDelete.Size = new System.Drawing.Size(24, 24);
 			this.buttonIncludeDelete.TabIndex = 27;
 			this.buttonIncludeDelete.Tag = "";
 			this.buttonIncludeDelete.UseVisualStyleBackColor = true;
@@ -707,7 +691,7 @@ namespace KeepBack
 			this.buttonIncludeAdd.Location = new System.Drawing.Point(607, 135);
 			this.buttonIncludeAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonIncludeAdd.Name = "buttonIncludeAdd";
-			this.buttonIncludeAdd.Size = new System.Drawing.Size(32, 30);
+			this.buttonIncludeAdd.Size = new System.Drawing.Size(24, 24);
 			this.buttonIncludeAdd.TabIndex = 26;
 			this.buttonIncludeAdd.UseVisualStyleBackColor = true;
 			this.buttonIncludeAdd.Click += new System.EventHandler(this.buttonIncludeAdd_Click);
@@ -721,7 +705,7 @@ namespace KeepBack
 			this.listBoxInclude.Location = new System.Drawing.Point(9, 135);
 			this.listBoxInclude.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxInclude.Name = "listBoxInclude";
-			this.listBoxInclude.Size = new System.Drawing.Size(596, 68);
+			this.listBoxInclude.Size = new System.Drawing.Size(448, 56);
 			this.listBoxInclude.TabIndex = 25;
 			this.listBoxInclude.DoubleClick += new System.EventHandler(this.listBoxInclude_DoubleClick);
 			// 
@@ -732,16 +716,15 @@ namespace KeepBack
 			this.textBoxFolderPath.Location = new System.Drawing.Point(68, 81);
 			this.textBoxFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderPath.Name = "textBoxFolderPath";
-			this.textBoxFolderPath.Size = new System.Drawing.Size(537, 22);
+			this.textBoxFolderPath.Size = new System.Drawing.Size(404, 20);
 			this.textBoxFolderPath.TabIndex = 15;
 			// 
 			// labelFolderPath
 			// 
 			this.labelFolderPath.AutoSize = true;
-			this.labelFolderPath.Location = new System.Drawing.Point(5, 85);
-			this.labelFolderPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelFolderPath.Location = new System.Drawing.Point(4, 69);
 			this.labelFolderPath.Name = "labelFolderPath";
-			this.labelFolderPath.Size = new System.Drawing.Size(37, 17);
+			this.labelFolderPath.Size = new System.Drawing.Size(29, 13);
 			this.labelFolderPath.TabIndex = 14;
 			this.labelFolderPath.Text = "Path";
 			// 
@@ -750,17 +733,16 @@ namespace KeepBack
 			this.textBoxFolderName.Location = new System.Drawing.Point(68, 49);
 			this.textBoxFolderName.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderName.Name = "textBoxFolderName";
-			this.textBoxFolderName.Size = new System.Drawing.Size(249, 22);
+			this.textBoxFolderName.Size = new System.Drawing.Size(188, 20);
 			this.textBoxFolderName.TabIndex = 13;
 			this.textBoxFolderName.TextChanged += new System.EventHandler(this.textBoxFolderName_TextChanged);
 			// 
 			// labelFolderName
 			// 
 			this.labelFolderName.AutoSize = true;
-			this.labelFolderName.Location = new System.Drawing.Point(5, 53);
-			this.labelFolderName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelFolderName.Location = new System.Drawing.Point(4, 43);
 			this.labelFolderName.Name = "labelFolderName";
-			this.labelFolderName.Size = new System.Drawing.Size(45, 17);
+			this.labelFolderName.Size = new System.Drawing.Size(35, 13);
 			this.labelFolderName.TabIndex = 12;
 			this.labelFolderName.Text = "Name";
 			// 
@@ -768,10 +750,9 @@ namespace KeepBack
 			// 
 			this.labelFolder.AutoSize = true;
 			this.labelFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelFolder.Location = new System.Drawing.Point(5, 4);
-			this.labelFolder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelFolder.Location = new System.Drawing.Point(4, 3);
 			this.labelFolder.Name = "labelFolder";
-			this.labelFolder.Size = new System.Drawing.Size(54, 17);
+			this.labelFolder.Size = new System.Drawing.Size(42, 13);
 			this.labelFolder.TabIndex = 6;
 			this.labelFolder.Text = "Folder";
 			// 
@@ -798,7 +779,7 @@ namespace KeepBack
 			this.panelArchive.Location = new System.Drawing.Point(4, 4);
 			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
-			this.panelArchive.Size = new System.Drawing.Size(643, 318);
+			this.panelArchive.Size = new System.Drawing.Size(483, 259);
 			this.panelArchive.TabIndex = 1;
 			// 
 			// labelArchiveFullPath
@@ -819,7 +800,7 @@ namespace KeepBack
 			this.buttonSave.Location = new System.Drawing.Point(536, 4);
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(100, 28);
+			this.buttonSave.Size = new System.Drawing.Size(75, 23);
 			this.buttonSave.TabIndex = 5;
 			this.buttonSave.Text = "Save";
 			this.buttonSave.UseVisualStyleBackColor = true;
@@ -835,7 +816,7 @@ namespace KeepBack
 			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 231);
 			this.buttonFolderDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderDelete.Name = "buttonFolderDelete";
-			this.buttonFolderDelete.Size = new System.Drawing.Size(32, 30);
+			this.buttonFolderDelete.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderDelete.TabIndex = 24;
 			this.buttonFolderDelete.Tag = "";
 			this.buttonFolderDelete.UseVisualStyleBackColor = true;
@@ -851,7 +832,7 @@ namespace KeepBack
 			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 196);
 			this.buttonFolderAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderAdd.Name = "buttonFolderAdd";
-			this.buttonFolderAdd.Size = new System.Drawing.Size(32, 30);
+			this.buttonFolderAdd.Size = new System.Drawing.Size(24, 24);
 			this.buttonFolderAdd.TabIndex = 23;
 			this.buttonFolderAdd.UseVisualStyleBackColor = true;
 			this.buttonFolderAdd.Click += new System.EventHandler(this.buttonFolderAdd_Click);
@@ -859,10 +840,9 @@ namespace KeepBack
 			// labelListFolders
 			// 
 			this.labelListFolders.AutoSize = true;
-			this.labelListFolders.Location = new System.Drawing.Point(5, 176);
-			this.labelListFolders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelListFolders.Location = new System.Drawing.Point(4, 143);
 			this.labelListFolders.Name = "labelListFolders";
-			this.labelListFolders.Size = new System.Drawing.Size(255, 17);
+			this.labelListFolders.Size = new System.Drawing.Size(193, 13);
 			this.labelListFolders.TabIndex = 22;
 			this.labelListFolders.Text = "Folders to be backed up to the archive.";
 			// 
@@ -876,7 +856,7 @@ namespace KeepBack
 			this.listBoxFolders.Location = new System.Drawing.Point(9, 196);
 			this.listBoxFolders.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxFolders.Name = "listBoxFolders";
-			this.listBoxFolders.Size = new System.Drawing.Size(596, 100);
+			this.listBoxFolders.Size = new System.Drawing.Size(448, 82);
 			this.listBoxFolders.TabIndex = 21;
 			this.listBoxFolders.DoubleClick += new System.EventHandler(this.listBoxFolders_DoubleClick);
 			// 
@@ -885,7 +865,7 @@ namespace KeepBack
 			this.textBoxArchiveMinute.Location = new System.Drawing.Point(521, 133);
 			this.textBoxArchiveMinute.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMinute.Name = "textBoxArchiveMinute";
-			this.textBoxArchiveMinute.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveMinute.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveMinute.TabIndex = 20;
 			this.textBoxArchiveMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups will be merged together in" +
@@ -894,10 +874,9 @@ namespace KeepBack
 			// labelArchiveMinute
 			// 
 			this.labelArchiveMinute.AutoSize = true;
-			this.labelArchiveMinute.Location = new System.Drawing.Point(461, 137);
-			this.labelArchiveMinute.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveMinute.Location = new System.Drawing.Point(346, 111);
 			this.labelArchiveMinute.Name = "labelArchiveMinute";
-			this.labelArchiveMinute.Size = new System.Drawing.Size(57, 17);
+			this.labelArchiveMinute.Size = new System.Drawing.Size(44, 13);
 			this.labelArchiveMinute.TabIndex = 19;
 			this.labelArchiveMinute.Text = "Minutes";
 			this.labelArchiveMinute.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -907,7 +886,7 @@ namespace KeepBack
 			this.textBoxArchiveHour.Location = new System.Drawing.Point(377, 133);
 			this.textBoxArchiveHour.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveHour.Name = "textBoxArchiveHour";
-			this.textBoxArchiveHour.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveHour.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveHour.TabIndex = 18;
 			this.textBoxArchiveHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups will be merged together into days.");
@@ -915,10 +894,9 @@ namespace KeepBack
 			// labelArchiveHour
 			// 
 			this.labelArchiveHour.AutoSize = true;
-			this.labelArchiveHour.Location = new System.Drawing.Point(329, 137);
-			this.labelArchiveHour.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveHour.Location = new System.Drawing.Point(247, 111);
 			this.labelArchiveHour.Name = "labelArchiveHour";
-			this.labelArchiveHour.Size = new System.Drawing.Size(46, 17);
+			this.labelArchiveHour.Size = new System.Drawing.Size(35, 13);
 			this.labelArchiveHour.TabIndex = 17;
 			this.labelArchiveHour.Text = "Hours";
 			this.labelArchiveHour.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -928,7 +906,7 @@ namespace KeepBack
 			this.textBoxArchiveDay.Location = new System.Drawing.Point(233, 133);
 			this.textBoxArchiveDay.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveDay.Name = "textBoxArchiveDay";
-			this.textBoxArchiveDay.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveDay.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveDay.TabIndex = 16;
 			this.textBoxArchiveDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups will be merged together into months.");
@@ -936,10 +914,9 @@ namespace KeepBack
 			// labelArchiveDay
 			// 
 			this.labelArchiveDay.AutoSize = true;
-			this.labelArchiveDay.Location = new System.Drawing.Point(191, 137);
-			this.labelArchiveDay.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveDay.Location = new System.Drawing.Point(143, 111);
 			this.labelArchiveDay.Name = "labelArchiveDay";
-			this.labelArchiveDay.Size = new System.Drawing.Size(40, 17);
+			this.labelArchiveDay.Size = new System.Drawing.Size(31, 13);
 			this.labelArchiveDay.TabIndex = 15;
 			this.labelArchiveDay.Text = "Days";
 			this.labelArchiveDay.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -947,8 +924,7 @@ namespace KeepBack
 			// labelArchiveHistory
 			// 
 			this.labelArchiveHistory.AutoSize = true;
-			this.labelArchiveHistory.Location = new System.Drawing.Point(5, 105);
-			this.labelArchiveHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveHistory.Location = new System.Drawing.Point(4, 85);
 			this.labelArchiveHistory.Name = "labelArchiveHistory";
 			this.labelArchiveHistory.Size = new System.Drawing.Size(515, 17);
 			this.labelArchiveHistory.TabIndex = 14;
@@ -960,7 +936,7 @@ namespace KeepBack
 			this.textBoxArchiveMonth.Location = new System.Drawing.Point(89, 133);
 			this.textBoxArchiveMonth.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMonth.Name = "textBoxArchiveMonth";
-			this.textBoxArchiveMonth.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveMonth.Size = new System.Drawing.Size(31, 20);
 			this.textBoxArchiveMonth.TabIndex = 13;
 			this.textBoxArchiveMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups will be merged together into years.");
@@ -968,13 +944,23 @@ namespace KeepBack
 			// labelArchiveMonth
 			// 
 			this.labelArchiveMonth.AutoSize = true;
-			this.labelArchiveMonth.Location = new System.Drawing.Point(32, 137);
-			this.labelArchiveMonth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveMonth.Location = new System.Drawing.Point(24, 111);
 			this.labelArchiveMonth.Name = "labelArchiveMonth";
-			this.labelArchiveMonth.Size = new System.Drawing.Size(54, 17);
+			this.labelArchiveMonth.Size = new System.Drawing.Size(42, 13);
 			this.labelArchiveMonth.TabIndex = 12;
 			this.labelArchiveMonth.Text = "Months";
 			this.labelArchiveMonth.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// textBoxArchivePath
+			// 
+			this.textBoxArchivePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxArchivePath.Location = new System.Drawing.Point(35, 40);
+			this.textBoxArchivePath.Name = "textBoxArchivePath";
+			this.textBoxArchivePath.ReadOnly = true;
+			this.textBoxArchivePath.Size = new System.Drawing.Size(420, 20);
+			this.textBoxArchivePath.TabIndex = 10;
+			this.textBoxArchivePath.TextChanged += new System.EventHandler(this.textBoxArchivePath_TextChanged);
 			// 
 			// labelArchivePath
 			// 
@@ -990,10 +976,9 @@ namespace KeepBack
 			// 
 			this.labelArchive.AutoSize = true;
 			this.labelArchive.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelArchive.Location = new System.Drawing.Point(5, 4);
-			this.labelArchive.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchive.Location = new System.Drawing.Point(4, 3);
 			this.labelArchive.Name = "labelArchive";
-			this.labelArchive.Size = new System.Drawing.Size(62, 17);
+			this.labelArchive.Size = new System.Drawing.Size(50, 13);
 			this.labelArchive.TabIndex = 5;
 			this.labelArchive.Text = "Archive";
 			// 
@@ -1006,9 +991,9 @@ namespace KeepBack
 			// 
 			// FormEdit
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1076, 617);
+			this.ClientSize = new System.Drawing.Size(807, 501);
 			this.Controls.Add(this.splitContainer);
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "FormEdit";
