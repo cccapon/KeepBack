@@ -82,62 +82,6 @@ namespace KeepBack
 		}
 
 
-		public static string[] ArchiveList( string path )
-		{
-			if( Directory.Exists( path ) )
-			{
-				try
-				{
-					List<string> a = new List<string>();
-					foreach( string x in Directory.GetDirectories( path, ARCHIVE_PATTERN + @"*" ) )
-					{
-						a.Add( System.IO.Path.GetFileName( x ) );
-					}
-					a.Sort();
-					return a.ToArray();
-				}
-				catch( Exception )
-				{
-				}
-			}
-			return new string[] { };
-		}
-		public static string[] ArchiveLogList( string path )
-		{
-			if( Directory.Exists( path ) )
-			{
-				try
-				{
-					List<string> a = new List<string>();
-					foreach( string x in Directory.GetFiles( path, ARCHIVE_PATTERN + @"*.log" ) )
-					{
-						a.Add( System.IO.Path.GetFileName( x ) );
-					}
-					a.Sort();
-					return a.ToArray();
-				}
-				catch( Exception )
-				{
-				}
-			}
-			return new string[] { };
-		}
-
-		public static string ArchiveDisplay( string folder )
-		{
-			/*  012345678901234567890
-			 * "2011-09-23-1145"
-			 * "2011-09-23-114528"
-			 * "2011-09-23-114528.log"
-			 */
-			folder = folder.ToLower().Replace( ".log", "" );
-			if( folder.Length > 15 )
-			{
-				folder = folder.Insert( 15, ":" );
-			}
-			return folder.Insert( 13, ":" ).Remove( 10, 1 ).Insert( 10, " (" ) + ")";
-		}
-
 		//--- end -------------------------------
 	}
 }

@@ -59,7 +59,7 @@ namespace KeepBack.v1
 					{
 						list.Add( a.Name );
 					}
-					V1.FormSelectArchive f = new V1.FormSelectArchive( list.ToArray() );
+					v1.FormSelectArchive f = new v1.FormSelectArchive( list.ToArray() );
 					if( f.ShowDialog() == DialogResult.OK )
 					{
 						int j = f.SelectedArchive();
