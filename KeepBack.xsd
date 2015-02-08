@@ -55,47 +55,38 @@
 
 	<xs:element name="folder">
 		<xs:complexType>
-			<xs:all maxOccurs="1" minOccurs="0">
-				<xs:element ref="includes"  maxOccurs="1" minOccurs="0" />
-				<xs:element ref="histories" maxOccurs="1" minOccurs="0" />
-				<xs:element ref="excludes"  maxOccurs="1" minOccurs="0" />
-			</xs:all>
-			<xs:attribute name="name"   type="xs:string"  />
-			<xs:attribute name="path"   type="xs:string"  />
+			<xs:sequence>
+				<xs:element ref="filters"  maxOccurs="1" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+			<xs:attribute name="path" type="xs:string" />
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="includes">
+	<xs:element name="filters">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="include" maxOccurs="unbounded" minOccurs="0" type="pattern" />
+				<xs:element ref="filter" maxOccurs="unbounded" minOccurs="0" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="histories">
+	<xs:element name="filter">
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="history" maxOccurs="unbounded" minOccurs="0" type="pattern" />
-			</xs:sequence>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="action" type="actionType" />
+				</xs:extension>
+			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="excludes">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="exclude" maxOccurs="unbounded" minOccurs="0" type="pattern" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:complexType name="pattern">
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="debug"          type="xs:boolean"  />
-				<xs:attribute name="case-sensitive" type="xs:boolean"  />
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
+	<xs:simpleType name="actionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Include" />
+			<xs:enumeration value="Exclude" />
+			<xs:enumeration value="History" />
+		</xs:restriction>
+	</xs:simpleType>
 
 </xs:schema>

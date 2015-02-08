@@ -3,12 +3,11 @@
   <archive month="6" day="7" hour="24" minute="60">
     <folders>
       <folder name="KeepBack" path="C:\Users\cc\Projects\KeepBack">
-        <excludes>
-          <exclude debug="true" case-sensitive="false">.svn\</exclude>
-        </excludes>
-        <histories>
-          <history debug="true" case-sensitive="true">*.pdb</history>
-        </histories>
+        <filters>
+          <filter action="Exclude">\Archive\</filter>
+          <filter action="Exclude">.svn\</filter>
+          <filter action="History">*.pdb</filter>
+        </filters>
       </folder>
     </folders>
   </archive>

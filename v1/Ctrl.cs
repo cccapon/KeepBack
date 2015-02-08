@@ -67,14 +67,14 @@ namespace KeepBack.v1
 					}
 				}
 				CtrlArchive archive = archives[i];
-				c.FileName = System.IO.Path.Combine( archive.FullPath, archive.Name + "." + Archive.EXTENSION );
+				c.Filename = System.IO.Path.Combine( archive.FullPath, KeepBack.Ctrl.ArchiveFilename );
 				archive.Upgrade( c.ArchiveCreate() );
 				MessageBox.Show(
 					"Upgrading control file...\r\n\r\n"
 					+ "Archive path:\r\n\r\n"
-					+ "      " + c.FileName + "\r\n\r\n"
-					+ "The path to the archive is no longer stored in the .keep file.\r\n"
-					+ "Instead, the location of the .keep file is also used as the folder\r\n"
+					+ "      " + c.Path + "\r\n\r\n"
+					+ "The location of the archive is no longer stored in the .keep file.\r\n"
+					+ "Instead, the folder with the .keep file is used as the folder\r\n"
 					+ "for the archive.\r\n\r\n"
 					+ "When you save the upgraded .keep file, it will be saved to the\r\n"
 					+ "old archive path (as shown above)."

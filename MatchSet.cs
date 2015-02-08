@@ -25,86 +25,100 @@ using System.Text;
 
 namespace KeepBack
 {
-	class MatchSet : IEnumerable<MatchPath>
+	class MatchSet
 	{
-		//--- define ----------------------------
-		public enum SetType : int
-		{
-			Include  = 1,
-			Exclude  = 2,
-			History  = 3,
-		}
-		public delegate void MatchDelegate( SetType type, MatchPath pattern, string path );
 		//--- field -----------------------------
-		SetType        type;
-		MatchPath[]    list;
-		MatchDelegate  match;
-		//--- property --------------------------
-		public MatchPath[] List { get { return list; } }
+
+		MatchPath[]    includeFolder;
+		MatchPath[]    includeFile;
+		MatchPath[]    historyFolder;
+		MatchPath[]    historyFile;
+
 		//--- constructor -----------------------
-		public MatchSet( SetType type, CtrlPattern[] list, MatchDelegate match )
+
+		public MatchSet( CtrlFilter[] list, bool isCaseSensitive )
 		{
-			List<MatchPath> a = new List<MatchPath>();
+			List<MatchPath> ifo = new List<MatchPath>();
+			List<MatchPath> ifi = new List<MatchPath>();
+			List<MatchPath> hfo = new List<MatchPath>();
+			List<MatchPath> hfi = new List<MatchPath>();
 			if( list != null )
 			{
-				foreach( CtrlPattern p in list )
+				foreach( CtrlFilter f in list )
 				{
-					string s = p.Pattern;
-					if( ! string.IsNullOrEmpty( s ) && ! string.IsNullOrEmpty( s.Trim() ) )
+					string s = f.Pattern;
+					if( ! string.IsNullOrEmpty( s ) )
 					{
-						a.Add( new MatchPath( s, p.Debug, p.CaseSensitive ) );
+						s = s.Trim();
+						if( ! string.IsNullOrEmpty( s ) )
+						{
+							MatchPath mp = new MatchPath( f.Action, s, isCaseSensitive );
+							switch( f.Action )
+							{
+								case CtrlFilter.ActionType.Include:  if( mp.IsDirectory ) { ifo.Add( mp ); } else { ifi.Add( mp ); } break;
+								case CtrlFilter.ActionType.Exclude:  if( mp.IsDirectory ) { ifo.Add( mp ); } else { ifi.Add( mp ); } break;
+								case CtrlFilter.ActionType.History:  if( mp.IsDirectory ) { hfo.Add( mp ); } else { hfi.Add( mp ); } break;
+							}
+						}
 					}
 				}
 			}
-			this.type  = type;
-			this.list  = a.ToArray();
-			this.match = match;
+			this.includeFolder  = ifo.ToArray();
+			this.includeFile    = ifi.ToArray();
+			this.historyFolder  = hfo.ToArray();
+			this.historyFile    = hfi.ToArray();
 		}
+
 		//--- method ----------------------------
-		public bool MatchDirectory( string path )
+
+		public bool IsHistoryFolder( string path )
 		{
-			return IsMatch( path, true );
+			return IsHistory( historyFolder, path );
 		}
-		public bool MatchFile( string path )
+		public bool IsHistoryFile( string path )
 		{
-			return IsMatch( path, false );
+			return IsHistory( historyFile, path );
 		}
-		bool IsMatch( string path, bool directory )
+		bool IsHistory( MatchPath[] list, string path )
 		{
-			if( list.Length <= 0 )
-			{
-				return (type == SetType.Include) ? true : false;
-			}
 			foreach( MatchPath mp in list )
 			{
-				if( (mp.IsDirectory == directory) && mp.Matches( path ) )
+				if( mp.Matches( path ) )
 				{
-					if( mp.Debug && (match != null) )
-					{
-						match( type, mp, path );
-					}
-					return true;
+					//..no history is kept for this folder/file
+					return false;
 				}
 			}
-			return false;
+			//..history will be maintained for this folder/file
+			return true;
 		}
-		//--- interface -------------------------
-		#region IEnumerable<MatchPath> Members
 
-		public IEnumerator<MatchPath> GetEnumerator()
+		public bool IsIncludedFolder( string path )
 		{
-			return ((IEnumerable<MatchPath>)this.list).GetEnumerator();
+			return IsIncluded( includeFolder, path );
 		}
-
-		#endregion
-		#region IEnumerable Members
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		public bool IsIncludedFile( string path )
 		{
-			return this.list.GetEnumerator();
+			return IsIncluded( includeFile, path );
+		}
+		bool IsIncluded( MatchPath[] list, string path )
+		{
+			foreach( MatchPath mp in list )
+			{
+				if( mp.Matches( path ) )
+				{
+					switch( mp.Action )
+					{
+						//..returns the result of the first pattern matched.
+						case CtrlFilter.ActionType.Include:  return true;
+						case CtrlFilter.ActionType.Exclude:  return false;
+					}
+				}
+			}
+			//..if no patterns match, assume folder/file is included
+			return true;
 		}
 
-		#endregion
 		//--- end -------------------------------
 	}
 }

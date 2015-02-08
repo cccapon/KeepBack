@@ -35,6 +35,7 @@ using System.Text;
 
 namespace KeepBack
 {
+#if false
 	public class Archive : IDisposable
 	{
 		/* Backup proceedure
@@ -676,7 +677,7 @@ namespace KeepBack
 			string[] a = ctrl.HistoryFolders();
 			string   s = DateFolderSkipCurrent( MergeLevel.Minute );
 			int      z = DateFolderLength     ( MergeLevel.Minute );
-			foreach( string f in ctrl.HistoryLogFiles() )
+			foreach( string f in ctrl.LogFiles() )
 			{
 				int i = a.Length;
 				do
@@ -1213,4 +1214,5 @@ namespace KeepBack
 
 		//--- end -------------------------------
 	}
+#endif
 }

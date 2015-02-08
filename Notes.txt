@@ -3,6 +3,26 @@
  Current
 ---------------------------------------
 
+- split the archive.cs file into 'backup.cs' and 'merge.cs'
+	- create BlockingCollection<> to handle work queue
+	- Backup object should be reusable and have one function call passed a Ctrl object to get started.
+	- a delegate interface object is used for all communications: logging, events, etc.
+	- main window will poll backup object periodically to get counts and current file paths
+	- pause and cancel functionality can halt queue.
+	- queue has a maximum of 999 items
+
+- start with an initial list of folders in the archive path
+- as folders are encountered in the backup, remove each from the list of folders
+- if the backup completes without errors, remove any remaining folders to the history archive
+
+- there is an implied archive folder/file in every archive.  It is backing up the Archive.keep file in the archive folder.
+	- don't copy it every time, only if it changes.
+
+
+- rename CtrlPattern.cs to CtrlFilter.cs and change XML schema to match.
+	- filters will have identifiers in them for Include/Exclude/History, etc.
+	- rather than History, can Include have a count for the number of historical items retained?
+
 - test the backup process, make sure everything is running again
 
 - converting to use archive .keep filename as path to where archive is stored.
@@ -23,7 +43,11 @@
 
  Quick Notes
 ---------------------------------------
-
+- remove character case from include/exclude filters.  use mixed case or ignore case depending on the file system test characteristics
+- to accomodate renamed files and folders, can a rename option be added to the History Explorer?  After renaming, remerge and backup.
+	- this would rename all historical versions of the file or folder.
+- log files should not be deleted by the same schedule as the merge, instead, we should keep a certain number of log files - like, keeping the last 100 or something
+	- maybe they should be stored in a log folder so they don't take up the root.
 
 
  Tip
@@ -413,7 +437,7 @@
     - check periodically if the file is unlocked.
     - have an option to automatically exclude locked files by adding a custom filter to the Folder.
 - handling files or folders which move
-  - on source drive, if files or folders are moved from one backup to the next, currently, the files will be duplicated:
+  - on source drive, if files or folders are moved or renamed between one backup and the next, currently, the files will be duplicated:
     one copy in the history folder and one in the current folder
   - is there a way with the multi-threading to identify files and folders which have moved and where their new locations are?
     - Would probably have to let the scan finish before determining this.

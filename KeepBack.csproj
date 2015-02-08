@@ -29,7 +29,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KeepBack</RootNamespace>
     <AssemblyName>KeepBack</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
@@ -49,6 +49,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -79,8 +80,9 @@
     <Compile Include="Archive.cs" />
     <Compile Include="Ctrl.cs" />
     <Compile Include="CtrlArchive.cs" />
+    <Compile Include="CtrlFilter.cs" />
     <Compile Include="CtrlFolder.cs" />
-    <Compile Include="CtrlPattern.cs" />
+    <Compile Include="Except.cs" />
     <Compile Include="FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +117,7 @@
     <Compile Include="MatchSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Backup.cs" />
     <Compile Include="v1\Ctrl.cs" />
     <Compile Include="v1\CtrlArchive.cs" />
     <Compile Include="v1\CtrlFolder.cs" />
@@ -155,9 +158,8 @@
     <EmbeddedResource Include="v1\FormSelectArchive.resx">
       <DependentUpon>FormSelectArchive.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="KeepBack.keep">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="app.config" />
+    <None Include="Archive\Archive.keep" />
     <None Include="KeepBack.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -170,6 +172,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="v1\v1.keep" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Image\Add.png" />
@@ -184,6 +187,7 @@
     <Content Include="Image\HistoryFolder.png" />
     <Content Include="Image\IncludeFile.png" />
     <Content Include="Image\IncludeFolder.png" />
+    <None Include="Image\LeftArrow.png" />
     <Content Include="Image\Previous.png" />
     <Content Include="License.txt" />
     <Content Include="Notes.txt" />

@@ -32,9 +32,7 @@ namespace KeepBack
 
 		string         name     = null;
 		string         path     = null;
-		CtrlPattern[]  include  = null;
-		CtrlPattern[]  exclude  = null;
-		CtrlPattern[]  history  = null;
+		CtrlFilter[]   filters  = null;
 
 		//--- property --------------------------
 
@@ -44,14 +42,8 @@ namespace KeepBack
 		[XmlAttribute(AttributeName="path")]
 		public string         Path     { get { return path; } set { path = value; } }
 
-		[XmlArray(ElementName="includes")] [XmlArrayItem(ElementName="include")]
-		public CtrlPattern[]  Include  { get { return include; } set { include = value; } }
-
-		[XmlArray(ElementName="excludes")] [XmlArrayItem(ElementName="exclude")]
-		public CtrlPattern[]  Exclude  { get { return exclude; } set { exclude = value; } }
-
-		[XmlArray(ElementName="histories")] [XmlArrayItem(ElementName="history")]
-		public CtrlPattern[]  History  { get { return history; } set { history = value; } }
+		[XmlArray(ElementName="filters")] [XmlArrayItem(ElementName="filter")]
+		public CtrlFilter[]   Filters  { get { return filters; } set { filters = value; } }
 
 		//--- method ----------------------------
 
@@ -60,26 +52,45 @@ namespace KeepBack
 			return string.IsNullOrEmpty( name ) ? "" : name;
 		}
 
-		public void PatternSort()
+		public CtrlFilter FilterAdd()
 		{
-			if( include != null ) { Array.Sort<CtrlPattern>( include ); }
-			if( exclude != null ) { Array.Sort<CtrlPattern>( exclude ); }
-			if( history != null ) { Array.Sort<CtrlPattern>( history ); }
+			CtrlFilter f = new CtrlFilter();
+			List<CtrlFilter> list = (filters == null) ? new List<CtrlFilter>() : new List<CtrlFilter>( filters );
+			list.Add( f );
+			filters = list.ToArray();
+			return f;
 		}
-		public CtrlPattern IncludeAdd() { return CtrlPattern.Add( ref include ); }
-		public CtrlPattern ExcludeAdd() { return CtrlPattern.Add( ref exclude ); }
-		public CtrlPattern HistoryAdd() { return CtrlPattern.Add( ref history ); }
-
-		public bool IncludeDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref include, pattern ); }
-		public bool ExcludeDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref exclude, pattern ); }
-		public bool HistoryDelete( CtrlPattern pattern ) { return CtrlPattern.Delete( ref history, pattern ); }
-
+		public bool FilterDelete( CtrlFilter filter )
+		{
+			bool b = false;
+			if( filters != null )
+			{
+				List<CtrlFilter> list = new List<CtrlFilter>( filters );
+				b = list.Remove( filter );
+				filters = (list.Count > 0) ? list.ToArray() : null;
+			}
+			return b;
+		}
 		public bool Validate()
 		{
 			bool b = false;
-			b |= CtrlPattern.Validate( ref include );
-			b |= CtrlPattern.Validate( ref exclude );
-			b |= CtrlPattern.Validate( ref history );
+			if( filters != null )
+			{
+				List<CtrlFilter> list = new List<CtrlFilter>( filters );
+				int i = list.Count;
+				while( --i >= 0 )
+				{
+					if( string.IsNullOrEmpty( list[i].Pattern ) )
+					{
+						list.RemoveAt( i );
+						b = true;
+					}
+				}
+				if( b )
+				{
+					filters = (list.Count > 0) ? list.ToArray() : null;
+				}
+			}
 			return b;
 		}
 

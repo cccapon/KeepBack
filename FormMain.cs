@@ -34,9 +34,12 @@ namespace KeepBack
 	public partial class FormMain : Form
 	{
 		string          filename         = null;
+		Backup          backup           = null;
 
+#if false
 		Thread          thread           = null;
 		Archive         current          = null;
+#endif
 
 		long            created          = 0;
 		long            modified         = 0;
@@ -76,12 +79,14 @@ namespace KeepBack
 		{
 			try
 			{
+				string ext = System.IO.Path.GetExtension( Ctrl.ArchiveFilename );
 				SaveFileDialog f = new SaveFileDialog();
-				f.AddExtension = true;
-				f.CheckPathExists = true;
-				f.CreatePrompt = false;
-				f.DefaultExt = Archive.EXTENSION;
-				f.Filter           = "control files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION;
+				f.AddExtension     = true;
+				f.CheckPathExists  = true;
+				f.CreatePrompt     = false;
+				f.DefaultExt       = ext;
+				f.FileName         = Ctrl.ArchiveFilename;
+				f.Filter           = "control files (*" + ext + ")|*" + ext;
 				f.FilterIndex      = 1;
 				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
 				f.OverwritePrompt = true;
@@ -89,9 +94,9 @@ namespace KeepBack
 				f.Title = "Where should the new control file be saved?";
 				if( f.ShowDialog() == DialogResult.OK )
 				{
-					Filename = f.FileName;
 					Ctrl ctrl = new Ctrl();
-					ctrl.Export( Filename );
+					ctrl.Filename = Filename = f.FileName;
+					ctrl.Export();
 				}
 			}
 			catch( Exception ex )
@@ -104,11 +109,12 @@ namespace KeepBack
 		{
 			try
 			{
+				string ext = System.IO.Path.GetExtension( Ctrl.ArchiveFilename );
 				OpenFileDialog f = new OpenFileDialog();
 				f.CheckFileExists  = true;
-				f.DefaultExt       = Archive.EXTENSION;
+				f.DefaultExt       = ext;
 				f.InitialDirectory = System.Environment.GetFolderPath( System.Environment.SpecialFolder.MyDocuments );
-				f.Filter           = "control files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION + "|All files (*.*)|*.*";
+				f.Filter           = "control files (*" + ext + ")|*" + ext;
 				f.FilterIndex      = 1;
 				f.RestoreDirectory = true;
 				f.Title = "Select a backup control file to work with.";
@@ -210,9 +216,11 @@ namespace KeepBack
 			{
 				if( IsFilename )
 				{
+#if false
 					ClearValues();
 					thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
 					thread.Start( "Merge" );
+#endif
 				}
 			}
 			catch( Exception ex )
@@ -229,18 +237,22 @@ namespace KeepBack
 				{
 					if( IsFilename )
 					{
+#if false
 						ClearValues();
 						thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
 						thread.Start( "Backup" );
+#endif
 					}
 				}
 				else
 				{
+#if false
 					Archive a = current;
 					if( a != null )
 					{
 						a.Cancel = true;
 					}
+#endif
 				}
 			}
 			catch( Exception ex )
@@ -248,6 +260,45 @@ namespace KeepBack
 				Info( ex );
 			}
 		}
+		private void buttonTest_Click( object sender, EventArgs e )
+		{
+			Backup bk = backup;
+			if( bk == null )
+			{
+				bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
+			}
+			try
+			{
+				if( bk.IsFinished )
+				{
+					Ctrl c = GetControl();
+					if( c != null )
+					{
+						labelArchive.Text = c.Path;
+						Msg( string.Empty );
+						Msg( "==== Backup ====" );
+						Msg( "Control File : {0}", c.Filename );
+						if( bk.Process( c, IsDebug ) )
+						{
+							timerRefresh.Start();
+						}
+					}
+				}
+				else
+				{
+					Msg( "..cancelling backup" );
+					bk.Cancel();
+				}
+			}
+			catch( Exception ex )
+			{
+				Msg( "Backup: {0}", Except.ToString( ex, IsDebug ) );
+				bk.Terminate();
+			}
+		}
+
+
+
 
 		private void MenuAbout_Click( object sender, EventArgs e )
 		{
@@ -261,12 +312,13 @@ namespace KeepBack
 			}
 		}
 
+#if false
 		void ClearValues()
 		{
-			labelCreated   .Text = "";
-			labelModified  .Text = "";
-			labelDeleted   .Text = "";
-			labelSkipped   .Text = "";
+			labelUpdateCreated   .Text = "";
+			labelUpdateModified  .Text = "";
+			labelUpdateDeleted   .Text = "";
+			labelUpdateSkipped   .Text = "";
 		}
 
 		private void Launch( object parm )
@@ -289,7 +341,7 @@ namespace KeepBack
 				if( IsFilename )
 				{
 					Ctrl c = Ctrl.Import( filename );
-					if( c.Upgraded )
+					if( c.IsUpgraded )
 					{
 						MessageBox.Show(
 							"Your control file has been upgraded from a previous version.\r\n\r\n"
@@ -327,6 +379,7 @@ namespace KeepBack
 				ButtonEnable( true );
 			}
 		}
+#endif
 
 		delegate void ButtonEnableCallback( bool enable );
 		private void ButtonEnable( bool enable )
@@ -383,6 +436,7 @@ namespace KeepBack
 			richTextBoxInfo.ScrollToCaret();
 		}
 
+#if false
 		delegate void ArchiveActionCallback( Archive.Action action, string message );
 		private void ArchiveAction( Archive.Action action, string message )
 		{
@@ -400,30 +454,127 @@ namespace KeepBack
 				}
 				case Archive.Action.Directory:
 				{
-					labelCurrentDirectory.Text = message;
+					labelScanCurrent.Text = message;
 					break;
 				}
 				case Archive.Action.File:
 				{
-					labelCurrentFile.Text = message;
+					labelUpdateCurrent.Text = message;
 					break;
 				}
 				case Archive.Action.Change:
 				{
 					Archive.Reason reason = (Archive.Reason)Enum.Parse( typeof(Archive.Reason), message );
-					if( (reason & Archive.Reason.Created   ) == Archive.Reason.Created   ) { ++created  ;  labelCreated  .Text = created  .ToString(); }
-					if( (reason & Archive.Reason.Modified  ) == Archive.Reason.Modified  ) { ++modified ;  labelModified .Text = modified .ToString(); }
-					if( (reason & Archive.Reason.Deleted   ) == Archive.Reason.Deleted   ) { ++deleted  ;  labelDeleted  .Text = deleted  .ToString(); }
+					if( (reason & Archive.Reason.Created   ) == Archive.Reason.Created   ) { ++created  ;  labelUpdateCreated  .Text = created  .ToString(); }
+					if( (reason & Archive.Reason.Modified  ) == Archive.Reason.Modified  ) { ++modified ;  labelUpdateModified .Text = modified .ToString(); }
+					if( (reason & Archive.Reason.Deleted   ) == Archive.Reason.Deleted   ) { ++deleted  ;  labelUpdateDeleted  .Text = deleted  .ToString(); }
 					break;
 				}
 				case Archive.Action.Skip:
 				{
 					++skipped;
-					labelSkipped.Text = skipped.ToString();
+					labelUpdateSkipped.Text = skipped.ToString();
 					break;
 				}
 			}
 		}
+#endif
+
+		//-----------------------------------------------------------------------
+
+
+		private void timerRefresh_Tick( object sender, EventArgs e )
+		{
+			Backup              bk = backup;
+
+			if( bk != null )
+			{
+				try
+				{
+					Backup.BackupStatus st = bk.Status;
+
+					toolStripElapsed   .Text = Ctrl.FormatTimeSpan( bk.Elapsed );
+
+					labelScanCurrent   .Text = st.scan  .current ?? string.Empty;
+					labelScanFolders   .Text = st.ToString( st.scan.folders );
+					labelScanFiles     .Text = st.ToString( st.scan.files   );
+
+					labelUpdateCurrent .Text = st.update.current ?? string.Empty;
+					labelUpdatePending .Text = st.ToString( bk.Pending );
+					labelUpdateCreated .Text = st.ToString( st.update.created  );
+					labelUpdateModified.Text = st.ToString( st.update.modified );
+					labelUpdateDeleted .Text = st.ToString( st.update.deleted  );
+					labelUpdateSkipped .Text = st.ToString( st.update.skipped  );
+
+					if( bk.IsFinished )
+					{
+						timerRefresh.Stop();
+						toolStripStatus.Text = "Ready.";
+						backup.Finished();
+					}
+					else
+					{
+						toolStripStatus.Text = "Working " + ". . . . . . ".Substring( 0, 2 * (DateTime.Now.Second % 6) );
+					}
+				}
+				catch( Exception ex )
+				{
+					Msg( "Timer: {0}", Except.ToString( ex, IsDebug ) );
+					bk.Terminate();
+					if( bk.IsFinished )
+					{
+						timerRefresh.Stop();
+					}
+				}
+			}
+		}
+
+		Ctrl GetControl()
+		{
+			try
+			{
+				if( IsFilename )
+				{
+					Ctrl c = Ctrl.Import( filename );
+					if( c.IsUpgraded )
+					{
+						MessageBox.Show(
+							"Your control file has been upgraded from a previous version.\r\n\r\n"
+							+ "Before running a backup, please verify the settings using the\r\n"
+							+ "configuration editor and save the file to the archive folder."
+							, "Upgrade Wizard"
+							, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 
+							);
+					}
+					else if( c.Archive != null )
+					{
+						return c;
+					}
+				}
+			}
+			catch( Exception ex )
+			{
+				Msg( Except.ToString( ex, IsDebug ) );
+			}
+			return null;
+		}
+
+		void Msg( string fmt, params object[] args )
+		{
+			Msg( string.Format( fmt, args ) );
+		}
+		delegate void MsgCallback( string message );
+		void Msg( string message )
+		{
+			if( this.InvokeRequired )
+			{
+				this.Invoke( new MsgCallback( Msg ), message );
+				return;
+			}
+			richTextBoxInfo.AppendText( (richTextBoxInfo.TextLength > 0) ? ("\r\n" + message) : message );
+			richTextBoxInfo.ScrollToCaret();
+		}
+
 
 	}
 }

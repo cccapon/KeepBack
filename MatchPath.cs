@@ -59,22 +59,22 @@ namespace KeepBack
 		 */
 
 		//--- field -----------------------------
-		string  pattern;
-		Regex   reg;
-		bool    debug;
-		bool    isDirectory;
-		bool    isFullPath;
+		CtrlFilter.ActionType action;
+		string                pattern;
+		Regex                 reg;
+		bool                  isDirectory;
+		bool                  isFullPath;
 		//--- property --------------------------
-		public string Pattern     { get { return pattern    ; } }
-		public Regex  Regex       { get { return reg        ; } }
-		public bool   Debug       { get { return debug      ; } }
-		public bool   IsDirectory { get { return isDirectory; } }
-		public bool   IsFullPath  { get { return isFullPath ; } }
+		public CtrlFilter.ActionType Action      { get { return action     ; } }
+		public string                Pattern     { get { return pattern    ; } }
+		public Regex                 Regex       { get { return reg        ; } }
+		public bool                  IsDirectory { get { return isDirectory; } }
+		public bool                  IsFullPath  { get { return isFullPath ; } }
 		//--- constructor -----------------------
-		public MatchPath( string pattern, bool debug, bool caseSensitive )
+		public MatchPath( CtrlFilter.ActionType action, string pattern, bool caseSensitive )
 		{
+			this.action  = action;
 			this.pattern = pattern;
-			this.debug   = debug;
 			//..we use a directory separator test a lot, so prepare the sequence
 			string ds = Regex.Escape( Path.DirectorySeparatorChar.ToString() + Path.AltDirectorySeparatorChar.ToString() );
 			string dsY = @"[" + ds + @"]";
@@ -114,40 +114,51 @@ namespace KeepBack
 			reg = new Regex( s, opts );
 		}
 		//--- method ----------------------------
-		public bool Matches( string text )
+		public bool Matches( string path )
 		{
-			if( ! StartsWithDirectorySeparator( text ) )
+			if( ! StartsWithDirectorySeparator( path ) )
 			{
-				text = Path.DirectorySeparatorChar.ToString() + text;
+				path = Path.DirectorySeparatorChar.ToString() + path;
 			}
-			return reg.IsMatch( text );
+			return reg.IsMatch( path );
+		}
+		public static bool IsDirectorySeparator( char c )
+		{
+			return ((c == Path.DirectorySeparatorChar) || (c == Path.AltDirectorySeparatorChar));
 		}
 		public static bool StartsWithDirectorySeparator( string text )
 		{
-			char c = string.IsNullOrEmpty( text ) ? '\0' : text[0];
-			return ((c == Path.DirectorySeparatorChar) || (c == Path.AltDirectorySeparatorChar));
+			return string.IsNullOrEmpty( text ) ? false : IsDirectorySeparator( text[0] );
 		}
 		public static bool EndsWithDirectorySeparator( string text )
 		{
-			char c = string.IsNullOrEmpty( text ) ? '\0' : text[text.Length - 1];
-			return ((c == Path.DirectorySeparatorChar) || (c == Path.AltDirectorySeparatorChar));
+			return string.IsNullOrEmpty( text ) ? false : IsDirectorySeparator( text[text.Length - 1] );
+		}
+		public static string AbsoluteDirectoryPath( string path )
+		{
+			path = RelativeDirectoryPath( path );
+			return StartsWithDirectorySeparator( path ) ? path : (Path.DirectorySeparatorChar.ToString() + path);
+		}
+		public static string RelativeDirectoryPath( string path )
+		{
+			return EndsWithDirectorySeparator( path ) ? path : (path + Path.DirectorySeparatorChar.ToString());
 		}
 		public static string[] Test()
 		{
 			List<string> err = new List<string>();
 			MatchPath p;
 
-			p = new MatchPath( @"*.txt", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"*.txt", false );
 			{
 				Test( err, p, @"abc.txt", true );
 				Test( err, p, @"/abc/def.txt", true );
 			}
-			p = new MatchPath( @"d*e.txt", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"d*e.txt", false );
 			{
 				Test( err, p, @"/abc/de.txt", true );
 				Test( err, p, @"/abc/dfg/hie.txt", false );
 			}
-			p = new MatchPath( @"fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/abc/fred/Barney.pdf", true );
 				Test( err, p, @"/abc/def/ghfred/Barney.txt", false );
@@ -155,30 +166,30 @@ namespace KeepBack
 				Test( err, p, @"/abc/def/fred/BarZZney.txt", false );
 				Test( err, p, @"\abc\def\fred\Barney.txt", true );
 			}
-			p = new MatchPath( @"*fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"*fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/abc/fred/Barney.pdf", true );
 				Test( err, p, @"/abc/def/ghfred/Barney.txt", true );
 			}
-			p = new MatchPath( @"/fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"/fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/abc/fred/Barney.pdf", false );
 				Test( err, p, @"/fred/Barney.txt", true );
 			}
-			p = new MatchPath( @"/hello/.../fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"/hello/.../fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/hello/there/fred/Barney.pdf", true );
 				Test( err, p, @"/hello/there/how/are/you/fred/Barney.txt", true );
 				Test( err, p, @"/hello/fred/Barney.txt", true );
 			}
-			p = new MatchPath( @"/hello/.../there/.../fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"/hello/.../there/.../fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/hello/there/fred/Barney.pdf", true );
 				Test( err, p, @"/hello/there/how/are/you/fred/Barney.txt", true );
 				Test( err, p, @"/hello/fred/Barney.txt", false );
 				Test( err, p, @"/hello/fred/there/Barney.txt", false );
 			}
-			p = new MatchPath( @"/hello/.../there/.../fred/Bar?ney.*", false, false );
+			p = new MatchPath( CtrlFilter.ActionType.Include, @"/hello/.../there/.../fred/Bar?ney.*", false );
 			{
 				Test( err, p, @"/hello/hi/there/way/fred/Barney.pdf", true );
 				Test( err, p, @"/hello/hi/how/there/how/are/you/fred/Barney.txt", true );

@@ -23,39 +23,44 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace KeepBack.v1
+namespace KeepBack
 {
-	public class CtrlPattern
+	public class CtrlFilter
 	{
+		//--- define ----------------------------
+
+		public enum ActionType
+		{
+			Include,
+			Exclude,
+			History,
+		}
+
 		//--- field -----------------------------
 
-		bool    debug         = false;
-		bool    caseSensitive = false;
-		string  pattern       = null;
+
+		ActionType  action        = ActionType.Exclude;
+		string      pattern       = null;
 
 		//--- property --------------------------
 
-		[XmlAttribute(AttributeName="debug")]
-		public bool  Debug  { get { return debug; } set { debug = value; } }
-
-		[XmlAttribute(AttributeName="case-sensitive")]
-		public bool  CaseSensitive  { get { return caseSensitive; } set { caseSensitive = value; } }
+		[XmlAttribute(AttributeName="action")]
+		public ActionType  Action     { get { return action; } set { action = value; } }
 
 		[XmlText]
-		public string  Pattern  { get { return pattern; } set { pattern = value; } }
+		public string      Pattern    { get { return pattern; } set { pattern = value; } }
 
 		[XmlIgnore]
-		public bool IsAbsolute { get { return MatchPath.StartsWithDirectorySeparator( pattern ); } }
+		public bool        IsAbsolute { get { return MatchPath.StartsWithDirectorySeparator( pattern ); } }
 
 		[XmlIgnore]
-		public bool IsFolder   { get { return MatchPath.EndsWithDirectorySeparator  ( pattern ); } }
+		public bool        IsFolder   { get { return MatchPath.EndsWithDirectorySeparator  ( pattern ); } }
 
 		//--- method ----------------------------
 
-		public void Upgrade( KeepBack.CtrlFilter filter, KeepBack.CtrlFilter.ActionType action )
+		public override string ToString()
 		{
-			filter.Action  = action;
-			filter.Pattern = Pattern;
+			return string.IsNullOrEmpty( pattern ) ? string.Empty : pattern;
 		}
 
 		//--- end -------------------------------

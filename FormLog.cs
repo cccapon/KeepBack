@@ -34,13 +34,13 @@ namespace KeepBack
 				panelLog  .SetBounds( r.X, r.Y, r.Width, r.Height );  panelLog  .Anchor = st;  panelLog .Visible = false;
 
 				listViewLogs.Clear();
-				if( (ctrl != null) && (ctrl.Archive != null) )
+				if( ctrl != null )
 				{
 					this.Text = "Log Files - " + ctrl.Path;
-					foreach( string s in ctrl.HistoryLogFiles() )
+					foreach( string s in ctrl.LogFiles() )
 					{
 						// "2011-09-23-114528.log"
-						ListViewItem li = listViewLogs.Items.Add( Ctrl.HistoryNameFormatted( s ) );
+						ListViewItem li = listViewLogs.Items.Add( Ctrl.FormatDateFilename( s ) );
 						li.Tag = s;
 					}
 					listViewLogs.Sorting = SortOrder.Descending;
@@ -66,7 +66,7 @@ namespace KeepBack
 					if( ! string.IsNullOrEmpty( s ) )
 					{
 						labelLog.Text = li.Text;
-						richTextBoxLog.LoadFile( Archive.PathCombine( ctrl.Path, s ), RichTextBoxStreamType.PlainText );
+						richTextBoxLog.LoadFile( ctrl.LogFullPath( s ), RichTextBoxStreamType.PlainText );
 					}
 				}
 			}

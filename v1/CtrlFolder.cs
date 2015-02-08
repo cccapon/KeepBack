@@ -59,25 +59,25 @@ namespace KeepBack.v1
 		{
 			folder.Name    = Name;
 			folder.Path    = Path;
-			if( include != null )
-			{
-				foreach( CtrlPattern p in include )
-				{
-					p.Upgrade( folder.IncludeAdd() );
-				}
-			}
 			if( exclude != null )
 			{
 				foreach( CtrlPattern p in exclude )
 				{
-					p.Upgrade( folder.ExcludeAdd() );
+					p.Upgrade( folder.FilterAdd(), KeepBack.CtrlFilter.ActionType.Exclude );
+				}
+			}
+			if( include != null )
+			{
+				foreach( CtrlPattern p in include )
+				{
+					p.Upgrade( folder.FilterAdd(), KeepBack.CtrlFilter.ActionType.Include );
 				}
 			}
 			if( history != null )
 			{
 				foreach( CtrlPattern p in history )
 				{
-					p.Upgrade( folder.HistoryAdd() );
+					p.Upgrade( folder.FilterAdd(), KeepBack.CtrlFilter.ActionType.History );
 				}
 			}
 		}

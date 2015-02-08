@@ -53,6 +53,10 @@ namespace KeepBack
 			this.imageListTree = new System.Windows.Forms.ImageList(this.components);
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.panelPattern = new System.Windows.Forms.Panel();
+			this.groupBoxAction = new System.Windows.Forms.GroupBox();
+			this.radioButtonActionHistory = new System.Windows.Forms.RadioButton();
+			this.radioButtonActionInclude = new System.Windows.Forms.RadioButton();
+			this.radioButtonActionExclude = new System.Windows.Forms.RadioButton();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.labelPattern5Tag = new System.Windows.Forms.Label();
 			this.labelPattern4Tag = new System.Windows.Forms.Label();
@@ -64,10 +68,6 @@ namespace KeepBack
 			this.labelPattern1Tag = new System.Windows.Forms.Label();
 			this.labelPattern5Description = new System.Windows.Forms.Label();
 			this.labelPattern4Description = new System.Windows.Forms.Label();
-			this.groupBoxCase = new System.Windows.Forms.GroupBox();
-			this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
-			this.radioButtonCaseIgnore = new System.Windows.Forms.RadioButton();
-			this.checkBoxPatternDebug = new System.Windows.Forms.CheckBox();
 			this.buttonPatternPrevious = new System.Windows.Forms.Button();
 			this.groupBoxPatternMatch = new System.Windows.Forms.GroupBox();
 			this.radioButtonMatchFolder = new System.Windows.Forms.RadioButton();
@@ -77,28 +77,29 @@ namespace KeepBack
 			this.radioButtonApplyRelative = new System.Windows.Forms.RadioButton();
 			this.textBoxPatternPattern = new System.Windows.Forms.TextBox();
 			this.labelPatternPattern = new System.Windows.Forms.Label();
-			this.labelPattern = new System.Windows.Forms.Label();
+			this.labelFilter = new System.Windows.Forms.Label();
 			this.panelFolder = new System.Windows.Forms.Panel();
 			this.buttonFolderPrevious = new System.Windows.Forms.Button();
 			this.buttonFolderPath = new System.Windows.Forms.Button();
-			this.labelListHistory = new System.Windows.Forms.Label();
-			this.buttonHistoryDelete = new System.Windows.Forms.Button();
-			this.buttonHistoryAdd = new System.Windows.Forms.Button();
-			this.listBoxHistory = new System.Windows.Forms.ListBox();
-			this.labelListExclude = new System.Windows.Forms.Label();
-			this.buttonExcludeDelete = new System.Windows.Forms.Button();
-			this.buttonExcludeAdd = new System.Windows.Forms.Button();
-			this.listBoxExclude = new System.Windows.Forms.ListBox();
-			this.labelListInclude = new System.Windows.Forms.Label();
-			this.buttonIncludeDelete = new System.Windows.Forms.Button();
-			this.buttonIncludeAdd = new System.Windows.Forms.Button();
-			this.listBoxInclude = new System.Windows.Forms.ListBox();
+			this.labelListFilter = new System.Windows.Forms.Label();
+			this.buttonFilterDelete = new System.Windows.Forms.Button();
+			this.buttonFilterAdd = new System.Windows.Forms.Button();
+			this.listBoxFilter = new System.Windows.Forms.ListBox();
 			this.textBoxFolderPath = new System.Windows.Forms.TextBox();
 			this.labelFolderPath = new System.Windows.Forms.Label();
 			this.textBoxFolderName = new System.Windows.Forms.TextBox();
 			this.labelFolderName = new System.Windows.Forms.Label();
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
+			this.labelArrowSeconds = new System.Windows.Forms.Label();
+			this.labelArrowMinutes = new System.Windows.Forms.Label();
+			this.labelArrowHours = new System.Windows.Forms.Label();
+			this.labelArrowMonths = new System.Windows.Forms.Label();
+			this.labelArrowDays = new System.Windows.Forms.Label();
+			this.textBoxArchiveSecond = new System.Windows.Forms.TextBox();
+			this.labelArchiveSecond = new System.Windows.Forms.Label();
+			this.textBoxArchiveYear = new System.Windows.Forms.TextBox();
+			this.labelArchiveYear = new System.Windows.Forms.Label();
 			this.labelArchiveFullPath = new System.Windows.Forms.Label();
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.buttonFolderDelete = new System.Windows.Forms.Button();
@@ -117,12 +118,13 @@ namespace KeepBack
 			this.labelArchivePath = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.panelPattern.SuspendLayout();
+			this.groupBoxAction.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
-			this.groupBoxCase.SuspendLayout();
 			this.groupBoxPatternMatch.SuspendLayout();
 			this.groupBoxPatternApply.SuspendLayout();
 			this.panelFolder.SuspendLayout();
@@ -142,7 +144,7 @@ namespace KeepBack
 			this.treeViewControl.Margin = new System.Windows.Forms.Padding(4);
 			this.treeViewControl.Name = "treeViewControl";
 			this.treeViewControl.SelectedImageIndex = 0;
-			this.treeViewControl.Size = new System.Drawing.Size(352, 608);
+			this.treeViewControl.Size = new System.Drawing.Size(258, 608);
 			this.treeViewControl.TabIndex = 0;
 			this.treeViewControl.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewControl_AfterSelect);
 			// 
@@ -177,28 +179,80 @@ namespace KeepBack
 			this.splitContainer.Panel2.Controls.Add(this.panelPattern);
 			this.splitContainer.Panel2.Controls.Add(this.panelFolder);
 			this.splitContainer.Panel2.Controls.Add(this.panelArchive);
-			this.splitContainer.Size = new System.Drawing.Size(1073, 613);
-			this.splitContainer.SplitterDistance = 357;
+			this.splitContainer.Size = new System.Drawing.Size(937, 613);
+			this.splitContainer.SplitterDistance = 241;
 			this.splitContainer.SplitterWidth = 5;
 			this.splitContainer.TabIndex = 1;
 			// 
 			// panelPattern
 			// 
 			this.panelPattern.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelPattern.Controls.Add(this.groupBoxAction);
 			this.panelPattern.Controls.Add(this.tableLayoutPanel1);
-			this.panelPattern.Controls.Add(this.groupBoxCase);
-			this.panelPattern.Controls.Add(this.checkBoxPatternDebug);
 			this.panelPattern.Controls.Add(this.buttonPatternPrevious);
 			this.panelPattern.Controls.Add(this.groupBoxPatternMatch);
 			this.panelPattern.Controls.Add(this.groupBoxPatternApply);
 			this.panelPattern.Controls.Add(this.textBoxPatternPattern);
 			this.panelPattern.Controls.Add(this.labelPatternPattern);
-			this.panelPattern.Controls.Add(this.labelPattern);
-			this.panelPattern.Location = new System.Drawing.Point(4, 432);
+			this.panelPattern.Controls.Add(this.labelFilter);
+			this.panelPattern.Location = new System.Drawing.Point(666, 405);
 			this.panelPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.panelPattern.Name = "panelPattern";
 			this.panelPattern.Size = new System.Drawing.Size(643, 390);
 			this.panelPattern.TabIndex = 3;
+			// 
+			// groupBoxAction
+			// 
+			this.groupBoxAction.Controls.Add(this.radioButtonActionHistory);
+			this.groupBoxAction.Controls.Add(this.radioButtonActionInclude);
+			this.groupBoxAction.Controls.Add(this.radioButtonActionExclude);
+			this.groupBoxAction.Location = new System.Drawing.Point(112, 26);
+			this.groupBoxAction.Margin = new System.Windows.Forms.Padding(4);
+			this.groupBoxAction.Name = "groupBoxAction";
+			this.groupBoxAction.Padding = new System.Windows.Forms.Padding(4);
+			this.groupBoxAction.Size = new System.Drawing.Size(358, 57);
+			this.groupBoxAction.TabIndex = 26;
+			this.groupBoxAction.TabStop = false;
+			this.groupBoxAction.Text = "Action";
+			// 
+			// radioButtonActionHistory
+			// 
+			this.radioButtonActionHistory.AutoSize = true;
+			this.radioButtonActionHistory.Location = new System.Drawing.Point(232, 23);
+			this.radioButtonActionHistory.Margin = new System.Windows.Forms.Padding(4);
+			this.radioButtonActionHistory.Name = "radioButtonActionHistory";
+			this.radioButtonActionHistory.Size = new System.Drawing.Size(73, 21);
+			this.radioButtonActionHistory.TabIndex = 23;
+			this.radioButtonActionHistory.TabStop = true;
+			this.radioButtonActionHistory.Text = "History";
+			this.toolTip.SetToolTip(this.radioButtonActionHistory, "Matching items will be a part of the backup but no revisions will be kept.");
+			this.radioButtonActionHistory.UseVisualStyleBackColor = true;
+			// 
+			// radioButtonActionInclude
+			// 
+			this.radioButtonActionInclude.AutoSize = true;
+			this.radioButtonActionInclude.Location = new System.Drawing.Point(8, 23);
+			this.radioButtonActionInclude.Margin = new System.Windows.Forms.Padding(4);
+			this.radioButtonActionInclude.Name = "radioButtonActionInclude";
+			this.radioButtonActionInclude.Size = new System.Drawing.Size(74, 21);
+			this.radioButtonActionInclude.TabIndex = 21;
+			this.radioButtonActionInclude.TabStop = true;
+			this.radioButtonActionInclude.Text = "Include";
+			this.toolTip.SetToolTip(this.radioButtonActionInclude, "Matching items will be part of the backup set.");
+			this.radioButtonActionInclude.UseVisualStyleBackColor = true;
+			// 
+			// radioButtonActionExclude
+			// 
+			this.radioButtonActionExclude.AutoSize = true;
+			this.radioButtonActionExclude.Location = new System.Drawing.Point(118, 23);
+			this.radioButtonActionExclude.Margin = new System.Windows.Forms.Padding(4);
+			this.radioButtonActionExclude.Name = "radioButtonActionExclude";
+			this.radioButtonActionExclude.Size = new System.Drawing.Size(78, 21);
+			this.radioButtonActionExclude.TabIndex = 22;
+			this.radioButtonActionExclude.TabStop = true;
+			this.radioButtonActionExclude.Text = "Exclude";
+			this.toolTip.SetToolTip(this.radioButtonActionExclude, "Matching items will not be a part of the backup.");
+			this.radioButtonActionExclude.UseVisualStyleBackColor = true;
 			// 
 			// tableLayoutPanel1
 			// 
@@ -332,54 +386,6 @@ namespace KeepBack
 			this.labelPattern4Description.Text = "matches a directory path character";
 			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// groupBoxCase
-			// 
-			this.groupBoxCase.Controls.Add(this.radioButtonCaseSensitive);
-			this.groupBoxCase.Controls.Add(this.radioButtonCaseIgnore);
-			this.groupBoxCase.Location = new System.Drawing.Point(457, 81);
-			this.groupBoxCase.Margin = new System.Windows.Forms.Padding(4);
-			this.groupBoxCase.Name = "groupBoxCase";
-			this.groupBoxCase.Padding = new System.Windows.Forms.Padding(4);
-			this.groupBoxCase.Size = new System.Drawing.Size(147, 84);
-			this.groupBoxCase.TabIndex = 26;
-			this.groupBoxCase.TabStop = false;
-			this.groupBoxCase.Text = "Character Case";
-			// 
-			// radioButtonCaseSensitive
-			// 
-			this.radioButtonCaseSensitive.AutoSize = true;
-			this.radioButtonCaseSensitive.Location = new System.Drawing.Point(8, 23);
-			this.radioButtonCaseSensitive.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-			this.radioButtonCaseSensitive.Size = new System.Drawing.Size(86, 21);
-			this.radioButtonCaseSensitive.TabIndex = 21;
-			this.radioButtonCaseSensitive.TabStop = true;
-			this.radioButtonCaseSensitive.Text = "Sensitive";
-			this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
-			// 
-			// radioButtonCaseIgnore
-			// 
-			this.radioButtonCaseIgnore.AutoSize = true;
-			this.radioButtonCaseIgnore.Location = new System.Drawing.Point(8, 52);
-			this.radioButtonCaseIgnore.Margin = new System.Windows.Forms.Padding(4);
-			this.radioButtonCaseIgnore.Name = "radioButtonCaseIgnore";
-			this.radioButtonCaseIgnore.Size = new System.Drawing.Size(69, 21);
-			this.radioButtonCaseIgnore.TabIndex = 22;
-			this.radioButtonCaseIgnore.TabStop = true;
-			this.radioButtonCaseIgnore.Text = "Ignore";
-			this.radioButtonCaseIgnore.UseVisualStyleBackColor = true;
-			// 
-			// checkBoxPatternDebug
-			// 
-			this.checkBoxPatternDebug.AutoSize = true;
-			this.checkBoxPatternDebug.Location = new System.Drawing.Point(120, 172);
-			this.checkBoxPatternDebug.Margin = new System.Windows.Forms.Padding(4);
-			this.checkBoxPatternDebug.Name = "checkBoxPatternDebug";
-			this.checkBoxPatternDebug.Size = new System.Drawing.Size(417, 21);
-			this.checkBoxPatternDebug.TabIndex = 41;
-			this.checkBoxPatternDebug.Text = "Log all matches of this filter pattern (for diagnostic purposes).";
-			this.checkBoxPatternDebug.UseVisualStyleBackColor = true;
-			// 
 			// buttonPatternPrevious
 			// 
 			this.buttonPatternPrevious.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -399,7 +405,7 @@ namespace KeepBack
 			// 
 			this.groupBoxPatternMatch.Controls.Add(this.radioButtonMatchFolder);
 			this.groupBoxPatternMatch.Controls.Add(this.radioButtonMatchFile);
-			this.groupBoxPatternMatch.Location = new System.Drawing.Point(296, 81);
+			this.groupBoxPatternMatch.Location = new System.Drawing.Point(344, 123);
 			this.groupBoxPatternMatch.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternMatch.Name = "groupBoxPatternMatch";
 			this.groupBoxPatternMatch.Padding = new System.Windows.Forms.Padding(4);
@@ -438,7 +444,7 @@ namespace KeepBack
 			// 
 			this.groupBoxPatternApply.Controls.Add(this.radioButtonApplyAbsolute);
 			this.groupBoxPatternApply.Controls.Add(this.radioButtonApplyRelative);
-			this.groupBoxPatternApply.Location = new System.Drawing.Point(112, 81);
+			this.groupBoxPatternApply.Location = new System.Drawing.Point(112, 123);
 			this.groupBoxPatternApply.Margin = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternApply.Name = "groupBoxPatternApply";
 			this.groupBoxPatternApply.Padding = new System.Windows.Forms.Padding(4);
@@ -477,7 +483,7 @@ namespace KeepBack
 			// 
 			this.textBoxPatternPattern.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPatternPattern.Location = new System.Drawing.Point(112, 49);
+			this.textBoxPatternPattern.Location = new System.Drawing.Point(112, 91);
 			this.textBoxPatternPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxPatternPattern.Name = "textBoxPatternPattern";
 			this.textBoxPatternPattern.Size = new System.Drawing.Size(523, 22);
@@ -487,47 +493,39 @@ namespace KeepBack
 			// labelPatternPattern
 			// 
 			this.labelPatternPattern.AutoSize = true;
-			this.labelPatternPattern.Location = new System.Drawing.Point(5, 53);
+			this.labelPatternPattern.Location = new System.Drawing.Point(5, 95);
 			this.labelPatternPattern.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelPatternPattern.Name = "labelPatternPattern";
 			this.labelPatternPattern.Size = new System.Drawing.Size(54, 17);
 			this.labelPatternPattern.TabIndex = 16;
 			this.labelPatternPattern.Text = "Pattern";
 			// 
-			// labelPattern
+			// labelFilter
 			// 
-			this.labelPattern.AutoSize = true;
-			this.labelPattern.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelPattern.Location = new System.Drawing.Point(4, 4);
-			this.labelPattern.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelPattern.Name = "labelPattern";
-			this.labelPattern.Size = new System.Drawing.Size(61, 17);
-			this.labelPattern.TabIndex = 7;
-			this.labelPattern.Text = "Pattern";
+			this.labelFilter.AutoSize = true;
+			this.labelFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelFilter.Location = new System.Drawing.Point(4, 4);
+			this.labelFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelFilter.Name = "labelFilter";
+			this.labelFilter.Size = new System.Drawing.Size(45, 17);
+			this.labelFilter.TabIndex = 7;
+			this.labelFilter.Text = "Filter";
 			// 
 			// panelFolder
 			// 
 			this.panelFolder.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panelFolder.Controls.Add(this.buttonFolderPrevious);
 			this.panelFolder.Controls.Add(this.buttonFolderPath);
-			this.panelFolder.Controls.Add(this.labelListHistory);
-			this.panelFolder.Controls.Add(this.buttonHistoryDelete);
-			this.panelFolder.Controls.Add(this.buttonHistoryAdd);
-			this.panelFolder.Controls.Add(this.listBoxHistory);
-			this.panelFolder.Controls.Add(this.labelListExclude);
-			this.panelFolder.Controls.Add(this.buttonExcludeDelete);
-			this.panelFolder.Controls.Add(this.buttonExcludeAdd);
-			this.panelFolder.Controls.Add(this.listBoxExclude);
-			this.panelFolder.Controls.Add(this.labelListInclude);
-			this.panelFolder.Controls.Add(this.buttonIncludeDelete);
-			this.panelFolder.Controls.Add(this.buttonIncludeAdd);
-			this.panelFolder.Controls.Add(this.listBoxInclude);
+			this.panelFolder.Controls.Add(this.labelListFilter);
+			this.panelFolder.Controls.Add(this.buttonFilterDelete);
+			this.panelFolder.Controls.Add(this.buttonFilterAdd);
+			this.panelFolder.Controls.Add(this.listBoxFilter);
 			this.panelFolder.Controls.Add(this.textBoxFolderPath);
 			this.panelFolder.Controls.Add(this.labelFolderPath);
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(655, 360);
+			this.panelFolder.Location = new System.Drawing.Point(20, 31);
 			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(643, 420);
@@ -563,167 +561,61 @@ namespace KeepBack
 			this.buttonFolderPath.UseVisualStyleBackColor = true;
 			this.buttonFolderPath.Click += new System.EventHandler(this.buttonFolderPath_Click);
 			// 
-			// labelListHistory
+			// labelListFilter
 			// 
-			this.labelListHistory.AutoSize = true;
-			this.labelListHistory.Location = new System.Drawing.Point(5, 214);
-			this.labelListHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelListHistory.Name = "labelListHistory";
-			this.labelListHistory.Size = new System.Drawing.Size(416, 17);
-			this.labelListHistory.TabIndex = 36;
-			this.labelListHistory.Text = "Backup Once: File and Folder patterns (no History is maintained)";
+			this.labelListFilter.AutoSize = true;
+			this.labelListFilter.Location = new System.Drawing.Point(5, 116);
+			this.labelListFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelListFilter.Name = "labelListFilter";
+			this.labelListFilter.Size = new System.Drawing.Size(490, 17);
+			this.labelListFilter.TabIndex = 28;
+			this.labelListFilter.Text = "Filters   (actions associated with directories or file names matching a pattern)";
 			// 
-			// buttonHistoryDelete
+			// buttonFilterDelete
 			// 
-			this.buttonHistoryDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonHistoryDelete.AutoSize = true;
-			this.buttonHistoryDelete.FlatAppearance.BorderSize = 0;
-			this.buttonHistoryDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonHistoryDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonHistoryDelete.Location = new System.Drawing.Point(607, 270);
-			this.buttonHistoryDelete.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonHistoryDelete.Name = "buttonHistoryDelete";
-			this.buttonHistoryDelete.Size = new System.Drawing.Size(32, 30);
-			this.buttonHistoryDelete.TabIndex = 35;
-			this.buttonHistoryDelete.Tag = "";
-			this.buttonHistoryDelete.UseVisualStyleBackColor = true;
-			this.buttonHistoryDelete.Click += new System.EventHandler(this.buttonHistoryDelete_Click);
+			this.buttonFilterDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonFilterDelete.AutoSize = true;
+			this.buttonFilterDelete.FlatAppearance.BorderSize = 0;
+			this.buttonFilterDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.buttonFilterDelete.Image = global::KeepBack.Properties.Resources.Delete;
+			this.buttonFilterDelete.Location = new System.Drawing.Point(607, 171);
+			this.buttonFilterDelete.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonFilterDelete.Name = "buttonFilterDelete";
+			this.buttonFilterDelete.Size = new System.Drawing.Size(32, 30);
+			this.buttonFilterDelete.TabIndex = 27;
+			this.buttonFilterDelete.Tag = "";
+			this.toolTip.SetToolTip(this.buttonFilterDelete, "Delete a filter pattern selected in the list.");
+			this.buttonFilterDelete.UseVisualStyleBackColor = true;
+			this.buttonFilterDelete.Click += new System.EventHandler(this.buttonFilterDelete_Click);
 			// 
-			// buttonHistoryAdd
+			// buttonFilterAdd
 			// 
-			this.buttonHistoryAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonHistoryAdd.AutoSize = true;
-			this.buttonHistoryAdd.FlatAppearance.BorderSize = 0;
-			this.buttonHistoryAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonHistoryAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonHistoryAdd.Location = new System.Drawing.Point(607, 234);
-			this.buttonHistoryAdd.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonHistoryAdd.Name = "buttonHistoryAdd";
-			this.buttonHistoryAdd.Size = new System.Drawing.Size(32, 30);
-			this.buttonHistoryAdd.TabIndex = 34;
-			this.buttonHistoryAdd.UseVisualStyleBackColor = true;
-			this.buttonHistoryAdd.Click += new System.EventHandler(this.buttonHistoryAdd_Click);
+			this.buttonFilterAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonFilterAdd.AutoSize = true;
+			this.buttonFilterAdd.FlatAppearance.BorderSize = 0;
+			this.buttonFilterAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.buttonFilterAdd.Image = global::KeepBack.Properties.Resources.Add;
+			this.buttonFilterAdd.Location = new System.Drawing.Point(607, 135);
+			this.buttonFilterAdd.Margin = new System.Windows.Forms.Padding(4);
+			this.buttonFilterAdd.Name = "buttonFilterAdd";
+			this.buttonFilterAdd.Size = new System.Drawing.Size(32, 30);
+			this.buttonFilterAdd.TabIndex = 26;
+			this.toolTip.SetToolTip(this.buttonFilterAdd, "Add a new filter pattern to the list.");
+			this.buttonFilterAdd.UseVisualStyleBackColor = true;
+			this.buttonFilterAdd.Click += new System.EventHandler(this.buttonFilterAdd_Click);
 			// 
-			// listBoxHistory
+			// listBoxFilter
 			// 
-			this.listBoxHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.listBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.listBoxHistory.FormattingEnabled = true;
-			this.listBoxHistory.ItemHeight = 16;
-			this.listBoxHistory.Location = new System.Drawing.Point(9, 234);
-			this.listBoxHistory.Margin = new System.Windows.Forms.Padding(4);
-			this.listBoxHistory.Name = "listBoxHistory";
-			this.listBoxHistory.Size = new System.Drawing.Size(596, 68);
-			this.listBoxHistory.TabIndex = 33;
-			this.listBoxHistory.DoubleClick += new System.EventHandler(this.listBoxHistory_DoubleClick);
-			// 
-			// labelListExclude
-			// 
-			this.labelListExclude.AutoSize = true;
-			this.labelListExclude.Location = new System.Drawing.Point(5, 313);
-			this.labelListExclude.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelListExclude.Name = "labelListExclude";
-			this.labelListExclude.Size = new System.Drawing.Size(380, 17);
-			this.labelListExclude.TabIndex = 32;
-			this.labelListExclude.Text = "Exclude: File and Folder patterns (will not be in the backup)";
-			// 
-			// buttonExcludeDelete
-			// 
-			this.buttonExcludeDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonExcludeDelete.AutoSize = true;
-			this.buttonExcludeDelete.FlatAppearance.BorderSize = 0;
-			this.buttonExcludeDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonExcludeDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonExcludeDelete.Location = new System.Drawing.Point(607, 368);
-			this.buttonExcludeDelete.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonExcludeDelete.Name = "buttonExcludeDelete";
-			this.buttonExcludeDelete.Size = new System.Drawing.Size(32, 30);
-			this.buttonExcludeDelete.TabIndex = 31;
-			this.buttonExcludeDelete.Tag = "";
-			this.buttonExcludeDelete.UseVisualStyleBackColor = true;
-			this.buttonExcludeDelete.Click += new System.EventHandler(this.buttonExcludeDelete_Click);
-			// 
-			// buttonExcludeAdd
-			// 
-			this.buttonExcludeAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonExcludeAdd.AutoSize = true;
-			this.buttonExcludeAdd.FlatAppearance.BorderSize = 0;
-			this.buttonExcludeAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonExcludeAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonExcludeAdd.Location = new System.Drawing.Point(607, 332);
-			this.buttonExcludeAdd.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonExcludeAdd.Name = "buttonExcludeAdd";
-			this.buttonExcludeAdd.Size = new System.Drawing.Size(32, 30);
-			this.buttonExcludeAdd.TabIndex = 30;
-			this.buttonExcludeAdd.UseVisualStyleBackColor = true;
-			this.buttonExcludeAdd.Click += new System.EventHandler(this.buttonExcludeAdd_Click);
-			// 
-			// listBoxExclude
-			// 
-			this.listBoxExclude.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.listBoxExclude.FormattingEnabled = true;
-			this.listBoxExclude.ItemHeight = 16;
-			this.listBoxExclude.Location = new System.Drawing.Point(9, 332);
-			this.listBoxExclude.Margin = new System.Windows.Forms.Padding(4);
-			this.listBoxExclude.Name = "listBoxExclude";
-			this.listBoxExclude.Size = new System.Drawing.Size(596, 68);
-			this.listBoxExclude.TabIndex = 29;
-			this.listBoxExclude.DoubleClick += new System.EventHandler(this.listBoxExclude_DoubleClick);
-			// 
-			// labelListInclude
-			// 
-			this.labelListInclude.AutoSize = true;
-			this.labelListInclude.Location = new System.Drawing.Point(5, 116);
-			this.labelListInclude.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.labelListInclude.Name = "labelListInclude";
-			this.labelListInclude.Size = new System.Drawing.Size(352, 17);
-			this.labelListInclude.TabIndex = 28;
-			this.labelListInclude.Text = "Include: File and Folder patterns (will be in the backup)";
-			// 
-			// buttonIncludeDelete
-			// 
-			this.buttonIncludeDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonIncludeDelete.AutoSize = true;
-			this.buttonIncludeDelete.FlatAppearance.BorderSize = 0;
-			this.buttonIncludeDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonIncludeDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonIncludeDelete.Location = new System.Drawing.Point(607, 171);
-			this.buttonIncludeDelete.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonIncludeDelete.Name = "buttonIncludeDelete";
-			this.buttonIncludeDelete.Size = new System.Drawing.Size(32, 30);
-			this.buttonIncludeDelete.TabIndex = 27;
-			this.buttonIncludeDelete.Tag = "";
-			this.buttonIncludeDelete.UseVisualStyleBackColor = true;
-			this.buttonIncludeDelete.Click += new System.EventHandler(this.buttonIncludeDelete_Click);
-			// 
-			// buttonIncludeAdd
-			// 
-			this.buttonIncludeAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonIncludeAdd.AutoSize = true;
-			this.buttonIncludeAdd.FlatAppearance.BorderSize = 0;
-			this.buttonIncludeAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.buttonIncludeAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonIncludeAdd.Location = new System.Drawing.Point(607, 135);
-			this.buttonIncludeAdd.Margin = new System.Windows.Forms.Padding(4);
-			this.buttonIncludeAdd.Name = "buttonIncludeAdd";
-			this.buttonIncludeAdd.Size = new System.Drawing.Size(32, 30);
-			this.buttonIncludeAdd.TabIndex = 26;
-			this.buttonIncludeAdd.UseVisualStyleBackColor = true;
-			this.buttonIncludeAdd.Click += new System.EventHandler(this.buttonIncludeAdd_Click);
-			// 
-			// listBoxInclude
-			// 
-			this.listBoxInclude.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.listBoxInclude.FormattingEnabled = true;
-			this.listBoxInclude.ItemHeight = 16;
-			this.listBoxInclude.Location = new System.Drawing.Point(9, 135);
-			this.listBoxInclude.Margin = new System.Windows.Forms.Padding(4);
-			this.listBoxInclude.Name = "listBoxInclude";
-			this.listBoxInclude.Size = new System.Drawing.Size(596, 68);
-			this.listBoxInclude.TabIndex = 25;
-			this.listBoxInclude.DoubleClick += new System.EventHandler(this.listBoxInclude_DoubleClick);
+			this.listBoxFilter.FormattingEnabled = true;
+			this.listBoxFilter.ItemHeight = 16;
+			this.listBoxFilter.Location = new System.Drawing.Point(8, 133);
+			this.listBoxFilter.Margin = new System.Windows.Forms.Padding(4);
+			this.listBoxFilter.Name = "listBoxFilter";
+			this.listBoxFilter.Size = new System.Drawing.Size(596, 276);
+			this.listBoxFilter.TabIndex = 25;
+			this.listBoxFilter.DoubleClick += new System.EventHandler(this.listBoxFilter_DoubleClick);
 			// 
 			// textBoxFolderPath
 			// 
@@ -778,6 +670,15 @@ namespace KeepBack
 			// panelArchive
 			// 
 			this.panelArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelArchive.Controls.Add(this.labelArrowSeconds);
+			this.panelArchive.Controls.Add(this.labelArrowMinutes);
+			this.panelArchive.Controls.Add(this.labelArrowHours);
+			this.panelArchive.Controls.Add(this.labelArrowMonths);
+			this.panelArchive.Controls.Add(this.labelArrowDays);
+			this.panelArchive.Controls.Add(this.textBoxArchiveSecond);
+			this.panelArchive.Controls.Add(this.labelArchiveSecond);
+			this.panelArchive.Controls.Add(this.textBoxArchiveYear);
+			this.panelArchive.Controls.Add(this.labelArchiveYear);
 			this.panelArchive.Controls.Add(this.labelArchiveFullPath);
 			this.panelArchive.Controls.Add(this.buttonSave);
 			this.panelArchive.Controls.Add(this.buttonFolderDelete);
@@ -795,11 +696,98 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(4, 4);
+			this.panelArchive.Location = new System.Drawing.Point(96, 81);
 			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
-			this.panelArchive.Size = new System.Drawing.Size(643, 318);
+			this.panelArchive.Size = new System.Drawing.Size(643, 370);
 			this.panelArchive.TabIndex = 1;
+			// 
+			// labelArrowSeconds
+			// 
+			this.labelArrowSeconds.Image = global::KeepBack.Properties.Resources.LeftArrow;
+			this.labelArrowSeconds.Location = new System.Drawing.Point(467, 161);
+			this.labelArrowSeconds.Name = "labelArrowSeconds";
+			this.labelArrowSeconds.Size = new System.Drawing.Size(17, 17);
+			this.labelArrowSeconds.TabIndex = 34;
+			// 
+			// labelArrowMinutes
+			// 
+			this.labelArrowMinutes.Image = global::KeepBack.Properties.Resources.LeftArrow;
+			this.labelArrowMinutes.Location = new System.Drawing.Point(374, 161);
+			this.labelArrowMinutes.Name = "labelArrowMinutes";
+			this.labelArrowMinutes.Size = new System.Drawing.Size(17, 17);
+			this.labelArrowMinutes.TabIndex = 33;
+			// 
+			// labelArrowHours
+			// 
+			this.labelArrowHours.Image = global::KeepBack.Properties.Resources.LeftArrow;
+			this.labelArrowHours.Location = new System.Drawing.Point(281, 161);
+			this.labelArrowHours.Name = "labelArrowHours";
+			this.labelArrowHours.Size = new System.Drawing.Size(17, 17);
+			this.labelArrowHours.TabIndex = 32;
+			// 
+			// labelArrowMonths
+			// 
+			this.labelArrowMonths.Image = global::KeepBack.Properties.Resources.LeftArrow;
+			this.labelArrowMonths.Location = new System.Drawing.Point(95, 161);
+			this.labelArrowMonths.Name = "labelArrowMonths";
+			this.labelArrowMonths.Size = new System.Drawing.Size(17, 17);
+			this.labelArrowMonths.TabIndex = 31;
+			// 
+			// labelArrowDays
+			// 
+			this.labelArrowDays.Image = global::KeepBack.Properties.Resources.LeftArrow;
+			this.labelArrowDays.Location = new System.Drawing.Point(188, 161);
+			this.labelArrowDays.Name = "labelArrowDays";
+			this.labelArrowDays.Size = new System.Drawing.Size(17, 17);
+			this.labelArrowDays.TabIndex = 30;
+			// 
+			// textBoxArchiveSecond
+			// 
+			this.textBoxArchiveSecond.Enabled = false;
+			this.textBoxArchiveSecond.Location = new System.Drawing.Point(503, 158);
+			this.textBoxArchiveSecond.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxArchiveSecond.Name = "textBoxArchiveSecond";
+			this.textBoxArchiveSecond.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveSecond.TabIndex = 29;
+			this.textBoxArchiveSecond.Text = "60";
+			this.textBoxArchiveSecond.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveSecond, "After this number of seconds, second-by-second backups are merged together into m" +
+        "inutes.");
+			// 
+			// labelArchiveSecond
+			// 
+			this.labelArchiveSecond.AutoSize = true;
+			this.labelArchiveSecond.Location = new System.Drawing.Point(500, 137);
+			this.labelArchiveSecond.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveSecond.Name = "labelArchiveSecond";
+			this.labelArchiveSecond.Size = new System.Drawing.Size(63, 17);
+			this.labelArchiveSecond.TabIndex = 28;
+			this.labelArchiveSecond.Text = "Seconds";
+			this.labelArchiveSecond.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// textBoxArchiveYear
+			// 
+			this.textBoxArchiveYear.Enabled = false;
+			this.textBoxArchiveYear.Location = new System.Drawing.Point(38, 158);
+			this.textBoxArchiveYear.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxArchiveYear.Name = "textBoxArchiveYear";
+			this.textBoxArchiveYear.Size = new System.Drawing.Size(40, 22);
+			this.textBoxArchiveYear.TabIndex = 27;
+			this.textBoxArchiveYear.Text = "99";
+			this.textBoxArchiveYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxArchiveYear, "Years are never merged.");
+			// 
+			// labelArchiveYear
+			// 
+			this.labelArchiveYear.AutoSize = true;
+			this.labelArchiveYear.Location = new System.Drawing.Point(35, 137);
+			this.labelArchiveYear.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelArchiveYear.Name = "labelArchiveYear";
+			this.labelArchiveYear.Size = new System.Drawing.Size(45, 17);
+			this.labelArchiveYear.TabIndex = 26;
+			this.labelArchiveYear.Text = "Years";
+			this.labelArchiveYear.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// labelArchiveFullPath
 			// 
@@ -832,7 +820,7 @@ namespace KeepBack
 			this.buttonFolderDelete.FlatAppearance.BorderSize = 0;
 			this.buttonFolderDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 231);
+			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 251);
 			this.buttonFolderDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderDelete.Name = "buttonFolderDelete";
 			this.buttonFolderDelete.Size = new System.Drawing.Size(32, 30);
@@ -848,7 +836,7 @@ namespace KeepBack
 			this.buttonFolderAdd.FlatAppearance.BorderSize = 0;
 			this.buttonFolderAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 196);
+			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 216);
 			this.buttonFolderAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderAdd.Name = "buttonFolderAdd";
 			this.buttonFolderAdd.Size = new System.Drawing.Size(32, 30);
@@ -859,7 +847,7 @@ namespace KeepBack
 			// labelListFolders
 			// 
 			this.labelListFolders.AutoSize = true;
-			this.labelListFolders.Location = new System.Drawing.Point(5, 176);
+			this.labelListFolders.Location = new System.Drawing.Point(5, 196);
 			this.labelListFolders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelListFolders.Name = "labelListFolders";
 			this.labelListFolders.Size = new System.Drawing.Size(255, 17);
@@ -873,28 +861,28 @@ namespace KeepBack
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.listBoxFolders.FormattingEnabled = true;
 			this.listBoxFolders.ItemHeight = 16;
-			this.listBoxFolders.Location = new System.Drawing.Point(9, 196);
+			this.listBoxFolders.Location = new System.Drawing.Point(9, 216);
 			this.listBoxFolders.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxFolders.Name = "listBoxFolders";
-			this.listBoxFolders.Size = new System.Drawing.Size(596, 100);
+			this.listBoxFolders.Size = new System.Drawing.Size(596, 148);
 			this.listBoxFolders.TabIndex = 21;
 			this.listBoxFolders.DoubleClick += new System.EventHandler(this.listBoxFolders_DoubleClick);
 			// 
 			// textBoxArchiveMinute
 			// 
-			this.textBoxArchiveMinute.Location = new System.Drawing.Point(521, 133);
+			this.textBoxArchiveMinute.Location = new System.Drawing.Point(410, 158);
 			this.textBoxArchiveMinute.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMinute.Name = "textBoxArchiveMinute";
 			this.textBoxArchiveMinute.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveMinute.TabIndex = 20;
 			this.textBoxArchiveMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups will be merged together in" +
-        "to hours.");
+			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups are merged together into h" +
+        "ours.");
 			// 
 			// labelArchiveMinute
 			// 
 			this.labelArchiveMinute.AutoSize = true;
-			this.labelArchiveMinute.Location = new System.Drawing.Point(461, 137);
+			this.labelArchiveMinute.Location = new System.Drawing.Point(407, 137);
 			this.labelArchiveMinute.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveMinute.Name = "labelArchiveMinute";
 			this.labelArchiveMinute.Size = new System.Drawing.Size(57, 17);
@@ -904,18 +892,18 @@ namespace KeepBack
 			// 
 			// textBoxArchiveHour
 			// 
-			this.textBoxArchiveHour.Location = new System.Drawing.Point(377, 133);
+			this.textBoxArchiveHour.Location = new System.Drawing.Point(317, 158);
 			this.textBoxArchiveHour.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveHour.Name = "textBoxArchiveHour";
 			this.textBoxArchiveHour.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveHour.TabIndex = 18;
 			this.textBoxArchiveHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups will be merged together into days.");
+			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups are merged together into days.");
 			// 
 			// labelArchiveHour
 			// 
 			this.labelArchiveHour.AutoSize = true;
-			this.labelArchiveHour.Location = new System.Drawing.Point(329, 137);
+			this.labelArchiveHour.Location = new System.Drawing.Point(314, 137);
 			this.labelArchiveHour.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveHour.Name = "labelArchiveHour";
 			this.labelArchiveHour.Size = new System.Drawing.Size(46, 17);
@@ -925,18 +913,18 @@ namespace KeepBack
 			// 
 			// textBoxArchiveDay
 			// 
-			this.textBoxArchiveDay.Location = new System.Drawing.Point(233, 133);
+			this.textBoxArchiveDay.Location = new System.Drawing.Point(224, 158);
 			this.textBoxArchiveDay.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveDay.Name = "textBoxArchiveDay";
 			this.textBoxArchiveDay.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveDay.TabIndex = 16;
 			this.textBoxArchiveDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups will be merged together into months.");
+			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups are merged together into months.");
 			// 
 			// labelArchiveDay
 			// 
 			this.labelArchiveDay.AutoSize = true;
-			this.labelArchiveDay.Location = new System.Drawing.Point(191, 137);
+			this.labelArchiveDay.Location = new System.Drawing.Point(221, 137);
 			this.labelArchiveDay.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveDay.Name = "labelArchiveDay";
 			this.labelArchiveDay.Size = new System.Drawing.Size(40, 17);
@@ -950,25 +938,25 @@ namespace KeepBack
 			this.labelArchiveHistory.Location = new System.Drawing.Point(5, 105);
 			this.labelArchiveHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveHistory.Name = "labelArchiveHistory";
-			this.labelArchiveHistory.Size = new System.Drawing.Size(515, 17);
+			this.labelArchiveHistory.Size = new System.Drawing.Size(586, 17);
 			this.labelArchiveHistory.TabIndex = 14;
-			this.labelArchiveHistory.Text = "Historical backups are merged together at four levels after these periods of time" +
-    ":";
+			this.labelArchiveHistory.Text = "Historical backups are merged together to save space.  You can control when this " +
+    "happens:";
 			// 
 			// textBoxArchiveMonth
 			// 
-			this.textBoxArchiveMonth.Location = new System.Drawing.Point(89, 133);
+			this.textBoxArchiveMonth.Location = new System.Drawing.Point(131, 158);
 			this.textBoxArchiveMonth.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMonth.Name = "textBoxArchiveMonth";
 			this.textBoxArchiveMonth.Size = new System.Drawing.Size(40, 22);
 			this.textBoxArchiveMonth.TabIndex = 13;
 			this.textBoxArchiveMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups will be merged together into years.");
+			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups are merged together into years.");
 			// 
 			// labelArchiveMonth
 			// 
 			this.labelArchiveMonth.AutoSize = true;
-			this.labelArchiveMonth.Location = new System.Drawing.Point(32, 137);
+			this.labelArchiveMonth.Location = new System.Drawing.Point(128, 137);
 			this.labelArchiveMonth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveMonth.Name = "labelArchiveMonth";
 			this.labelArchiveMonth.Size = new System.Drawing.Size(54, 17);
@@ -1008,7 +996,7 @@ namespace KeepBack
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1076, 617);
+			this.ClientSize = new System.Drawing.Size(940, 617);
 			this.Controls.Add(this.splitContainer);
 			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "FormEdit";
@@ -1017,12 +1005,13 @@ namespace KeepBack
 			this.Shown += new System.EventHandler(this.FormEdit_Shown);
 			this.splitContainer.Panel1.ResumeLayout(false);
 			this.splitContainer.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
 			this.splitContainer.ResumeLayout(false);
 			this.panelPattern.ResumeLayout(false);
 			this.panelPattern.PerformLayout();
+			this.groupBoxAction.ResumeLayout(false);
+			this.groupBoxAction.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
-			this.groupBoxCase.ResumeLayout(false);
-			this.groupBoxCase.PerformLayout();
 			this.groupBoxPatternMatch.ResumeLayout(false);
 			this.groupBoxPatternMatch.PerformLayout();
 			this.groupBoxPatternApply.ResumeLayout(false);
@@ -1063,21 +1052,13 @@ namespace KeepBack
 		private System.Windows.Forms.TextBox textBoxFolderName;
 		private System.Windows.Forms.Label labelFolderName;
 		private System.Windows.Forms.Label labelFolder;
-		private System.Windows.Forms.Label labelListInclude;
-		private System.Windows.Forms.Button buttonIncludeDelete;
-		private System.Windows.Forms.Button buttonIncludeAdd;
-		private System.Windows.Forms.ListBox listBoxInclude;
-		private System.Windows.Forms.Label labelListExclude;
-		private System.Windows.Forms.Button buttonExcludeDelete;
-		private System.Windows.Forms.Button buttonExcludeAdd;
-		private System.Windows.Forms.ListBox listBoxExclude;
-		private System.Windows.Forms.Label labelListHistory;
-		private System.Windows.Forms.Button buttonHistoryDelete;
-		private System.Windows.Forms.Button buttonHistoryAdd;
-		private System.Windows.Forms.ListBox listBoxHistory;
+		private System.Windows.Forms.Label labelListFilter;
+		private System.Windows.Forms.Button buttonFilterDelete;
+		private System.Windows.Forms.Button buttonFilterAdd;
+		private System.Windows.Forms.ListBox listBoxFilter;
 		private System.Windows.Forms.TextBox textBoxPatternPattern;
 		private System.Windows.Forms.Label labelPatternPattern;
-		private System.Windows.Forms.Label labelPattern;
+		private System.Windows.Forms.Label labelFilter;
 		private System.Windows.Forms.RadioButton radioButtonApplyRelative;
 		private System.Windows.Forms.RadioButton radioButtonApplyAbsolute;
 		private System.Windows.Forms.RadioButton radioButtonMatchFile;
@@ -1087,11 +1068,7 @@ namespace KeepBack
 		private System.Windows.Forms.Button buttonFolderPath;
 		private System.Windows.Forms.Button buttonFolderPrevious;
 		private System.Windows.Forms.Button buttonPatternPrevious;
-		private System.Windows.Forms.CheckBox checkBoxPatternDebug;
 		private System.Windows.Forms.Button buttonSave;
-		private System.Windows.Forms.GroupBox groupBoxCase;
-		private System.Windows.Forms.RadioButton radioButtonCaseSensitive;
-		private System.Windows.Forms.RadioButton radioButtonCaseIgnore;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.Label labelPattern5Description;
 		private System.Windows.Forms.Label labelPattern4Tag;
@@ -1105,5 +1082,18 @@ namespace KeepBack
 		private System.Windows.Forms.Label labelPattern4Description;
 		private System.Windows.Forms.Label labelArchiveFullPath;
 		private System.Windows.Forms.ToolTip toolTip;
+		private System.Windows.Forms.TextBox textBoxArchiveYear;
+		private System.Windows.Forms.Label labelArchiveYear;
+		private System.Windows.Forms.TextBox textBoxArchiveSecond;
+		private System.Windows.Forms.Label labelArchiveSecond;
+		private System.Windows.Forms.Label labelArrowDays;
+		private System.Windows.Forms.Label labelArrowSeconds;
+		private System.Windows.Forms.Label labelArrowMinutes;
+		private System.Windows.Forms.Label labelArrowHours;
+		private System.Windows.Forms.Label labelArrowMonths;
+		private System.Windows.Forms.GroupBox groupBoxAction;
+		private System.Windows.Forms.RadioButton radioButtonActionInclude;
+		private System.Windows.Forms.RadioButton radioButtonActionExclude;
+		private System.Windows.Forms.RadioButton radioButtonActionHistory;
 	}
 }

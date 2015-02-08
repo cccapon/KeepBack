@@ -56,13 +56,6 @@ namespace KeepBack
 
 		//--- method ----------------------------
 
-		public void FolderSort()
-		{
-			if( folders != null )
-			{
-				Array.Sort<CtrlFolder>( folders );
-			}
-		}
 		public CtrlFolder FolderAdd()
 		{
 			CtrlFolder f = new CtrlFolder();

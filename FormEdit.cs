@@ -44,11 +44,11 @@ namespace KeepBack
 		class FolderPattern
 		{
 			public CtrlFolder   folder;
-			public CtrlPattern  pattern;
-			public FolderPattern( CtrlFolder folder, CtrlPattern pattern )
+			public CtrlFilter   filter;
+			public FolderPattern( CtrlFolder folder, CtrlFilter filter )
 			{
-				this.folder   = folder;
-				this.pattern  = pattern;
+				this.folder  = folder;
+				this.filter  = filter;
 			}
 		}
 		//--- field -----------------------------
@@ -56,7 +56,7 @@ namespace KeepBack
 		bool  modified           = false;
 		bool  ignoreChangeState  = false;
 		//--- property --------------------------
-		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.FileName; } }
+		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.Filename; } }
 		//--- constructor -----------------------
 		public FormEdit( Ctrl ctrl )
 		{
@@ -78,9 +78,9 @@ namespace KeepBack
 			panelFolder .SetBounds( r.X, r.Y, r.Width, r.Height );  panelFolder .Anchor = st;
 			panelPattern.SetBounds( r.X, r.Y, r.Width, r.Height );  panelPattern.Anchor = st;
 
-			if( ctrl.Upgraded )
+			if( ctrl.IsUpgraded )
 			{
-				MessageBox.Show( ctrl.FileName + "\r\n\r\nThis KeepBack file has been upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "Upgrade Wizard", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
+				MessageBox.Show( ctrl.Filename + "\r\n\r\nThis KeepBack file has been upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "Upgrade Wizard", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
 				modified = true;
 			}
 
@@ -122,41 +122,19 @@ namespace KeepBack
 				this.treeViewControl.Nodes.Add( archive );
 				if( a.Folders != null )
 				{
-					a.FolderSort();
-					foreach( CtrlFolder f in a.Folders )
+					foreach( CtrlFolder fo in a.Folders )
 					{
-						TreeNode folder = new TreeNode( f.Name, IMAGE_FOLDER, IMAGE_FOLDER );
-						folder.Tag = f;
+						TreeNode folder = new TreeNode( fo.Name, IMAGE_FOLDER, IMAGE_FOLDER );
+						folder.Tag = fo;
 						archive.Nodes.Add( folder );
-						f.PatternSort();
-						if( f.Include != null )
+						if( fo.Filters != null )
 						{
-							foreach( CtrlPattern p in f.Include )
+							foreach( CtrlFilter fi in fo.Filters )
 							{
-								int i = p.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
-								TreeNode include = new TreeNode( p.Pattern, i, i );
-								include.Tag = p;
-								folder.Nodes.Add( include );
-							}
-						}
-						if( f.Exclude != null )
-						{
-							foreach( CtrlPattern p in f.Exclude )
-							{
-								int i = p.IsFolder ? IMAGE_EXCLUDE_FOLDER : IMAGE_EXCLUDE_FILE;
-								TreeNode exclude = new TreeNode( p.Pattern, i, i );
-								exclude.Tag = p;
-								folder.Nodes.Add( exclude );
-							}
-						}
-						if( f.History != null )
-						{
-							foreach( CtrlPattern p in f.History )
-							{
-								int i = p.IsFolder ? IMAGE_HISTORY_FOLDER : IMAGE_HISTORY_FILE;
-								TreeNode history = new TreeNode( p.Pattern, i, i );
-								history.Tag = p;
-								folder.Nodes.Add( history );
+								int i = fi.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
+								TreeNode n = new TreeNode( fi.Pattern, i, i );
+								n.Tag = fi;
+								folder.Nodes.Add( n );
 							}
 						}
 					}
@@ -260,34 +238,27 @@ namespace KeepBack
 				else if( t == typeof(CtrlFolder) )
 				{
 					this.panelFolder.Visible = true;
-					this.listBoxInclude.Items.Clear();
-					this.listBoxExclude.Items.Clear();
-					this.listBoxHistory.Items.Clear();
+					this.listBoxFilter.Items.Clear();
 					CtrlFolder f = (CtrlFolder)node.Tag;
 					this.panelFolder.Tag = f;
 					textBoxFolderName.Text = f.Name;
 					textBoxFolderPath.Text = f.Path;
-					if( f.Include != null ) { this.listBoxInclude.Items.AddRange( f.Include ); }
-					if( f.Exclude != null ) { this.listBoxExclude.Items.AddRange( f.Exclude ); }
-					if( f.History != null ) { this.listBoxHistory.Items.AddRange( f.History ); }
+					if( f.Filters != null ) { this.listBoxFilter.Items.AddRange( f.Filters ); }
 				}
-				else if( t == typeof(CtrlPattern) )
+				else if( t == typeof(CtrlFilter) )
 				{
 					this.panelPattern.Visible = true;
 					switch( node.ImageIndex )
 					{
-						case IMAGE_INCLUDE_FILE:  case IMAGE_INCLUDE_FOLDER:  labelPattern.Text = "Include";  break;
-						case IMAGE_EXCLUDE_FILE:  case IMAGE_EXCLUDE_FOLDER:  labelPattern.Text = "Exclude";  break;
-						case IMAGE_HISTORY_FILE:  case IMAGE_HISTORY_FOLDER:  labelPattern.Text = "History";  break;
-						default:                                              labelPattern.Text = "Pattern";  break;
+						case IMAGE_INCLUDE_FILE:  case IMAGE_INCLUDE_FOLDER:  labelFilter.Text = "Include";  break;
+						case IMAGE_EXCLUDE_FILE:  case IMAGE_EXCLUDE_FOLDER:  labelFilter.Text = "Exclude";  break;
+						case IMAGE_HISTORY_FILE:  case IMAGE_HISTORY_FOLDER:  labelFilter.Text = "History";  break;
+						default:                                              labelFilter.Text = "Pattern";  break;
 					}
-					CtrlPattern p = (CtrlPattern)node.Tag;
+					CtrlFilter  p = (CtrlFilter)node.Tag;
 					CtrlFolder  f = (CtrlFolder )node.Parent.Tag;
 					this.panelPattern.Tag = new FolderPattern( f, p );
-					checkBoxPatternDebug    .Checked =   p.Debug;
 					textBoxPatternPattern   .Text    =   p.Pattern;
-					radioButtonCaseSensitive.Checked =   p.CaseSensitive;
-					radioButtonCaseIgnore   .Checked = ! p.CaseSensitive;
 					PatternSetRadioButtons();
 				}
 			}
@@ -313,16 +284,16 @@ namespace KeepBack
 			{
 				if( ctrl != null )
 				{
-					if( ctrl.Upgraded )
+					if( ctrl.IsUpgraded )
 					{
 						SaveFileDialog f = new SaveFileDialog();
 						f.AddExtension = true;
 						f.CheckPathExists = true;
-						f.DefaultExt = Archive.EXTENSION;
-						f.FileName = Path.GetFileName( ctrl.FileName );
-						f.Filter = "KeepBack files (*." + Archive.EXTENSION + ")|*." + Archive.EXTENSION;
+						f.DefaultExt = Path.GetExtension( Ctrl.ArchiveFilename );
+						f.FileName = Path.GetFileName( ctrl.Filename );
+						f.Filter = "KeepBack files (" + Ctrl.ArchiveFilename + ")|" + Ctrl.ArchiveFilename;
 						f.FilterIndex = 0;
-						f.InitialDirectory = Path.GetDirectoryName( ctrl.FileName );
+						f.InitialDirectory = Path.GetDirectoryName( ctrl.Filename );
 						f.OverwritePrompt = true;
 						f.RestoreDirectory = true;
 						f.Title = "Save upgraded KeepBack file.";
@@ -330,9 +301,9 @@ namespace KeepBack
 						{
 							return false;
 						}
-						ctrl.FileName = f.FileName;
+						ctrl.Filename = f.FileName;
 					}
-					ctrl.Export( ctrl.FileName );
+					ctrl.Export();
 				}
 				modified = false;
 				buttonSave.Enabled = false;
@@ -471,93 +442,34 @@ namespace KeepBack
 			}
 		}
 
-		private void buttonIncludeAdd_Click( object sender, EventArgs e )
+		private void buttonFilterAdd_Click( object sender, EventArgs e )
 		{
 			CtrlFolder f = this.panelFolder.Tag as CtrlFolder;
 			if( f != null )
 			{
-				CtrlPattern p = f.IncludeAdd();
-				p.Pattern = string.Empty;
-				modified = true;
-				TreeUpdate( p );
-			}
-		}
-		private void buttonExcludeAdd_Click( object sender, EventArgs e )
-		{
-			CtrlFolder f = this.panelFolder.Tag as CtrlFolder;
-			if( f != null )
-			{
-				CtrlPattern p = f.ExcludeAdd();
-				p.Pattern = string.Empty;
-				modified = true;
-				TreeUpdate( p );
-			}
-		}
-		private void buttonHistoryAdd_Click( object sender, EventArgs e )
-		{
-			CtrlFolder f = this.panelFolder.Tag as CtrlFolder;
-			if( f != null )
-			{
-				CtrlPattern p = f.HistoryAdd();
+				CtrlFilter p = f.FilterAdd();
+				p.Action  = CtrlFilter.ActionType.Exclude;
 				p.Pattern = string.Empty;
 				modified = true;
 				TreeUpdate( p );
 			}
 		}
 
-		private void buttonIncludeDelete_Click( object sender, EventArgs e )
+		private void buttonFilterDelete_Click( object sender, EventArgs e )
 		{
-			CtrlFolder  f = this.panelFolder.Tag as CtrlFolder;
-			CtrlPattern p = this.listBoxInclude.SelectedItem as CtrlPattern;
+			CtrlFolder f = this.panelFolder.Tag as CtrlFolder;
+			CtrlFilter p = this.listBoxFilter.SelectedItem as CtrlFilter;
 			if( (f != null) && (p != null) )
 			{
-				f.IncludeDelete( p );
-				modified = true;
-				TreeUpdate( f );
-			}
-		}
-		private void buttonExcludeDelete_Click( object sender, EventArgs e )
-		{
-			CtrlFolder  f = this.panelFolder.Tag as CtrlFolder;
-			CtrlPattern p = this.listBoxExclude.SelectedItem as CtrlPattern;
-			if( (f != null) && (p != null) )
-			{
-				f.ExcludeDelete( p );
-				modified = true;
-				TreeUpdate( f );
-			}
-		}
-		private void buttonHistoryDelete_Click( object sender, EventArgs e )
-		{
-			CtrlFolder  f = this.panelFolder.Tag as CtrlFolder;
-			CtrlPattern p = this.listBoxHistory.SelectedItem as CtrlPattern;
-			if( (f != null) && (p != null) )
-			{
-				f.HistoryDelete( p );
+				f.FilterDelete( p );
 				modified = true;
 				TreeUpdate( f );
 			}
 		}
 
-		private void listBoxInclude_DoubleClick( object sender, EventArgs e )
+		private void listBoxFilter_DoubleClick( object sender, EventArgs e )
 		{
-			CtrlPattern p = this.listBoxInclude.SelectedItem as CtrlPattern;
-			if( p != null )
-			{
-				TreeSelect( p );
-			}
-		}
-		private void listBoxExclude_DoubleClick( object sender, EventArgs e )
-		{
-			CtrlPattern p = this.listBoxExclude.SelectedItem as CtrlPattern;
-			if( p != null )
-			{
-				TreeSelect( p );
-			}
-		}
-		private void listBoxHistory_DoubleClick( object sender, EventArgs e )
-		{
-			CtrlPattern p = this.listBoxHistory.SelectedItem as CtrlPattern;
+			CtrlFilter p = this.listBoxFilter.SelectedItem as CtrlFilter;
 			if( p != null )
 			{
 				TreeSelect( p );
@@ -574,15 +486,13 @@ namespace KeepBack
 			FolderPattern fp = this.panelPattern.Tag as FolderPattern;
 			if( fp != null )
 			{
-				CtrlFolder  f = fp.folder;
-				CtrlPattern p = fp.pattern;
+				CtrlFolder f = fp.folder;
+				CtrlFilter p = fp.filter;
 				string s;
 				s = textBoxPatternPattern.Text.Trim();
 				if( string.IsNullOrEmpty( s ) )
 				{
-					modified |= f.IncludeDelete( p );
-					modified |= f.ExcludeDelete( p );
-					modified |= f.HistoryDelete( p );
+					modified |= f.FilterDelete( p );
 					this.panelPattern.Tag = null;
 					return f;
 				}
@@ -592,30 +502,20 @@ namespace KeepBack
 					modified = true;
 					TreeText( p, p.Pattern );
 				}
-				if( p.Debug != checkBoxPatternDebug.Checked )
-				{
-					p.Debug = checkBoxPatternDebug.Checked;
-					modified = true;
-				}
-				if( p.CaseSensitive != radioButtonCaseSensitive.Checked )
-				{
-					p.CaseSensitive = radioButtonCaseSensitive.Checked;
-					modified = true;
-				}
 			}
 			return null;
 		}
 
 		private void buttonPatternPrevious_Click( object sender, EventArgs e )
 		{
-			TreeSelectParent( ((FolderPattern)this.panelPattern.Tag).pattern  );
+			TreeSelectParent( ((FolderPattern)this.panelPattern.Tag).filter );
 		}
 
 		private void textBoxPatternPattern_TextChanged( object sender, EventArgs e )
 		{
 			if( ! ignoreChangeState )
 			{
-				TreeText( ((FolderPattern)this.panelPattern.Tag).pattern, textBoxPatternPattern.Text );
+				TreeText( ((FolderPattern)this.panelPattern.Tag).filter, textBoxPatternPattern.Text );
 				PatternSetRadioButtons();
 			}
 		}
