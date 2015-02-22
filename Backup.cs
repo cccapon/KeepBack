@@ -40,8 +40,8 @@ namespace KeepBack
 		//--- define ----------------------------
 
 		const int Maximum_Items_In_Queue = 999; //maximum # of files and folders waiting to be updated at a time
-		const int Thread_Cancel_Timeout  =  60; //# of seconds to await for threads to respond to cancellation
 
+		const string        ExMethod               = "Backup.Method";
 		const string        ExArchiveRoot          = "Backup.Archive.Root";
 		const string        ExCurrentRoot          = "Backup.Current.Root";
 		const string        ExCurrentPath          = "Backup.Current.Path";
@@ -143,31 +143,63 @@ namespace KeepBack
 
 		//--- field -----------------------------
 
+		char[]                            InvalidFilenameCharacters = System.IO.Path.GetInvalidFileNameChars();
+		char[]                            InvalidPathCharacters     = System.IO.Path.GetInvalidPathChars();
+
 		MessageDelegate                   message;
 
 		Ctrl                              ctrl            = null;
 		bool                              debug           = false;
 		BlockingCollection<UpdateRequest> queue           = null;
+		BlockingCollection<string>        logging         = null;
 		BackupStatus                      status          = null;
 		CancellationTokenSource           cancel          = null;
 		DateTime                          start           = DateTime.MinValue;
 
-		StreamWriter                      log             = null;
 		string                            current         = null;
 		string                            history         = null;
 
+		ManualResetEvent                  pause           = new ManualResetEvent( true );
+
+		Thread                            log             = null;
 		Thread                            scan            = null;
 		Thread                            update          = null;
 
-		char[]                            InvalidFilenameCharacters = System.IO.Path.GetInvalidFileNameChars();
-		char[]                            InvalidPathCharacters     = System.IO.Path.GetInvalidPathChars();
 
 		//--- property --------------------------
 
-		public TimeSpan     Elapsed  { get { return DateTime.Now - start; } }
-		public BackupStatus Status   { get { return status; } }
-		public int          Pending  { get { return queue.Count; } }
-		public bool         IsFinished { get { return ((scan == null) && (update == null)); } }
+		public TimeSpan     Elapsed            { get { return DateTime.Now - start; } }
+		public BackupStatus Status             { get { return status; } }
+		public int          Pending            { get { return queue  .Count; } }
+		public int          LogCount           { get { return logging.Count; } }
+		public bool         IsLogAlive         { get { return (log    != null) && log   .IsAlive; } }
+		public bool         IsScanAlive        { get { return (scan   != null) && scan  .IsAlive; } }
+		public bool         IsUpdateAlive      { get { return (update != null) && update.IsAlive; } }
+		public bool         IsScanWorking      { get { return (IsScanAlive   && ! scan  .ThreadState.HasFlag( ThreadState.WaitSleepJoin )); } }
+		public bool         IsUpdateWorking    { get { return (IsUpdateAlive && ! update.ThreadState.HasFlag( ThreadState.WaitSleepJoin )); } }
+		public ThreadState  ScanState          { get { return (scan   != null) ? scan  .ThreadState : ThreadState.Unstarted; } }
+		public ThreadState  UpdateState        { get { return (update != null) ? update.ThreadState : ThreadState.Unstarted; } }
+
+		bool                IsCancellRequested { get { pause.WaitOne();  return cancel.IsCancellationRequested; } }
+
+		public bool IsRunning
+		{
+			get
+			{
+				if( ! IsScanAlive && ! IsUpdateAlive )
+				{
+					if( (logging != null) && ! logging.IsAddingCompleted )
+					{
+						logging.CompleteAdding();
+					}
+					if( ! IsLogAlive )
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+		}
 
 		//--- constructor -----------------------
 
@@ -178,87 +210,134 @@ namespace KeepBack
 
 		//--- method ----------------------------
 
-		public bool Process( Ctrl ctrl, bool debug )
+		public void Process( Ctrl ctrl, bool debug )
 		{
 			try
 			{
-				this.queue   = new BlockingCollection<UpdateRequest>( Maximum_Items_In_Queue );
 				this.ctrl    = ctrl;
 				this.debug   = debug;
+				this.queue   = new BlockingCollection<UpdateRequest>( Maximum_Items_In_Queue );
+				this.logging = new BlockingCollection<string>( Maximum_Items_In_Queue );
 				this.status  = new BackupStatus();
 				this.cancel  = new CancellationTokenSource();
 				this.start   = DateTime.Now;
 
-				this.log     = null;
 				this.current = null;
 				this.history = null;
 
+				pause.Set();
+
+				this.log     = new Thread( new ThreadStart( LogHandler    ) );
 				this.scan    = new Thread( new ThreadStart( ScanHandler   ) );
 				this.update  = new Thread( new ThreadStart( UpdateHandler ) );
+
+				this.log   .Name     = "Log";
 				this.scan  .Name     = "Scan";
-				this.update.Name     = "Change";
+				this.update.Name     = "Update";
+
+				this.log   .Priority = ThreadPriority.BelowNormal;
 				this.scan  .Priority = ThreadPriority.BelowNormal;
 				this.update.Priority = ThreadPriority.BelowNormal;
+
+				this.log   .Start();
 				this.scan  .Start();
 				this.update.Start();
-				return true;
 			}
 			catch( Exception ex )
 			{
 				Msg( "Process: {0}", Except.ToString( ex, debug ) );
-				Terminate();
 			}
-			return false;
 		}
 
-		public void Terminate()
-		{
-			Cancel();
-			Finished();
-		}
-
-		public void Cancel()
+		public void Pause()
 		{
 			if( cancel != null )
 			{
-				try
+				lock( cancel )
 				{
-					cancel.Cancel();
-					Msg( "..operation cancelled" );
-				}
-				catch( Exception ex )
-				{
-					Msg( "Cancel: {0}", Except.ToString( ex, debug ) );
+					if( ! cancel.IsCancellationRequested )
+					{
+						if( pause.WaitOne( 0 ) )
+						{
+							pause.Reset();
+						}
+						else
+						{
+							pause.Set();
+						}
+					}
 				}
 			}
 		}
-
-		public void Finished()
+		public void Cancel()
 		{
 			try
 			{
-				if( log != null )
+				if( cancel != null )
 				{
-					Log( string.Empty );
-					Log( "{0} - Elapsed", Ctrl.FormatTimeSpan( Elapsed ) );
-
-					Log( "Scanned  {0:N0} folders, {1:N0} files", status.scan.folders, status.scan.files );
-					Log( "Updated  {0:N0} created, {1:N0} modified, {2:N0} deleted, {3:N0} skipped", status.update.created, status.update.modified, status.update.deleted, status.update.skipped );
-
-					log.Close();
-					log.Dispose();
-					log = null;
-					Msg( "Finished: log closed." );
+					bool b = false;
+					lock( cancel )
+					{
+						if( ! cancel.IsCancellationRequested )
+						{
+							cancel.Cancel();
+							pause.Set();
+							b = true;
+						}
+					}
+					if( b )
+					{
+						if( IsScanAlive   ) { scan  .Abort(); }
+						if( IsUpdateAlive ) { update.Abort(); }
+						Msg( "..operation cancelled" );
+					}
 				}
 			}
 			catch( Exception ex )
 			{
-				Msg( "Finished: {0}", Except.ToString( ex, debug ) );
+				Msg( "Cancel: {0}", Except.ToString( ex, debug ) );
 			}
 		}
 
 
 		//--- method ----------------------------
+
+		void LogHandler()
+		{
+			try
+			{
+				Msg( "Log: begins" );
+				using( StreamWriter sw = ctrl.CreateLogFile( start ) )
+				{
+					try
+					{
+						foreach( string msg in logging.GetConsumingEnumerable() )
+						{
+							sw.WriteLine( msg );
+						}
+					}
+					catch( Exception ex )
+					{
+						logging.CompleteAdding();
+						sw.WriteLine( "Log: {0}", Except.ToString( ex, debug ) );
+					}
+					sw.WriteLine();
+					sw.WriteLine( "{0} - Elapsed", Ctrl.FormatTimeSpan( Elapsed ) );
+					sw.WriteLine( "Scanned  {0:N0} folders, {1:N0} files", status.scan.folders, status.scan.files );
+					sw.WriteLine( "Updated  {0:N0} created, {1:N0} modified, {2:N0} deleted, {3:N0} skipped", status.update.created, status.update.modified, status.update.deleted, status.update.skipped );
+				}
+			}
+			catch( Exception ex )
+			{
+				logging.CompleteAdding();
+				Msg( "Log: {0}", Except.ToString( ex, debug ) );
+				Cancel();
+			}
+			finally
+			{
+				Msg( "Log: complete" );
+			}
+		}
 
 		void ScanHandler()
 		{
@@ -274,7 +353,6 @@ namespace KeepBack
 			}
 			finally
 			{
-				scan = null;
 				queue.CompleteAdding();
 				Msg( "Scan: {0}", cancel.IsCancellationRequested ? "cancelled" : "complete" );
 			}
@@ -284,8 +362,6 @@ namespace KeepBack
 		{
 			try
 			{
-				//..create a log file for this backup
-				log = ctrl.CreateLogFile( start );
 				Msg( "Archive: {0}", ctrl.Path );
 				//..check the archive path's drive properties
 				ctrl.TestArchiveDriveProperties();
@@ -371,7 +447,7 @@ namespace KeepBack
 					}
 
 					//..move folders which are no longer part of the backup folder set to history
-					if( b && ! cancel.IsCancellationRequested && (a.Count > 0) )
+					if( b && ! IsCancellRequested && (a.Count > 0) )
 					{
 						if( debug ) { Log( ".s.remove folders from current which are not part of backup set" ); }
 						foreach( string n in a )
@@ -446,7 +522,7 @@ namespace KeepBack
 				Interlocked.Increment( ref status.scan.folders );
 
 				//..check if cancelled
-				if( cancel.IsCancellationRequested )
+				if( IsCancellRequested )
 				{
 					throw new Exception( "Scan cancelled." );
 				}
@@ -497,7 +573,7 @@ namespace KeepBack
 						{
 							try
 							{
-								if( cancel.IsCancellationRequested )
+								if( IsCancellRequested )
 								{
 									throw new Exception( "Scan cancelled." );
 								}
@@ -566,7 +642,7 @@ namespace KeepBack
 						a = new List<string>( Ctrl.ListDirectories( cp ) );
 						foreach( string n in Ctrl.ListDirectories( fp ) )
 						{
-							if( cancel.IsCancellationRequested )
+							if( IsCancellRequested )
 							{
 								throw new Exception( "Scan cancelled." );
 							}
@@ -617,9 +693,8 @@ namespace KeepBack
 			try
 			{
 				Msg( "Update: waiting" );
-				for( ;; )
+				foreach( UpdateRequest ur in queue.GetConsumingEnumerable( cancel.Token ) )
 				{
-					UpdateRequest ur = queue.Take( cancel.Token );
 					try
 					{
 						Update( ur );
@@ -631,15 +706,12 @@ namespace KeepBack
 						ex.Data[ExHistoryRoot] = history;
 						Msg( "Update: {0}", Except.ToString( ex, debug ) );
 					}
+					pause.WaitOne();
 				}
 			}
-			catch( InvalidOperationException ex )
+			catch( OperationCanceledException ex )
 			{
-				if( ! queue.IsCompleted )
-				{
-					Msg( "Update: {0}", Except.ToString( ex, debug ) );
-					Cancel();
-				}
+				Msg( "Update: {0}", Except.ToString( ex, debug ) );
 			}
 			catch( Exception ex )
 			{
@@ -654,7 +726,6 @@ namespace KeepBack
 					RemoveEmptyHistoryFolder( string.Empty );
 				}
 				status.update.current = string.Empty;
-				update = null;
 				Msg( "Update: {0}", (cancel.IsCancellationRequested || ! queue.IsCompleted) ? "cancelled" : "complete" );
 			}
 		}
@@ -855,7 +926,7 @@ namespace KeepBack
 				if( debug ) { Log( ".u.recursive copy [{0}]", s ); }
 
 				//..check if cancelled
-				if( cancel.IsCancellationRequested )
+				if( IsCancellRequested )
 				{
 					throw new Exception( "Update cancelled." );
 				}
@@ -896,7 +967,7 @@ namespace KeepBack
 							try
 							{
 								status.update.current = folder.Name + ":" + MatchPath.AbsoluteDirectoryPath( path ?? string.Empty ) + n;
-								if( cancel.IsCancellationRequested )
+								if( IsCancellRequested )
 								{
 									throw new Exception( "Update cancelled." );
 								}
@@ -984,7 +1055,7 @@ namespace KeepBack
 				if( debug ) { Log( ".u.recursive delete [{0}]", s ); }
 
 				//..check if cancelled
-				if( cancel.IsCancellationRequested )
+				if( IsCancellRequested )
 				{
 					throw new Exception( "Update cancelled." );
 				}
@@ -1241,11 +1312,14 @@ namespace KeepBack
 		}
 		void Log( string msg )
 		{
-			if( log != null )
+			if( (logging != null) && ! logging.IsAddingCompleted )
 			{
-				lock( log )
+				try
 				{
-					log.WriteLine( msg );
+					logging.Add( msg );
+				}
+				catch( Exception )
+				{
 				}
 			}
 		}

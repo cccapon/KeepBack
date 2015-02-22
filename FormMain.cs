@@ -33,35 +33,42 @@ namespace KeepBack
 {
 	public partial class FormMain : Form
 	{
+
 		string          filename         = null;
 		Backup          backup           = null;
-
-#if false
-		Thread          thread           = null;
-		Archive         current          = null;
-#endif
-
-		long            created          = 0;
-		long            modified         = 0;
-		long            deleted          = 0;
-		long            skipped          = 0;
+		int             timer_kick       = 0;
 
 
 		public string Filename   { get { return filename; } set { filename = value; SetHeader(); } }
 		public bool   IsFilename { get { return ! string.IsNullOrEmpty( filename ); } }
 		public bool   IsDebug    { get { return debugToolStripMenuItem.Checked; } }
 
+
 		public FormMain()
 		{
 			InitializeComponent();
-			SetHeader();
+			try
+			{
+				SetHeader();
+			}
+			catch( Exception ex )
+			{
+				Msg( ex );
+			}
+
 		}
 
 		private void FormMain_Load( object sender, EventArgs e )
 		{
-			SetHeader();
+			try
+			{
+				SetHeader();
+			}
+			catch( Exception ex )
+			{
+				Msg( ex );
+			}
 		}
-
 
 		void SetHeader()
 		{
@@ -71,7 +78,7 @@ namespace KeepBack
 				filename = Path.GetFullPath( filename );
 				this.Text += " - " + filename;
 			}
-			ButtonEnable( true );
+			ControlActivation();
 		}
 
 
@@ -101,7 +108,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -125,7 +132,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -133,11 +140,11 @@ namespace KeepBack
 		{
 			try
 			{
-				Filename = "";
+				Filename = string.Empty;
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -165,7 +172,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -185,7 +192,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -205,7 +212,7 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
 
@@ -225,7 +232,19 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
+			}
+		}
+
+		private void MenuAbout_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				new FormAbout().ShowDialog();
+			}
+			catch( Exception ex )
+			{
+				Msg( ex );
 			}
 		}
 
@@ -233,55 +252,25 @@ namespace KeepBack
 		{
 			try
 			{
-				if( newToolStripMenuItem.Enabled )
+				Backup bk = backup;
+				if( bk == null )
 				{
-					if( IsFilename )
-					{
-#if false
-						ClearValues();
-						thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
-						thread.Start( "Backup" );
-#endif
-					}
+					bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
 				}
-				else
-				{
-#if false
-					Archive a = current;
-					if( a != null )
-					{
-						a.Cancel = true;
-					}
-#endif
-				}
-			}
-			catch( Exception ex )
-			{
-				Info( ex );
-			}
-		}
-		private void buttonTest_Click( object sender, EventArgs e )
-		{
-			Backup bk = backup;
-			if( bk == null )
-			{
-				bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
-			}
-			try
-			{
-				if( bk.IsFinished )
+				if( ! bk.IsRunning )
 				{
 					Ctrl c = GetControl();
 					if( c != null )
 					{
 						labelArchive.Text = c.Path;
+						richTextBoxInfo.Clear();
 						Msg( string.Empty );
 						Msg( "==== Backup ====" );
 						Msg( "Control File : {0}", c.Filename );
-						if( bk.Process( c, IsDebug ) )
-						{
-							timerRefresh.Start();
-						}
+						bk.Process( c, IsDebug );
+						ControlActivation();
+						timer_kick = -1;
+						timerRefresh.Start();
 					}
 				}
 				else
@@ -292,206 +281,35 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Msg( "Backup: {0}", Except.ToString( ex, IsDebug ) );
-				bk.Terminate();
+				Msg( ex );
 			}
 		}
 
-
-
-
-		private void MenuAbout_Click( object sender, EventArgs e )
+		private void buttonMerge_Click( object sender, EventArgs e )
 		{
 			try
 			{
-				new FormAbout().ShowDialog();
+				Backup bk = backup;
+				if( (bk != null) && bk.IsRunning )
+				{
+					bk.Pause();
+				}
 			}
 			catch( Exception ex )
 			{
-				Info( ex );
+				Msg( ex );
 			}
 		}
-
-#if false
-		void ClearValues()
-		{
-			labelUpdateCreated   .Text = "";
-			labelUpdateModified  .Text = "";
-			labelUpdateDeleted   .Text = "";
-			labelUpdateSkipped   .Text = "";
-		}
-
-		private void Launch( object parm )
-		{
-			try
-			{
-				string s = (string)parm;
-				current = null;
-				ButtonEnable( false );
-
-				Info( "" );
-				Info( "==== Begin ====" );
-				Info( "Control File   " + filename );
-
-				created              = 0;
-				modified             = 0;
-				deleted              = 0;
-				skipped              = 0;
-
-				if( IsFilename )
-				{
-					Ctrl c = Ctrl.Import( filename );
-					if( c.IsUpgraded )
-					{
-						MessageBox.Show(
-							"Your control file has been upgraded from a previous version.\r\n\r\n"
-							+ "Before running a backup, please verify the settings using the\r\n"
-							+ "configuration editor and save the file to the archive folder."
-							, "Upgrade Wizard"
-							, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 
-							);
-					}
-					else if( c.Archive != null )
-					{
-						using( current = new Archive( new Archive.ActionDelegate( this.ArchiveAction ), c, IsDebug ) )
-						{
-							if( current != null )
-							{
-								switch( s )
-								{
-									case "Backup":  current.Merge(); current.Backup( filename );  break;
-									case "Merge" :  current.Merge();                              break;
-								}
-							}
-						}
-					}
-				}
-				current = null;
-				Info( "===== End =====" );
-				Info( "" );
-			}
-			catch( Exception ex )
-			{
-				Info( ex );
-			}
-			finally
-			{
-				ButtonEnable( true );
-			}
-		}
-#endif
-
-		delegate void ButtonEnableCallback( bool enable );
-		private void ButtonEnable( bool enable )
-		{
-			if( this.InvokeRequired )
-			{
-				this.Invoke( new ButtonEnableCallback( ButtonEnable ), enable );
-				return;
-			}
-			bool fn = IsFilename;
-
-			//File
-			newToolStripMenuItem    .Enabled = enable;
-			openToolStripMenuItem   .Enabled = enable;
-			closeToolStripMenuItem  .Enabled = enable && fn;
-
-			//Tools
-			editToolStripMenuItem   .Enabled = enable && fn;
-			exploreToolStripMenuItem.Enabled = enable && fn;
-			logsToolStripMenuItem   .Enabled = enable && fn;
-			mergeToolStripMenuItem  .Enabled = enable && fn;
-			backupToolStripMenuItem .Enabled = enable && fn;
-			debugToolStripMenuItem  .Enabled = enable;
-
-			buttonBackup  .Text    = enable ? "Backup" : "Cancel";
-			buttonBackup  .Enabled = fn;
-		}
-
-		void Info( Exception ex )
-		{
-			if( IsDebug )
-			{
-				Info( ex.ToString() );
-			}
-			else
-			{
-				StringBuilder sb = new StringBuilder( ex.Message );
-				while( (ex = ex.InnerException) != null )
-				{
-					sb.AppendFormat( "\r\n{0}", ex.Message );
-				}
-				Info( sb.ToString() );
-			}
-		}
-		delegate void InfoCallback( string message );
-		void Info( string message )
-		{
-			if( this.InvokeRequired )
-			{
-				this.Invoke( new InfoCallback( Info ), message );
-				return;
-			}
-			richTextBoxInfo.AppendText( message + "\r\n" );
-			richTextBoxInfo.ScrollToCaret();
-		}
-
-#if false
-		delegate void ArchiveActionCallback( Archive.Action action, string message );
-		private void ArchiveAction( Archive.Action action, string message )
-		{
-			if( this.InvokeRequired )
-			{
-				this.Invoke( new ArchiveActionCallback( ArchiveAction ), action, message );
-				return;
-			}
-			switch( action )
-			{
-				case Archive.Action.Info:
-				{
-					Info( message );
-					break;
-				}
-				case Archive.Action.Directory:
-				{
-					labelScanCurrent.Text = message;
-					break;
-				}
-				case Archive.Action.File:
-				{
-					labelUpdateCurrent.Text = message;
-					break;
-				}
-				case Archive.Action.Change:
-				{
-					Archive.Reason reason = (Archive.Reason)Enum.Parse( typeof(Archive.Reason), message );
-					if( (reason & Archive.Reason.Created   ) == Archive.Reason.Created   ) { ++created  ;  labelUpdateCreated  .Text = created  .ToString(); }
-					if( (reason & Archive.Reason.Modified  ) == Archive.Reason.Modified  ) { ++modified ;  labelUpdateModified .Text = modified .ToString(); }
-					if( (reason & Archive.Reason.Deleted   ) == Archive.Reason.Deleted   ) { ++deleted  ;  labelUpdateDeleted  .Text = deleted  .ToString(); }
-					break;
-				}
-				case Archive.Action.Skip:
-				{
-					++skipped;
-					labelUpdateSkipped.Text = skipped.ToString();
-					break;
-				}
-			}
-		}
-#endif
-
-		//-----------------------------------------------------------------------
-
 
 		private void timerRefresh_Tick( object sender, EventArgs e )
 		{
-			Backup              bk = backup;
+			Backup bk = backup;
 
 			if( bk != null )
 			{
 				try
 				{
-					Backup.BackupStatus st = bk.Status;
+					Backup.BackupStatus st   = bk.Status;
 
 					toolStripElapsed   .Text = Ctrl.FormatTimeSpan( bk.Elapsed );
 
@@ -500,33 +318,87 @@ namespace KeepBack
 					labelScanFiles     .Text = st.ToString( st.scan.files   );
 
 					labelUpdateCurrent .Text = st.update.current ?? string.Empty;
-					labelUpdatePending .Text = st.ToString( bk.Pending );
+					labelUpdatePending .Text = st.ToString( bk.Pending         );
 					labelUpdateCreated .Text = st.ToString( st.update.created  );
 					labelUpdateModified.Text = st.ToString( st.update.modified );
 					labelUpdateDeleted .Text = st.ToString( st.update.deleted  );
 					labelUpdateSkipped .Text = st.ToString( st.update.skipped  );
 
-					if( bk.IsFinished )
+					pictureBoxScan  .Visible = bk.IsScanWorking;
+					pictureBoxUpdate.Visible = bk.IsUpdateWorking;
+
+					toolStripStatusLabelScanState  .Text = bk.ScanState  .ToString();
+					toolStripStatusLabelUpdateState.Text = bk.UpdateState.ToString();
+					toolStripStatusLabelLogs       .Text = st.ToString( bk.LogCount );
+
+					++timer_kick;
+					if( ! bk.IsRunning )
 					{
 						timerRefresh.Stop();
 						toolStripStatus.Text = "Ready.";
-						backup.Finished();
+						Msg( "===== End =====" );
+						Msg( "" );
+						ControlActivation();
 					}
 					else
 					{
-						toolStripStatus.Text = "Working " + ". . . . . . ".Substring( 0, 2 * (DateTime.Now.Second % 6) );
+						toolStripStatus.Text = "Working " + ". . . . . . ".Substring( 0, 2 * (timer_kick % 6) );
 					}
 				}
 				catch( Exception ex )
 				{
 					Msg( "Timer: {0}", Except.ToString( ex, IsDebug ) );
-					bk.Terminate();
-					if( bk.IsFinished )
-					{
-						timerRefresh.Stop();
-					}
 				}
 			}
+		}
+
+		delegate void ControlActivationCallback();
+		private void ControlActivation()
+		{
+			if( this.InvokeRequired )
+			{
+				this.Invoke( new ControlActivationCallback( ControlActivation ) );
+				return;
+			}
+			Backup bk   = backup;
+			bool   idle = (bk == null) ? true : ! bk.IsRunning;
+			bool   fn   = IsFilename;
+
+			//File
+			newToolStripMenuItem    .Enabled = idle;
+			openToolStripMenuItem   .Enabled = idle;
+			closeToolStripMenuItem  .Enabled = idle && fn;
+
+			//Tools
+			editToolStripMenuItem   .Enabled = idle && fn;
+			exploreToolStripMenuItem.Enabled = idle && fn;
+			logsToolStripMenuItem   .Enabled = idle && fn;
+			mergeToolStripMenuItem  .Enabled = idle && fn;
+			backupToolStripMenuItem .Enabled = idle && fn;
+			debugToolStripMenuItem  .Enabled = idle;
+
+			//Buttons
+			buttonBackup  .Text    = idle ? "Begin Backup" : "Cancel";
+			buttonBackup  .Enabled = fn;
+			buttonMerge   .Text    = idle ? "Merge" : "Pause";
+			buttonMerge   .Enabled = fn;
+
+			//Display
+			Color c = idle ? System.Drawing.SystemColors.Control : System.Drawing.SystemColors.Info;
+			labelArchive      .BackColor = c;
+			labelScanCurrent  .BackColor = c;
+			labelUpdateCurrent.BackColor = c;
+
+			Font f = labelTagArchive.Font;
+			f = new System.Drawing.Font( f, idle ? FontStyle.Regular : FontStyle.Italic );
+			labelTagArchive.Font = f;
+			labelTagScan   .Font = f;
+			labelTagUpdate .Font = f;
+
+			pictureBoxScan  .Visible = false;
+			pictureBoxUpdate.Visible = false;
+
+			this.Refresh();
 		}
 
 		Ctrl GetControl()
@@ -554,11 +426,16 @@ namespace KeepBack
 			}
 			catch( Exception ex )
 			{
-				Msg( Except.ToString( ex, IsDebug ) );
+				Msg( ex );
 			}
 			return null;
 		}
 
+
+		void Msg( Exception ex )
+		{
+			Msg( Except.ToString( ex, IsDebug ) );
+		}
 		void Msg( string fmt, params object[] args )
 		{
 			Msg( string.Format( fmt, args ) );

@@ -177,6 +177,9 @@
   <ItemGroup>
     <Content Include="Image\Add.png" />
     <Content Include="Image\Archive.png" />
+    <None Include="Resources\Working.bmp" />
+    <None Include="Image\clock.gif" />
+    <None Include="Image\arrows.gif" />
     <Content Include="Image\Control.png" />
     <Content Include="Image\Delete.png" />
     <Content Include="Image\ExcludeFile.png" />
@@ -188,7 +191,10 @@
     <Content Include="Image\IncludeFile.png" />
     <Content Include="Image\IncludeFolder.png" />
     <None Include="Image\LeftArrow.png" />
+    <None Include="Image\indicator.gif" />
     <Content Include="Image\Previous.png" />
+    <None Include="Image\square.gif" />
+    <None Include="Image\Working.gif" />
     <Content Include="License.txt" />
     <Content Include="Notes.txt" />
     <Content Include="ReadMe.txt" />
