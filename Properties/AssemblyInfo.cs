@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright 2008,2009,2010,2011 Chris Capon.
+    Copyright 2008,2009,2010,2011,2012,2013,2014,2015 Chris Capon.
 
     This file is part of KeepBack.
 
@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KeepBack")]
-[assembly: AssemblyCopyright("Copyright © 2008-2013 Chris Capon")]
+[assembly: AssemblyCopyright("Copyright © 2008-2015 Chris Capon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

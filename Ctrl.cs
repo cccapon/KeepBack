@@ -320,6 +320,19 @@ namespace KeepBack
 			}
 		}
 
+		public string HistoryFullPath( string name )
+		{
+			try
+			{
+				return System.IO.Path.Combine( Path, name );
+			}
+			catch( Exception ex )
+			{
+				ex.Data[ExFilename] = name;
+				throw;
+			}
+		}
+
 		public StreamWriter CreateLogFile( DateTime start )
 		{
 			string logs    = null;

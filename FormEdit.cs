@@ -114,6 +114,7 @@ namespace KeepBack
 					a.Day    = 15;
 					a.Hour   = 24;
 					a.Minute = 60;
+					a.Logs   = 90;
 					modified = true;
 				}
 				a = ctrl.Archive;
@@ -131,7 +132,7 @@ namespace KeepBack
 						{
 							foreach( CtrlFilter fi in fo.Filters )
 							{
-								int i = fi.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
+								int i = FilterImage( fi );
 								TreeNode n = new TreeNode( fi.Pattern, i, i );
 								n.Tag = fi;
 								folder.Nodes.Add( n );
@@ -157,6 +158,15 @@ namespace KeepBack
 			if( (n != null) && (n.Parent != null) )
 			{
 				this.treeViewControl.SelectedNode = n.Parent;
+			}
+		}
+		private void TreeImage( object select, int i )
+		{
+			TreeNode n = TreeFind( select );
+			if( n != null )
+			{
+				n.ImageIndex         = i;
+				n.SelectedImageIndex = i;
 			}
 		}
 		private void TreeText( object select, string text )
@@ -228,11 +238,12 @@ namespace KeepBack
 					CtrlArchive a = (CtrlArchive)node.Tag;
 					this.panelArchive.Tag = a;
 					buttonSave.Enabled = modified;
-					labelArchiveFullPath.Text  = ctrl.Path;
-					textBoxArchiveMonth .Text  = a.Month .ToString();
-					textBoxArchiveDay   .Text  = a.Day   .ToString();
-					textBoxArchiveHour  .Text  = a.Hour  .ToString();
-					textBoxArchiveMinute.Text  = a.Minute.ToString();
+					textBoxArchiveFullPath.Text  = ctrl.Path;
+					textBoxArchiveMonth   .Text  = a.Month .ToString();
+					textBoxArchiveDay     .Text  = a.Day   .ToString();
+					textBoxArchiveHour    .Text  = a.Hour  .ToString();
+					textBoxArchiveMinute  .Text  = a.Minute.ToString();
+					textBoxLogsDays       .Text  = a.Logs  .ToString();
 					if( a.Folders != null ) { this.listBoxFolders.Items.AddRange( a.Folders ); }
 				}
 				else if( t == typeof(CtrlFolder) )
@@ -248,17 +259,13 @@ namespace KeepBack
 				else if( t == typeof(CtrlFilter) )
 				{
 					this.panelPattern.Visible = true;
-					switch( node.ImageIndex )
-					{
-						case IMAGE_INCLUDE_FILE:  case IMAGE_INCLUDE_FOLDER:  labelFilter.Text = "Include";  break;
-						case IMAGE_EXCLUDE_FILE:  case IMAGE_EXCLUDE_FOLDER:  labelFilter.Text = "Exclude";  break;
-						case IMAGE_HISTORY_FILE:  case IMAGE_HISTORY_FOLDER:  labelFilter.Text = "History";  break;
-						default:                                              labelFilter.Text = "Pattern";  break;
-					}
 					CtrlFilter  p = (CtrlFilter)node.Tag;
-					CtrlFolder  f = (CtrlFolder )node.Parent.Tag;
+					CtrlFolder  f = (CtrlFolder)node.Parent.Tag;
 					this.panelPattern.Tag = new FolderPattern( f, p );
-					textBoxPatternPattern   .Text    =   p.Pattern;
+					radioButtonActionInclude.Checked = (p.Action == CtrlFilter.ActionType.Include);
+					radioButtonActionExclude.Checked = (p.Action == CtrlFilter.ActionType.Exclude);
+					radioButtonActionHistory.Checked = (p.Action == CtrlFilter.ActionType.History);
+					textBoxPatternPattern.Text    =   p.Pattern;
 					PatternSetRadioButtons();
 				}
 			}
@@ -337,6 +344,7 @@ namespace KeepBack
 				s = textBoxArchiveDay   .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Day    ) { a.Day    = i; modified = true; } } catch { } }
 				s = textBoxArchiveHour  .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Hour   ) { a.Hour   = i; modified = true; } } catch { } }
 				s = textBoxArchiveMinute.Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Minute ) { a.Minute = i; modified = true; } } catch { } }
+				s = textBoxLogsDays     .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Logs   ) { a.Logs   = i; modified = true; } } catch { } }
 			}
 			return null;
 		}
@@ -488,6 +496,12 @@ namespace KeepBack
 			{
 				CtrlFolder f = fp.folder;
 				CtrlFilter p = fp.filter;
+				CtrlFilter.ActionType t = radioButtonActionInclude.Checked ? CtrlFilter.ActionType.Include : (radioButtonActionHistory.Checked ? CtrlFilter.ActionType.History : CtrlFilter.ActionType.Exclude);
+				if( p.Action != t )
+				{
+					p.Action = t;
+					modified = true;
+				}
 				string s;
 				s = textBoxPatternPattern.Text.Trim();
 				if( string.IsNullOrEmpty( s ) )
@@ -500,8 +514,9 @@ namespace KeepBack
 				{
 					p.Pattern = s;
 					modified = true;
-					TreeText( p, p.Pattern );
 				}
+				TreeImage( p, FilterImage( p ) );
+				TreeText( p, p.Pattern );
 			}
 			return null;
 		}
@@ -570,6 +585,17 @@ namespace KeepBack
 				}
 				PatternSetRadioButtons();
 			}
+		}
+
+		private int FilterImage( CtrlFilter fi )
+		{
+			switch( fi.Action )
+			{
+				case CtrlFilter.ActionType.Include:  return fi.IsFolder ? IMAGE_INCLUDE_FOLDER : IMAGE_INCLUDE_FILE;
+				case CtrlFilter.ActionType.Exclude:  return fi.IsFolder ? IMAGE_EXCLUDE_FOLDER : IMAGE_EXCLUDE_FILE;
+				case CtrlFilter.ActionType.History:  return fi.IsFolder ? IMAGE_HISTORY_FOLDER : IMAGE_HISTORY_FILE;
+			}
+			return IMAGE_FOLDER;
 		}
 
 		private void PatternSetRadioButtons()

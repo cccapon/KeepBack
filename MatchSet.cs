@@ -103,20 +103,20 @@ namespace KeepBack
 		}
 		bool IsIncluded( MatchPath[] list, string path )
 		{
+			bool b = true;  //..if no patterns match, assume folder/file is included
 			foreach( MatchPath mp in list )
 			{
 				if( mp.Matches( path ) )
 				{
 					switch( mp.Action )
 					{
-						//..returns the result of the first pattern matched.
-						case CtrlFilter.ActionType.Include:  return true;
-						case CtrlFilter.ActionType.Exclude:  return false;
+						//..all patterns are applied in order.  The result is based on the last match.
+						case CtrlFilter.ActionType.Include:  b = true ;  break;
+						case CtrlFilter.ActionType.Exclude:  b = false;  break;
 					}
 				}
 			}
-			//..if no patterns match, assume folder/file is included
-			return true;
+			return b;
 		}
 
 		//--- end -------------------------------

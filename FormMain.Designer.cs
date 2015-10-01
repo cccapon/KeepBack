@@ -48,7 +48,6 @@ namespace KeepBack
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
 			this.buttonBackup = new System.Windows.Forms.Button();
 			this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
 			this.labelScanCurrent = new System.Windows.Forms.Label();
@@ -83,6 +82,9 @@ namespace KeepBack
 			this.statusStripMain = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripBlank = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelScanState = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelUpdateState = new System.Windows.Forms.ToolStripStatusLabel();
+			this.toolStripStatusLabelLogs = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripElapsed = new System.Windows.Forms.ToolStripStatusLabel();
 			this.labelTagFolders = new System.Windows.Forms.Label();
 			this.labelTagFiles = new System.Windows.Forms.Label();
@@ -96,9 +98,6 @@ namespace KeepBack
 			this.panelScan = new System.Windows.Forms.Panel();
 			this.pictureBoxUpdate = new System.Windows.Forms.PictureBox();
 			this.pictureBoxScan = new System.Windows.Forms.PictureBox();
-			this.toolStripStatusLabelScanState = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelUpdateState = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabelLogs = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStripMain.SuspendLayout();
 			this.statusStripMain.SuspendLayout();
 			this.panelUpdate.SuspendLayout();
@@ -165,18 +164,18 @@ namespace KeepBack
 			// labelUpdateModified
 			// 
 			this.labelUpdateModified.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelUpdateModified.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUpdateModified.Location = new System.Drawing.Point(209, 22);
+			this.labelUpdateModified.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUpdateModified.Location = new System.Drawing.Point(205, 22);
 			this.labelUpdateModified.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUpdateModified.Name = "labelUpdateModified";
-			this.labelUpdateModified.Size = new System.Drawing.Size(85, 28);
+			this.labelUpdateModified.Size = new System.Drawing.Size(92, 23);
 			this.labelUpdateModified.TabIndex = 7;
 			this.labelUpdateModified.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelTagModified
 			// 
 			this.labelTagModified.AutoSize = true;
-			this.labelTagModified.Location = new System.Drawing.Point(221, 5);
+			this.labelTagModified.Location = new System.Drawing.Point(221, 4);
 			this.labelTagModified.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagModified.Name = "labelTagModified";
 			this.labelTagModified.Size = new System.Drawing.Size(61, 17);
@@ -208,29 +207,29 @@ namespace KeepBack
 			// labelUpdateCreated
 			// 
 			this.labelUpdateCreated.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelUpdateCreated.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUpdateCreated.Location = new System.Drawing.Point(115, 22);
+			this.labelUpdateCreated.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUpdateCreated.Location = new System.Drawing.Point(110, 22);
 			this.labelUpdateCreated.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUpdateCreated.Name = "labelUpdateCreated";
-			this.labelUpdateCreated.Size = new System.Drawing.Size(85, 28);
+			this.labelUpdateCreated.Size = new System.Drawing.Size(92, 23);
 			this.labelUpdateCreated.TabIndex = 5;
 			this.labelUpdateCreated.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelUpdateDeleted
 			// 
 			this.labelUpdateDeleted.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelUpdateDeleted.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUpdateDeleted.Location = new System.Drawing.Point(303, 22);
+			this.labelUpdateDeleted.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUpdateDeleted.Location = new System.Drawing.Point(300, 22);
 			this.labelUpdateDeleted.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUpdateDeleted.Name = "labelUpdateDeleted";
-			this.labelUpdateDeleted.Size = new System.Drawing.Size(85, 28);
+			this.labelUpdateDeleted.Size = new System.Drawing.Size(92, 23);
 			this.labelUpdateDeleted.TabIndex = 11;
 			this.labelUpdateDeleted.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelTagDeleted
 			// 
 			this.labelTagDeleted.AutoSize = true;
-			this.labelTagDeleted.Location = new System.Drawing.Point(317, 5);
+			this.labelTagDeleted.Location = new System.Drawing.Point(318, 4);
 			this.labelTagDeleted.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagDeleted.Name = "labelTagDeleted";
 			this.labelTagDeleted.Size = new System.Drawing.Size(57, 17);
@@ -240,18 +239,18 @@ namespace KeepBack
 			// labelUpdateSkipped
 			// 
 			this.labelUpdateSkipped.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelUpdateSkipped.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUpdateSkipped.Location = new System.Drawing.Point(397, 22);
+			this.labelUpdateSkipped.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUpdateSkipped.Location = new System.Drawing.Point(395, 22);
 			this.labelUpdateSkipped.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUpdateSkipped.Name = "labelUpdateSkipped";
-			this.labelUpdateSkipped.Size = new System.Drawing.Size(85, 28);
+			this.labelUpdateSkipped.Size = new System.Drawing.Size(92, 23);
 			this.labelUpdateSkipped.TabIndex = 3;
 			this.labelUpdateSkipped.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelTagSkipped
 			// 
 			this.labelTagSkipped.AutoSize = true;
-			this.labelTagSkipped.Location = new System.Drawing.Point(410, 5);
+			this.labelTagSkipped.Location = new System.Drawing.Point(412, 4);
 			this.labelTagSkipped.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagSkipped.Name = "labelTagSkipped";
 			this.labelTagSkipped.Size = new System.Drawing.Size(59, 17);
@@ -261,7 +260,7 @@ namespace KeepBack
 			// labelTagPending
 			// 
 			this.labelTagPending.AutoSize = true;
-			this.labelTagPending.Location = new System.Drawing.Point(20, 5);
+			this.labelTagPending.Location = new System.Drawing.Point(17, 4);
 			this.labelTagPending.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagPending.Name = "labelTagPending";
 			this.labelTagPending.Size = new System.Drawing.Size(60, 17);
@@ -271,18 +270,18 @@ namespace KeepBack
 			// labelUpdatePending
 			// 
 			this.labelUpdatePending.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelUpdatePending.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelUpdatePending.Location = new System.Drawing.Point(8, 22);
+			this.labelUpdatePending.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelUpdatePending.Location = new System.Drawing.Point(1, 22);
 			this.labelUpdatePending.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelUpdatePending.Name = "labelUpdatePending";
-			this.labelUpdatePending.Size = new System.Drawing.Size(85, 28);
+			this.labelUpdatePending.Size = new System.Drawing.Size(92, 23);
 			this.labelUpdatePending.TabIndex = 13;
 			this.labelUpdatePending.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelTagCreated
 			// 
 			this.labelTagCreated.AutoSize = true;
-			this.labelTagCreated.Location = new System.Drawing.Point(128, 5);
+			this.labelTagCreated.Location = new System.Drawing.Point(127, 4);
 			this.labelTagCreated.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagCreated.Name = "labelTagCreated";
 			this.labelTagCreated.Size = new System.Drawing.Size(58, 17);
@@ -438,9 +437,30 @@ namespace KeepBack
 			// 
 			this.toolStripBlank.AutoSize = false;
 			this.toolStripBlank.Name = "toolStripBlank";
-			this.toolStripBlank.Size = new System.Drawing.Size(88, 20);
+			this.toolStripBlank.Size = new System.Drawing.Size(119, 20);
 			this.toolStripBlank.Spring = true;
 			this.toolStripBlank.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// toolStripStatusLabelScanState
+			// 
+			this.toolStripStatusLabelScanState.AutoSize = false;
+			this.toolStripStatusLabelScanState.Name = "toolStripStatusLabelScanState";
+			this.toolStripStatusLabelScanState.Size = new System.Drawing.Size(150, 20);
+			this.toolStripStatusLabelScanState.Text = "Scan";
+			// 
+			// toolStripStatusLabelUpdateState
+			// 
+			this.toolStripStatusLabelUpdateState.AutoSize = false;
+			this.toolStripStatusLabelUpdateState.Name = "toolStripStatusLabelUpdateState";
+			this.toolStripStatusLabelUpdateState.Size = new System.Drawing.Size(150, 20);
+			this.toolStripStatusLabelUpdateState.Text = "Update";
+			// 
+			// toolStripStatusLabelLogs
+			// 
+			this.toolStripStatusLabelLogs.AutoSize = false;
+			this.toolStripStatusLabelLogs.Name = "toolStripStatusLabelLogs";
+			this.toolStripStatusLabelLogs.Size = new System.Drawing.Size(85, 20);
+			this.toolStripStatusLabelLogs.Text = "Logs";
 			// 
 			// toolStripElapsed
 			// 
@@ -452,7 +472,7 @@ namespace KeepBack
 			// labelTagFolders
 			// 
 			this.labelTagFolders.AutoSize = true;
-			this.labelTagFolders.Location = new System.Drawing.Point(130, 5);
+			this.labelTagFolders.Location = new System.Drawing.Point(129, 4);
 			this.labelTagFolders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagFolders.Name = "labelTagFolders";
 			this.labelTagFolders.Size = new System.Drawing.Size(55, 17);
@@ -462,7 +482,7 @@ namespace KeepBack
 			// labelTagFiles
 			// 
 			this.labelTagFiles.AutoSize = true;
-			this.labelTagFiles.Location = new System.Drawing.Point(233, 5);
+			this.labelTagFiles.Location = new System.Drawing.Point(233, 4);
 			this.labelTagFiles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelTagFiles.Name = "labelTagFiles";
 			this.labelTagFiles.Size = new System.Drawing.Size(37, 17);
@@ -472,22 +492,22 @@ namespace KeepBack
 			// labelScanFolders
 			// 
 			this.labelScanFolders.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelScanFolders.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelScanFolders.Location = new System.Drawing.Point(115, 21);
+			this.labelScanFolders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelScanFolders.Location = new System.Drawing.Point(110, 21);
 			this.labelScanFolders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelScanFolders.Name = "labelScanFolders";
-			this.labelScanFolders.Size = new System.Drawing.Size(85, 28);
+			this.labelScanFolders.Size = new System.Drawing.Size(92, 23);
 			this.labelScanFolders.TabIndex = 5;
 			this.labelScanFolders.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// labelScanFiles
 			// 
 			this.labelScanFiles.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelScanFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelScanFiles.Location = new System.Drawing.Point(209, 21);
+			this.labelScanFiles.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelScanFiles.Location = new System.Drawing.Point(205, 21);
 			this.labelScanFiles.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelScanFiles.Name = "labelScanFiles";
-			this.labelScanFiles.Size = new System.Drawing.Size(85, 28);
+			this.labelScanFiles.Size = new System.Drawing.Size(92, 23);
 			this.labelScanFiles.TabIndex = 7;
 			this.labelScanFiles.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
@@ -499,7 +519,7 @@ namespace KeepBack
 			this.buttonMerge.Name = "buttonMerge";
 			this.buttonMerge.Size = new System.Drawing.Size(140, 28);
 			this.buttonMerge.TabIndex = 17;
-			this.buttonMerge.Text = "Merge";
+			this.buttonMerge.Text = "Merge History";
 			this.buttonMerge.UseVisualStyleBackColor = true;
 			this.buttonMerge.Click += new System.EventHandler(this.buttonMerge_Click);
 			// 
@@ -554,10 +574,10 @@ namespace KeepBack
 			// panelScan
 			// 
 			this.panelScan.Anchor = System.Windows.Forms.AnchorStyles.Top;
-			this.panelScan.Controls.Add(this.labelTagFolders);
-			this.panelScan.Controls.Add(this.labelTagFiles);
 			this.panelScan.Controls.Add(this.labelScanFolders);
 			this.panelScan.Controls.Add(this.labelScanFiles);
+			this.panelScan.Controls.Add(this.labelTagFolders);
+			this.panelScan.Controls.Add(this.labelTagFiles);
 			this.panelScan.Location = new System.Drawing.Point(121, 103);
 			this.panelScan.Margin = new System.Windows.Forms.Padding(4);
 			this.panelScan.Name = "panelScan";
@@ -566,7 +586,7 @@ namespace KeepBack
 			// 
 			// pictureBoxUpdate
 			// 
-			this.pictureBoxUpdate.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxUpdate.Image")));
+			this.pictureBoxUpdate.Image = global::KeepBack.Properties.Resources.Working;
 			this.pictureBoxUpdate.Location = new System.Drawing.Point(95, 228);
 			this.pictureBoxUpdate.Name = "pictureBoxUpdate";
 			this.pictureBoxUpdate.Size = new System.Drawing.Size(16, 16);
@@ -576,34 +596,13 @@ namespace KeepBack
 			// 
 			// pictureBoxScan
 			// 
-			this.pictureBoxScan.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxScan.Image")));
+			this.pictureBoxScan.Image = global::KeepBack.Properties.Resources.Sleep;
 			this.pictureBoxScan.Location = new System.Drawing.Point(98, 127);
 			this.pictureBoxScan.Name = "pictureBoxScan";
 			this.pictureBoxScan.Size = new System.Drawing.Size(16, 16);
 			this.pictureBoxScan.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			this.pictureBoxScan.TabIndex = 20;
 			this.pictureBoxScan.TabStop = false;
-			// 
-			// toolStripStatusLabelScanState
-			// 
-			this.toolStripStatusLabelScanState.AutoSize = false;
-			this.toolStripStatusLabelScanState.Name = "toolStripStatusLabelScanState";
-			this.toolStripStatusLabelScanState.Size = new System.Drawing.Size(150, 20);
-			this.toolStripStatusLabelScanState.Text = "Scan";
-			// 
-			// toolStripStatusLabelUpdateState
-			// 
-			this.toolStripStatusLabelUpdateState.AutoSize = false;
-			this.toolStripStatusLabelUpdateState.Name = "toolStripStatusLabelUpdateState";
-			this.toolStripStatusLabelUpdateState.Size = new System.Drawing.Size(150, 20);
-			this.toolStripStatusLabelUpdateState.Text = "Update";
-			// 
-			// toolStripStatusLabelLogs
-			// 
-			this.toolStripStatusLabelLogs.AutoSize = false;
-			this.toolStripStatusLabelLogs.Name = "toolStripStatusLabelLogs";
-			this.toolStripStatusLabelLogs.Size = new System.Drawing.Size(85, 20);
-			this.toolStripStatusLabelLogs.Text = "Logs";
 			// 
 			// FormMain
 			// 

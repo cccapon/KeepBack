@@ -264,10 +264,12 @@ namespace KeepBack
 					{
 						labelArchive.Text = c.Path;
 						richTextBoxInfo.Clear();
+						labelTagScan.Text = "Scan";
+						labelTagUpdate.Visible = true;
 						Msg( string.Empty );
 						Msg( "==== Backup ====" );
 						Msg( "Control File : {0}", c.Filename );
-						bk.Process( c, IsDebug );
+						bk.Process( Backup.Operation.Backup, c, IsDebug );
 						ControlActivation();
 						timer_kick = -1;
 						timerRefresh.Start();
@@ -275,8 +277,11 @@ namespace KeepBack
 				}
 				else
 				{
-					Msg( "..cancelling backup" );
+					Msg( "..cancelling" );
 					bk.Cancel();
+					buttonMerge .ForeColor = buttonBackup.ForeColor;
+					buttonBackup.Enabled   = false;
+					buttonMerge .Enabled   = false;
 				}
 			}
 			catch( Exception ex )
@@ -290,9 +295,33 @@ namespace KeepBack
 			try
 			{
 				Backup bk = backup;
-				if( (bk != null) && bk.IsRunning )
+				if( bk == null )
+				{
+					bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
+				}
+				if( ! bk.IsRunning )
+				{
+					Ctrl c = GetControl();
+					if( c != null )
+					{
+						labelArchive.Text = c.Path;
+						richTextBoxInfo.Clear();
+						labelTagScan.Text = "Merge";
+						labelTagUpdate.Visible = false;
+						Msg( string.Empty );
+						Msg( "==== Merge ====" );
+						Msg( "Control File : {0}", c.Filename );
+						bk.Process( Backup.Operation.Merge, c, IsDebug );
+						ControlActivation();
+						timer_kick = -1;
+						timerRefresh.Start();
+					}
+				}
+				else
 				{
 					bk.Pause();
+					buttonMerge.Text      = bk.IsPaused ? "Resume" : "Pause";
+					buttonMerge.ForeColor = buttonBackup.ForeColor;
 				}
 			}
 			catch( Exception ex )
@@ -313,7 +342,7 @@ namespace KeepBack
 
 					toolStripElapsed   .Text = Ctrl.FormatTimeSpan( bk.Elapsed );
 
-					labelScanCurrent   .Text = st.scan  .current ?? string.Empty;
+					labelScanCurrent   .Text = bk.IsScanAlive ? (st.scan.current ?? string.Empty) : (bk.IsMergeAlive ? (st.merge.current ?? string.Empty) : string.Empty);
 					labelScanFolders   .Text = st.ToString( st.scan.folders );
 					labelScanFiles     .Text = st.ToString( st.scan.files   );
 
@@ -324,11 +353,20 @@ namespace KeepBack
 					labelUpdateDeleted .Text = st.ToString( st.update.deleted  );
 					labelUpdateSkipped .Text = st.ToString( st.update.skipped  );
 
-					pictureBoxScan  .Visible = bk.IsScanWorking;
-					pictureBoxUpdate.Visible = bk.IsUpdateWorking;
+					pictureBoxScan  .Image   = (bk.IsScanWorking || bk.IsMergeWorking) ? Properties.Resources.Working : Properties.Resources.Sleep;
+					pictureBoxUpdate.Image   = bk.IsUpdateWorking ? Properties.Resources.Working : Properties.Resources.Sleep;
+					pictureBoxScan  .Refresh();
+					pictureBoxUpdate.Refresh();
+					pictureBoxScan  .Visible = (bk.IsScanAlive || bk.IsMergeAlive);
+					pictureBoxUpdate.Visible = bk.IsUpdateAlive;
 
-					toolStripStatusLabelScanState  .Text = bk.ScanState  .ToString();
-					toolStripStatusLabelUpdateState.Text = bk.UpdateState.ToString();
+					if( bk.IsPaused )
+					{
+						buttonMerge.ForeColor = ((timer_kick % 2) == 0) ? buttonMerge.BackColor : buttonBackup.ForeColor;
+					}
+
+					toolStripStatusLabelScanState  .Text = bk.IsScanAlive ? bk.ScanState.ToString() : (bk.IsMergeAlive ? bk.MergeState.ToString() : string.Empty);
+					toolStripStatusLabelUpdateState.Text = bk.IsUpdateAlive ? bk.UpdateState.ToString() : string.Empty;
 					toolStripStatusLabelLogs       .Text = st.ToString( bk.LogCount );
 
 					++timer_kick;
@@ -378,10 +416,11 @@ namespace KeepBack
 			debugToolStripMenuItem  .Enabled = idle;
 
 			//Buttons
-			buttonBackup  .Text    = idle ? "Begin Backup" : "Cancel";
-			buttonBackup  .Enabled = fn;
-			buttonMerge   .Text    = idle ? "Merge" : "Pause";
-			buttonMerge   .Enabled = fn;
+			buttonBackup  .Text      = idle ? "Begin Backup"  : "Cancel";
+			buttonBackup  .Enabled   = fn;
+			buttonMerge   .Text      = idle ? "Merge History" : "Pause";
+			buttonMerge   .Enabled   = fn;
+			buttonMerge   .ForeColor = buttonBackup.ForeColor;
 
 			//Display
 			Color c = idle ? System.Drawing.SystemColors.Control : System.Drawing.SystemColors.Info;

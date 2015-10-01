@@ -35,6 +35,7 @@ namespace KeepBack
 		int           day       = 0;
 		int           hour      = 0;
 		int           minute    = 0;
+		int           logs      = 0;
 		CtrlFolder[]  folders   = null;
 
 		//--- property --------------------------
@@ -51,8 +52,11 @@ namespace KeepBack
 		[XmlAttribute(AttributeName="minute")]
 		public int          Minute    { get { return minute ; } set { minute  = value; } }
 
+		[XmlAttribute(AttributeName="logs")]
+		public int          Logs      { get { return logs   ; } set { logs    = value; } }
+
 		[XmlArray(ElementName="folders")] [XmlArrayItem(ElementName="folder")]
-		public CtrlFolder[] Folders { get { return folders; } set { folders = value; } }
+		public CtrlFolder[] Folders   { get { return folders; } set { folders = value; } }
 
 		//--- method ----------------------------
 

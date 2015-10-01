@@ -59,6 +59,12 @@ namespace KeepBack
 		const string        ExUpdatePath           = "Backup.Update.Path";
 		const string        ExUpdateFilename       = "Backup.Update.Filename";
 
+		public enum Operation
+		{
+			Merge,
+			Backup,
+		}
+
 		enum ActionType
 		{
 			None = 0,
@@ -116,6 +122,10 @@ namespace KeepBack
 
 		public class BackupStatus
 		{
+			public struct Merge
+			{
+				public string  current;
+			}
 			public struct Scan
 			{
 				public string  current;
@@ -130,6 +140,7 @@ namespace KeepBack
 				public long    deleted;
 				public long    skipped;
 			}
+			public Merge  merge;
 			public Scan   scan;
 			public Update update;
 
@@ -150,18 +161,18 @@ namespace KeepBack
 
 		Ctrl                              ctrl            = null;
 		bool                              debug           = false;
-		BlockingCollection<UpdateRequest> queue           = null;
 		BlockingCollection<string>        logging         = null;
 		BackupStatus                      status          = null;
 		CancellationTokenSource           cancel          = null;
+		ManualResetEvent                  pause           = new ManualResetEvent( true );
 		DateTime                          start           = DateTime.MinValue;
 
+		BlockingCollection<UpdateRequest> queue           = null;
 		string                            current         = null;
 		string                            history         = null;
 
-		ManualResetEvent                  pause           = new ManualResetEvent( true );
-
 		Thread                            log             = null;
+		Thread                            merge           = null;
 		Thread                            scan            = null;
 		Thread                            update          = null;
 
@@ -170,23 +181,30 @@ namespace KeepBack
 
 		public TimeSpan     Elapsed            { get { return DateTime.Now - start; } }
 		public BackupStatus Status             { get { return status; } }
-		public int          Pending            { get { return queue  .Count; } }
+		public int          Pending            { get { return (queue != null) ? queue.Count : 0; } }
 		public int          LogCount           { get { return logging.Count; } }
+
 		public bool         IsLogAlive         { get { return (log    != null) && log   .IsAlive; } }
+		public bool         IsMergeAlive       { get { return (merge  != null) && merge .IsAlive; } }
 		public bool         IsScanAlive        { get { return (scan   != null) && scan  .IsAlive; } }
 		public bool         IsUpdateAlive      { get { return (update != null) && update.IsAlive; } }
+
+		public bool         IsMergeWorking     { get { return (IsMergeAlive  && ! merge .ThreadState.HasFlag( ThreadState.WaitSleepJoin )); } }
 		public bool         IsScanWorking      { get { return (IsScanAlive   && ! scan  .ThreadState.HasFlag( ThreadState.WaitSleepJoin )); } }
 		public bool         IsUpdateWorking    { get { return (IsUpdateAlive && ! update.ThreadState.HasFlag( ThreadState.WaitSleepJoin )); } }
+
+		public ThreadState  MergeState         { get { return (merge  != null) ? merge .ThreadState : ThreadState.Unstarted; } }
 		public ThreadState  ScanState          { get { return (scan   != null) ? scan  .ThreadState : ThreadState.Unstarted; } }
 		public ThreadState  UpdateState        { get { return (update != null) ? update.ThreadState : ThreadState.Unstarted; } }
 
-		bool                IsCancellRequested { get { pause.WaitOne();  return cancel.IsCancellationRequested; } }
+		public bool         IsPaused           { get { return ! pause.WaitOne( 0 ); } }
+		bool                IsCancelRequested  { get { pause.WaitOne();  return cancel.IsCancellationRequested; } }
 
 		public bool IsRunning
 		{
 			get
 			{
-				if( ! IsScanAlive && ! IsUpdateAlive )
+				if( ! IsMergeAlive && ! IsScanAlive && ! IsUpdateAlive )
 				{
 					if( (logging != null) && ! logging.IsAddingCompleted )
 					{
@@ -201,6 +219,7 @@ namespace KeepBack
 			}
 		}
 
+
 		//--- constructor -----------------------
 
 		public Backup( MessageDelegate message )
@@ -208,40 +227,56 @@ namespace KeepBack
 			this.message  = message;
 		}
 
-		//--- method ----------------------------
 
-		public void Process( Ctrl ctrl, bool debug )
+		//--- backup ----------------------------
+
+		public void Process( Operation operation, Ctrl ctrl, bool debug )
 		{
 			try
 			{
 				this.ctrl    = ctrl;
 				this.debug   = debug;
-				this.queue   = new BlockingCollection<UpdateRequest>( Maximum_Items_In_Queue );
 				this.logging = new BlockingCollection<string>( Maximum_Items_In_Queue );
 				this.status  = new BackupStatus();
 				this.cancel  = new CancellationTokenSource();
+				pause.Set();
 				this.start   = DateTime.Now;
 
+				this.queue   = new BlockingCollection<UpdateRequest>( Maximum_Items_In_Queue );
 				this.current = null;
 				this.history = null;
 
-				pause.Set();
+				this.log          = new Thread( new ThreadStart( LogHandler    ) );
+				this.log.Name     = "Log";
+				this.log.Priority = ThreadPriority.BelowNormal;
+				this.log.Start();
 
-				this.log     = new Thread( new ThreadStart( LogHandler    ) );
-				this.scan    = new Thread( new ThreadStart( ScanHandler   ) );
-				this.update  = new Thread( new ThreadStart( UpdateHandler ) );
+				switch( operation )
+				{
+					case Operation.Merge:
+					{
+						this.merge          = new Thread( new ThreadStart( MergeHandler ) );
+						this.merge.Name     = "Update";
+						this.merge.Priority = ThreadPriority.BelowNormal;
+						this.merge.Start();
 
-				this.log   .Name     = "Log";
-				this.scan  .Name     = "Scan";
-				this.update.Name     = "Update";
+						break;
+					}
+					case Operation.Backup:
+					{
+						this.scan            = new Thread( new ThreadStart( ScanHandler   ) );
+						this.scan  .Name     = "Scan";
+						this.scan  .Priority = ThreadPriority.BelowNormal;
+						this.scan  .Start();
 
-				this.log   .Priority = ThreadPriority.BelowNormal;
-				this.scan  .Priority = ThreadPriority.BelowNormal;
-				this.update.Priority = ThreadPriority.BelowNormal;
+						this.update          = new Thread( new ThreadStart( UpdateHandler ) );
+						this.update.Name     = "Update";
+						this.update.Priority = ThreadPriority.BelowNormal;
+						this.update.Start();
 
-				this.log   .Start();
-				this.scan  .Start();
-				this.update.Start();
+						break;
+					}
+				}
 			}
 			catch( Exception ex )
 			{
@@ -269,6 +304,7 @@ namespace KeepBack
 				}
 			}
 		}
+
 		public void Cancel()
 		{
 			try
@@ -289,6 +325,7 @@ namespace KeepBack
 					{
 						if( IsScanAlive   ) { scan  .Abort(); }
 						if( IsUpdateAlive ) { update.Abort(); }
+						if( IsMergeAlive  ) { merge .Abort(); }
 						Msg( "..operation cancelled" );
 					}
 				}
@@ -300,7 +337,7 @@ namespace KeepBack
 		}
 
 
-		//--- method ----------------------------
+		//--- logging ---------------------------
 
 		void LogHandler()
 		{
@@ -338,6 +375,9 @@ namespace KeepBack
 				Msg( "Log: complete" );
 			}
 		}
+
+
+		//--- backup scanner --------------------
 
 		void ScanHandler()
 		{
@@ -380,8 +420,8 @@ namespace KeepBack
 				}
 				Msg( "History: {0}", history );
 				Msg( "Current: {0}", current );
-				current = PathCombine( ctrl.Path, current );
-				history = PathCombine( ctrl.Path, history );
+				current = ctrl.HistoryFullPath( current );
+				history = ctrl.HistoryFullPath( history );
 				if( debug )
 				{
 					Log( ".s.current folder [{0}]", current );
@@ -447,7 +487,7 @@ namespace KeepBack
 					}
 
 					//..move folders which are no longer part of the backup folder set to history
-					if( b && ! IsCancellRequested && (a.Count > 0) )
+					if( b && ! IsCancelRequested && (a.Count > 0) )
 					{
 						if( debug ) { Log( ".s.remove folders from current which are not part of backup set" ); }
 						foreach( string n in a )
@@ -472,6 +512,7 @@ namespace KeepBack
 			finally
 			{
 				status.scan.current = string.Empty;
+				ctrl.HistoryFolders(); // This is here to make sure our last accessed folder doesn't lock one of the history directories
 			}
 		}
 
@@ -522,10 +563,7 @@ namespace KeepBack
 				Interlocked.Increment( ref status.scan.folders );
 
 				//..check if cancelled
-				if( IsCancellRequested )
-				{
-					throw new Exception( "Scan cancelled." );
-				}
+				if( IsCancelRequested ) { throw new Exception( "Scan cancelled." ); }
 				if( ! folder.IsIncludedFolder( path ) )
 				{
 					if( debug ) { Log( "  .s.not included" ); }
@@ -573,7 +611,7 @@ namespace KeepBack
 						{
 							try
 							{
-								if( IsCancellRequested )
+								if( IsCancelRequested )
 								{
 									throw new Exception( "Scan cancelled." );
 								}
@@ -642,7 +680,7 @@ namespace KeepBack
 						a = new List<string>( Ctrl.ListDirectories( cp ) );
 						foreach( string n in Ctrl.ListDirectories( fp ) )
 						{
-							if( IsCancellRequested )
+							if( IsCancelRequested )
 							{
 								throw new Exception( "Scan cancelled." );
 							}
@@ -686,7 +724,7 @@ namespace KeepBack
 		}
 
 
-		//--- method ----------------------------
+		//--- backup update ---------------------
 
 		void UpdateHandler()
 		{
@@ -926,7 +964,7 @@ namespace KeepBack
 				if( debug ) { Log( ".u.recursive copy [{0}]", s ); }
 
 				//..check if cancelled
-				if( IsCancellRequested )
+				if( IsCancelRequested )
 				{
 					throw new Exception( "Update cancelled." );
 				}
@@ -967,7 +1005,7 @@ namespace KeepBack
 							try
 							{
 								status.update.current = folder.Name + ":" + MatchPath.AbsoluteDirectoryPath( path ?? string.Empty ) + n;
-								if( IsCancellRequested )
+								if( IsCancelRequested )
 								{
 									throw new Exception( "Update cancelled." );
 								}
@@ -1055,7 +1093,7 @@ namespace KeepBack
 				if( debug ) { Log( ".u.recursive delete [{0}]", s ); }
 
 				//..check if cancelled
-				if( IsCancellRequested )
+				if( IsCancelRequested )
 				{
 					throw new Exception( "Update cancelled." );
 				}
@@ -1110,7 +1148,190 @@ namespace KeepBack
 			}
 		}
 
-		//--- method ----------------------------
+
+
+		//--- merge -----------------------------
+
+		void MergeHandler()
+		{
+			try
+			{
+				Msg( "Merge: begins" );
+				Merge();
+			}
+			catch( Exception ex )
+			{
+				Msg( "Merge: {0}", Except.ToString( ex, debug ) );
+				Cancel();
+			}
+			finally
+			{
+				Msg( "Merge: {0}", cancel.IsCancellationRequested ? "cancelled" : "complete" );
+			}
+		}
+
+		public void Merge()
+		{
+			try
+			{
+				Msg( "Archive: {0}", ctrl.Path );
+				//..check the archive path's drive properties
+				ctrl.TestArchiveDriveProperties();
+
+				Merge( Ctrl.DateFolderLevel.Minute );
+				Merge( Ctrl.DateFolderLevel.Hour   );
+				Merge( Ctrl.DateFolderLevel.Day    );
+				Merge( Ctrl.DateFolderLevel.Month  );
+				Merge( Ctrl.DateFolderLevel.Year   );
+
+				//..remove old log files
+				if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+				CtrlArchive archive = ctrl.Archive;
+				if( (archive != null) && (archive.Logs > 0) )
+				{
+					DateTime dt = start.AddDays( 0 - archive.Logs );
+					string s = Ctrl.DateFolder( dt, Ctrl.DateFolderLevel.Day );
+					Msg( "..remove old log files" );
+					if( debug ) { Log( "..remove log files older than {0} days - {1}", archive.Logs, s ); }
+					foreach( string f in ctrl.LogFiles() )
+					{
+						if( string.Compare( f, s, true ) < 0 )
+						{
+							if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+							if( debug ) { Log( "  ..remove log file: {0}", f ); }
+							FileDelete( ctrl.LogFullPath( f ) );
+						}
+					}
+				}
+			}
+			catch( Exception ex )
+			{
+				ex.Data[ExArchiveRoot] = ctrl.Path;
+				throw;
+			}
+			finally
+			{
+				status.merge.current = string.Empty;
+			}
+		}
+
+		void Merge( Ctrl.DateFolderLevel level )
+		{
+			if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+			Msg( "Level: {0}", level );
+			string  s = MergeMinHistoryFolder( level );
+			int     z = (int)level;
+			if( ! string.IsNullOrEmpty( s ) && (z > 0) )
+			{
+				//..merge directories
+				string[] a  = ctrl.HistoryFolders();
+				int      i  = a.Length;
+				//..skip all folders being kept
+				do
+				{
+					--i;
+				}
+				while( (i > 0) && (string.Compare( a[i], s, true ) >= 0 ) );
+
+				//..scan remaining folders for potential merges and renames
+				while( i >= 0 )
+				{
+					int  j = i;
+					bool b = true;
+					while( (--i >= 0) && (string.Compare( a[i], 0, a[j], 0, z, true ) == 0) )
+					{
+						if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
+						Log( "  ..remove/merge {0}", a[i] );
+						Merge( a[i], a[j] );
+					}
+					//rename any folder where the name is longer than it needs for uniquness
+					if( a[j].Length > z )
+					{
+						if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
+						string t = a[j].Substring( 0, z );
+						Log( "  ..rename to {0}", t );
+						DirectoryMove( ctrl.HistoryFullPath( a[j] ), ctrl.HistoryFullPath( t ) );
+					}
+				}
+			}
+		}
+
+		void Merge( string src, string dst )
+		{
+			try
+			{
+				if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+				status.merge.current = src;
+				string sp = ctrl.HistoryFullPath( src );
+				string dp = ctrl.HistoryFullPath( dst );
+				if( ! Directory.Exists( dp ) )
+				{
+					throw new Exception( "Destination folder missing : " + dp );
+				}
+				if( ! Directory.Exists( sp ) )
+				{
+					throw new Exception( "Source folder missing : " + sp );
+				}
+				foreach( string n in Ctrl.ListDirectories( sp ) )
+				{
+					if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+					Interlocked.Increment( ref status.scan.folders );
+					string dpn = PathCombine( dp, n );
+					if( Directory.Exists( dpn ) )
+					{
+						Merge( PathCombine( src, n ), PathCombine( dst, n ) );
+					}
+					else
+					{
+						DirectoryMove( PathCombine( sp, n ), dpn );
+					}
+				}
+				foreach( string n in Ctrl.ListFiles( sp ) )
+				{
+					if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+					Interlocked.Increment( ref status.scan.files );
+					string dpn = PathCombine( dp, n );
+					if( File.Exists( dpn ) )
+					{
+						FileDelete( PathCombine( sp, n ) );
+					}
+					else
+					{
+						FileMove( PathCombine( sp, n ), dpn );
+					}
+				}
+				if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
+				//..if all opperations were successful then remove source folder
+				DirectoryDelete( sp, true );
+			}
+			catch( Exception ex )
+			{
+				ex.Data[ExCurrentPath] = src;
+				ex.Data[ExHistoryPath] = dst;
+				throw;
+			}
+		}
+
+		string MergeMinHistoryFolder( Ctrl.DateFolderLevel level )
+		{
+			DateTime dt = DateTime.MinValue;
+			CtrlArchive archive = ctrl.Archive;
+			if( archive != null )
+			{
+				switch( level )
+				{
+					case Ctrl.DateFolderLevel.Year  :  if( archive.Month  > 0 ) { dt = start.AddMonths  ( 0 - archive.Month  ); } break;
+					case Ctrl.DateFolderLevel.Month :  if( archive.Day    > 0 ) { dt = start.AddDays    ( 0 - archive.Day    ); } break;
+					case Ctrl.DateFolderLevel.Day   :  if( archive.Hour   > 0 ) { dt = start.AddHours   ( 0 - archive.Hour   ); } break;
+					case Ctrl.DateFolderLevel.Hour  :  if( archive.Minute > 0 ) { dt = start.AddMinutes ( 0 - archive.Minute ); } break;
+					case Ctrl.DateFolderLevel.Minute:  dt = start;                                                                break;
+				}
+			}
+			return (dt == DateTime.MinValue) ? null : Ctrl.DateFolder( dt, level );
+		}
+
+
+		//--- file handling ---------------------
 
 
 		void ListFilenameRemove( List<string> a, string filename )
@@ -1296,6 +1517,9 @@ namespace KeepBack
 				throw;
 			}
 		}
+
+
+		//--- logging ---------------------------
 
 		void LogStatus( StatusType status, string name, string path, string filename )
 		{

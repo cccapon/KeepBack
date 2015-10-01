@@ -6,35 +6,22 @@
 - testing latest backup
 	- if nothing in the queue for 1 second, clear current update path
 	- for Exceptions, include the method throwing the exception in .data
-	- remove boxes around path labels on main dialog
-	- show a graphic for scan and update threads to indicate they are still running
-	- select colours other than black on grey - very dull
-		- make counter boxes white background
-		- center text over counter boxes
-		- numbers with commas appear to be periods
+	- when upgrading a .keep file from 1.0, the path where the archive.keep file is saved should be editable (only during an upgrade)
+	- trap all permission related exceptions and provide a simpler text (or eliminate the text if in non-debug mode)
 
-- add a pause button, pause both queues
 
 - we were working on History Explorer, but started to merge 2.0 changes in
-
-
+ 
+  
 
  Quick Notes
 ---------------------------------------
-- to accomodate renamed files and folders, can a rename option be added to the History Explorer?  After renaming, remerge and backup.
-	- this would rename all historical versions of the file or folder.
-- log files should not be deleted by the same schedule as the merge, instead, we should keep a certain number of log files - like, keeping the last 100 or something
-
+  
+   
 
  Bug
 ---------------------------------------
 - when a folder is excluded using a filter and that folder already exists in the backup, it will not be cleared out properly by history.
-- Add new "exclude folder" to existing archive
-  - when exclude folder is added, the file exclude icon is displayed rather than folder exclude
-- remove default pattern
-  - default pattern of "*" matches everything and on an exclude is disasterous
-  - make default pattern "" instead
-  - automatically remove "" patterns when the pattern dialog is closed.
 - some files are being backed up repeatedly even if they haven't changed.
 	- could it be date related somehow?
 	- if we can detect the condition, we should do a full file comparison
@@ -60,11 +47,6 @@
 
 ... Functionality
 
-	- dated directory names
-		- when there are no conflicting names, allow merge to rename date/time folders to just date folders
-			eg: 2010-11-05-1903  to  2010-11-05
-			especially the monthly merge if not the daily
-			handle smooth transitions from 2010-11-05-190321 to 2010-11-05-1903 to 2010-11-05-1900 to 2010-11-05 to 2010-11 to 2010
 	- if we have eliminated the 'already exists' problem
 		- can we go back to comparing filenames rather than asking the filesystem to pattern match the names?
 		- use the filter match object with the case sensitive flag from our filesystem test
@@ -84,13 +66,6 @@
 		- need to handle all sorts of case/case insensitive situations
 			- backup drive may not be case sensitive where source drive may be
 		- fix merge as well as backup
-	- multithreaded backup
-		- reader thread
-			- scan for changes, queue up files which must be backed up
-		- writer thread
-			- archive old files
-			- copy over new files
-			- delete files being removed
 	- rather than a verify option
 		- have a backup flag which does a full byte-by-byte file compare instead
 
@@ -104,9 +79,6 @@
 			- replace history with a pattern backup count
 			- allow user to specify maximum number of copies to retain
 			- older versions are culled during the merge phase
-		- have just one list of filters and provide filter options when creating
-			- options for include or exclude
-			- options for max backup count
 		- should there be a hierarchy of filters?
 			- if first filter matches, try child filters
 	- include files which are part of an excluded folder (ie: exclude the folder but include one file it contains)
@@ -322,6 +294,8 @@
 		  can use it to prune duplicate files.
 			- we could put a special file in the folder indicating where the new backup directory was moved to
 				- that wouldn't work for files, only folders though
+	- to accomodate renamed files and folders, can a rename option be added to the History Explorer?  After renaming, remerge and backup.
+		- this would rename all historical versions of the file or folder.
 	- duplicate files
 		- history option to help locate large files which are duplicates
 		- needed to help clean up system
@@ -422,10 +396,6 @@
     - new CRC's can be compared against list of known CRC's for all files
       - if found, check if old file is gone
         - if gone, assume file has moved
-
-
-
-
 
  End
 ---------------------------------------

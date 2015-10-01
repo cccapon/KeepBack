@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<keepback xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:keepback:schema:2013-02">
-  <archive month="6" day="7" hour="24" minute="60">
+<keepback xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:keepback:schema:2013-02">
+  <archive month="6" day="7" hour="24" minute="60" logs="0">
     <folders>
-      <folder name="KeepBack" path="C:\Users\cc\Projects\KeepBack">
+      <folder name="KeepBack" path="C:\Users\cc\Source\Repos\KeepBack\KeepBack">
         <filters>
           <filter action="Exclude">\Archive\</filter>
           <filter action="Exclude">.svn\</filter>

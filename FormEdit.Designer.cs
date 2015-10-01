@@ -91,6 +91,9 @@ namespace KeepBack
 			this.labelFolderName = new System.Windows.Forms.Label();
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
+			this.textBoxLogsDays = new System.Windows.Forms.TextBox();
+			this.labelLogsDays = new System.Windows.Forms.Label();
+			this.labelLogsHistory = new System.Windows.Forms.Label();
 			this.labelArrowSeconds = new System.Windows.Forms.Label();
 			this.labelArrowMinutes = new System.Windows.Forms.Label();
 			this.labelArrowHours = new System.Windows.Forms.Label();
@@ -100,7 +103,6 @@ namespace KeepBack
 			this.labelArchiveSecond = new System.Windows.Forms.Label();
 			this.textBoxArchiveYear = new System.Windows.Forms.TextBox();
 			this.labelArchiveYear = new System.Windows.Forms.Label();
-			this.labelArchiveFullPath = new System.Windows.Forms.Label();
 			this.buttonSave = new System.Windows.Forms.Button();
 			this.buttonFolderDelete = new System.Windows.Forms.Button();
 			this.buttonFolderAdd = new System.Windows.Forms.Button();
@@ -118,6 +120,7 @@ namespace KeepBack
 			this.labelArchivePath = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.textBoxArchiveFullPath = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -195,7 +198,7 @@ namespace KeepBack
 			this.panelPattern.Controls.Add(this.textBoxPatternPattern);
 			this.panelPattern.Controls.Add(this.labelPatternPattern);
 			this.panelPattern.Controls.Add(this.labelFilter);
-			this.panelPattern.Location = new System.Drawing.Point(666, 405);
+			this.panelPattern.Location = new System.Drawing.Point(661, 544);
 			this.panelPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.panelPattern.Name = "panelPattern";
 			this.panelPattern.Size = new System.Drawing.Size(643, 390);
@@ -211,7 +214,7 @@ namespace KeepBack
 			this.groupBoxAction.Name = "groupBoxAction";
 			this.groupBoxAction.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxAction.Size = new System.Drawing.Size(358, 57);
-			this.groupBoxAction.TabIndex = 26;
+			this.groupBoxAction.TabIndex = 1;
 			this.groupBoxAction.TabStop = false;
 			this.groupBoxAction.Text = "Action";
 			// 
@@ -222,7 +225,7 @@ namespace KeepBack
 			this.radioButtonActionHistory.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonActionHistory.Name = "radioButtonActionHistory";
 			this.radioButtonActionHistory.Size = new System.Drawing.Size(73, 21);
-			this.radioButtonActionHistory.TabIndex = 23;
+			this.radioButtonActionHistory.TabIndex = 2;
 			this.radioButtonActionHistory.TabStop = true;
 			this.radioButtonActionHistory.Text = "History";
 			this.toolTip.SetToolTip(this.radioButtonActionHistory, "Matching items will be a part of the backup but no revisions will be kept.");
@@ -235,7 +238,7 @@ namespace KeepBack
 			this.radioButtonActionInclude.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonActionInclude.Name = "radioButtonActionInclude";
 			this.radioButtonActionInclude.Size = new System.Drawing.Size(74, 21);
-			this.radioButtonActionInclude.TabIndex = 21;
+			this.radioButtonActionInclude.TabIndex = 0;
 			this.radioButtonActionInclude.TabStop = true;
 			this.radioButtonActionInclude.Text = "Include";
 			this.toolTip.SetToolTip(this.radioButtonActionInclude, "Matching items will be part of the backup set.");
@@ -248,7 +251,7 @@ namespace KeepBack
 			this.radioButtonActionExclude.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonActionExclude.Name = "radioButtonActionExclude";
 			this.radioButtonActionExclude.Size = new System.Drawing.Size(78, 21);
-			this.radioButtonActionExclude.TabIndex = 22;
+			this.radioButtonActionExclude.TabIndex = 1;
 			this.radioButtonActionExclude.TabStop = true;
 			this.radioButtonActionExclude.Text = "Exclude";
 			this.toolTip.SetToolTip(this.radioButtonActionExclude, "Matching items will not be a part of the backup.");
@@ -372,7 +375,7 @@ namespace KeepBack
 			this.labelPattern5Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelPattern5Description.Name = "labelPattern5Description";
 			this.labelPattern5Description.Size = new System.Drawing.Size(372, 25);
-			this.labelPattern5Description.TabIndex = 7;
+			this.labelPattern5Description.TabIndex = 9;
 			this.labelPattern5Description.Text = "match any number of intermediate directory levels";
 			this.labelPattern5Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -382,7 +385,7 @@ namespace KeepBack
 			this.labelPattern4Description.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelPattern4Description.Name = "labelPattern4Description";
 			this.labelPattern4Description.Size = new System.Drawing.Size(372, 33);
-			this.labelPattern4Description.TabIndex = 9;
+			this.labelPattern4Description.TabIndex = 7;
 			this.labelPattern4Description.Text = "matches a directory path character";
 			this.labelPattern4Description.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -397,7 +400,7 @@ namespace KeepBack
 			this.buttonPatternPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonPatternPrevious.Name = "buttonPatternPrevious";
 			this.buttonPatternPrevious.Size = new System.Drawing.Size(32, 30);
-			this.buttonPatternPrevious.TabIndex = 40;
+			this.buttonPatternPrevious.TabIndex = 6;
 			this.buttonPatternPrevious.UseVisualStyleBackColor = true;
 			this.buttonPatternPrevious.Click += new System.EventHandler(this.buttonPatternPrevious_Click);
 			// 
@@ -410,7 +413,7 @@ namespace KeepBack
 			this.groupBoxPatternMatch.Name = "groupBoxPatternMatch";
 			this.groupBoxPatternMatch.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternMatch.Size = new System.Drawing.Size(115, 84);
-			this.groupBoxPatternMatch.TabIndex = 25;
+			this.groupBoxPatternMatch.TabIndex = 5;
 			this.groupBoxPatternMatch.TabStop = false;
 			this.groupBoxPatternMatch.Text = "Matches only";
 			// 
@@ -421,7 +424,7 @@ namespace KeepBack
 			this.radioButtonMatchFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonMatchFolder.Name = "radioButtonMatchFolder";
 			this.radioButtonMatchFolder.Size = new System.Drawing.Size(76, 21);
-			this.radioButtonMatchFolder.TabIndex = 21;
+			this.radioButtonMatchFolder.TabIndex = 0;
 			this.radioButtonMatchFolder.TabStop = true;
 			this.radioButtonMatchFolder.Text = "Folders";
 			this.radioButtonMatchFolder.UseVisualStyleBackColor = true;
@@ -434,7 +437,7 @@ namespace KeepBack
 			this.radioButtonMatchFile.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonMatchFile.Name = "radioButtonMatchFile";
 			this.radioButtonMatchFile.Size = new System.Drawing.Size(58, 21);
-			this.radioButtonMatchFile.TabIndex = 22;
+			this.radioButtonMatchFile.TabIndex = 1;
 			this.radioButtonMatchFile.TabStop = true;
 			this.radioButtonMatchFile.Text = "Files";
 			this.radioButtonMatchFile.UseVisualStyleBackColor = true;
@@ -449,7 +452,7 @@ namespace KeepBack
 			this.groupBoxPatternApply.Name = "groupBoxPatternApply";
 			this.groupBoxPatternApply.Padding = new System.Windows.Forms.Padding(4);
 			this.groupBoxPatternApply.Size = new System.Drawing.Size(140, 84);
-			this.groupBoxPatternApply.TabIndex = 24;
+			this.groupBoxPatternApply.TabIndex = 4;
 			this.groupBoxPatternApply.TabStop = false;
 			this.groupBoxPatternApply.Text = "Applies only to";
 			// 
@@ -460,7 +463,7 @@ namespace KeepBack
 			this.radioButtonApplyAbsolute.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonApplyAbsolute.Name = "radioButtonApplyAbsolute";
 			this.radioButtonApplyAbsolute.Size = new System.Drawing.Size(102, 21);
-			this.radioButtonApplyAbsolute.TabIndex = 18;
+			this.radioButtonApplyAbsolute.TabIndex = 0;
 			this.radioButtonApplyAbsolute.TabStop = true;
 			this.radioButtonApplyAbsolute.Text = "Fixed Paths";
 			this.radioButtonApplyAbsolute.UseVisualStyleBackColor = true;
@@ -473,7 +476,7 @@ namespace KeepBack
 			this.radioButtonApplyRelative.Margin = new System.Windows.Forms.Padding(4);
 			this.radioButtonApplyRelative.Name = "radioButtonApplyRelative";
 			this.radioButtonApplyRelative.Size = new System.Drawing.Size(120, 21);
-			this.radioButtonApplyRelative.TabIndex = 19;
+			this.radioButtonApplyRelative.TabIndex = 1;
 			this.radioButtonApplyRelative.TabStop = true;
 			this.radioButtonApplyRelative.Text = "Relative Paths";
 			this.radioButtonApplyRelative.UseVisualStyleBackColor = true;
@@ -487,7 +490,7 @@ namespace KeepBack
 			this.textBoxPatternPattern.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxPatternPattern.Name = "textBoxPatternPattern";
 			this.textBoxPatternPattern.Size = new System.Drawing.Size(523, 22);
-			this.textBoxPatternPattern.TabIndex = 17;
+			this.textBoxPatternPattern.TabIndex = 3;
 			this.textBoxPatternPattern.TextChanged += new System.EventHandler(this.textBoxPatternPattern_TextChanged);
 			// 
 			// labelPatternPattern
@@ -497,7 +500,7 @@ namespace KeepBack
 			this.labelPatternPattern.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelPatternPattern.Name = "labelPatternPattern";
 			this.labelPatternPattern.Size = new System.Drawing.Size(54, 17);
-			this.labelPatternPattern.TabIndex = 16;
+			this.labelPatternPattern.TabIndex = 2;
 			this.labelPatternPattern.Text = "Pattern";
 			// 
 			// labelFilter
@@ -508,7 +511,7 @@ namespace KeepBack
 			this.labelFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFilter.Name = "labelFilter";
 			this.labelFilter.Size = new System.Drawing.Size(45, 17);
-			this.labelFilter.TabIndex = 7;
+			this.labelFilter.TabIndex = 0;
 			this.labelFilter.Text = "Filter";
 			// 
 			// panelFolder
@@ -525,11 +528,11 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(20, 31);
+			this.panelFolder.Location = new System.Drawing.Point(656, 11);
 			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
-			this.panelFolder.Size = new System.Drawing.Size(643, 420);
-			this.panelFolder.TabIndex = 2;
+			this.panelFolder.Size = new System.Drawing.Size(643, 496);
+			this.panelFolder.TabIndex = 0;
 			// 
 			// buttonFolderPrevious
 			// 
@@ -542,7 +545,7 @@ namespace KeepBack
 			this.buttonFolderPrevious.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPrevious.Name = "buttonFolderPrevious";
 			this.buttonFolderPrevious.Size = new System.Drawing.Size(32, 30);
-			this.buttonFolderPrevious.TabIndex = 39;
+			this.buttonFolderPrevious.TabIndex = 10;
 			this.buttonFolderPrevious.UseVisualStyleBackColor = true;
 			this.buttonFolderPrevious.Click += new System.EventHandler(this.buttonFolderPrevious_Click);
 			// 
@@ -557,7 +560,7 @@ namespace KeepBack
 			this.buttonFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderPath.Name = "buttonFolderPath";
 			this.buttonFolderPath.Size = new System.Drawing.Size(32, 30);
-			this.buttonFolderPath.TabIndex = 37;
+			this.buttonFolderPath.TabIndex = 5;
 			this.buttonFolderPath.UseVisualStyleBackColor = true;
 			this.buttonFolderPath.Click += new System.EventHandler(this.buttonFolderPath_Click);
 			// 
@@ -568,7 +571,7 @@ namespace KeepBack
 			this.labelListFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelListFilter.Name = "labelListFilter";
 			this.labelListFilter.Size = new System.Drawing.Size(490, 17);
-			this.labelListFilter.TabIndex = 28;
+			this.labelListFilter.TabIndex = 6;
 			this.labelListFilter.Text = "Filters   (actions associated with directories or file names matching a pattern)";
 			// 
 			// buttonFilterDelete
@@ -582,7 +585,7 @@ namespace KeepBack
 			this.buttonFilterDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFilterDelete.Name = "buttonFilterDelete";
 			this.buttonFilterDelete.Size = new System.Drawing.Size(32, 30);
-			this.buttonFilterDelete.TabIndex = 27;
+			this.buttonFilterDelete.TabIndex = 9;
 			this.buttonFilterDelete.Tag = "";
 			this.toolTip.SetToolTip(this.buttonFilterDelete, "Delete a filter pattern selected in the list.");
 			this.buttonFilterDelete.UseVisualStyleBackColor = true;
@@ -599,7 +602,7 @@ namespace KeepBack
 			this.buttonFilterAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFilterAdd.Name = "buttonFilterAdd";
 			this.buttonFilterAdd.Size = new System.Drawing.Size(32, 30);
-			this.buttonFilterAdd.TabIndex = 26;
+			this.buttonFilterAdd.TabIndex = 8;
 			this.toolTip.SetToolTip(this.buttonFilterAdd, "Add a new filter pattern to the list.");
 			this.buttonFilterAdd.UseVisualStyleBackColor = true;
 			this.buttonFilterAdd.Click += new System.EventHandler(this.buttonFilterAdd_Click);
@@ -614,7 +617,7 @@ namespace KeepBack
 			this.listBoxFilter.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxFilter.Name = "listBoxFilter";
 			this.listBoxFilter.Size = new System.Drawing.Size(596, 276);
-			this.listBoxFilter.TabIndex = 25;
+			this.listBoxFilter.TabIndex = 7;
 			this.listBoxFilter.DoubleClick += new System.EventHandler(this.listBoxFilter_DoubleClick);
 			// 
 			// textBoxFolderPath
@@ -625,7 +628,7 @@ namespace KeepBack
 			this.textBoxFolderPath.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderPath.Name = "textBoxFolderPath";
 			this.textBoxFolderPath.Size = new System.Drawing.Size(537, 22);
-			this.textBoxFolderPath.TabIndex = 15;
+			this.textBoxFolderPath.TabIndex = 4;
 			// 
 			// labelFolderPath
 			// 
@@ -634,7 +637,7 @@ namespace KeepBack
 			this.labelFolderPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFolderPath.Name = "labelFolderPath";
 			this.labelFolderPath.Size = new System.Drawing.Size(37, 17);
-			this.labelFolderPath.TabIndex = 14;
+			this.labelFolderPath.TabIndex = 3;
 			this.labelFolderPath.Text = "Path";
 			// 
 			// textBoxFolderName
@@ -643,7 +646,7 @@ namespace KeepBack
 			this.textBoxFolderName.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxFolderName.Name = "textBoxFolderName";
 			this.textBoxFolderName.Size = new System.Drawing.Size(249, 22);
-			this.textBoxFolderName.TabIndex = 13;
+			this.textBoxFolderName.TabIndex = 2;
 			this.textBoxFolderName.TextChanged += new System.EventHandler(this.textBoxFolderName_TextChanged);
 			// 
 			// labelFolderName
@@ -653,7 +656,7 @@ namespace KeepBack
 			this.labelFolderName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFolderName.Name = "labelFolderName";
 			this.labelFolderName.Size = new System.Drawing.Size(45, 17);
-			this.labelFolderName.TabIndex = 12;
+			this.labelFolderName.TabIndex = 1;
 			this.labelFolderName.Text = "Name";
 			// 
 			// labelFolder
@@ -664,12 +667,16 @@ namespace KeepBack
 			this.labelFolder.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFolder.Name = "labelFolder";
 			this.labelFolder.Size = new System.Drawing.Size(54, 17);
-			this.labelFolder.TabIndex = 6;
+			this.labelFolder.TabIndex = 0;
 			this.labelFolder.Text = "Folder";
 			// 
 			// panelArchive
 			// 
 			this.panelArchive.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panelArchive.Controls.Add(this.textBoxArchiveFullPath);
+			this.panelArchive.Controls.Add(this.textBoxLogsDays);
+			this.panelArchive.Controls.Add(this.labelLogsDays);
+			this.panelArchive.Controls.Add(this.labelLogsHistory);
 			this.panelArchive.Controls.Add(this.labelArrowSeconds);
 			this.panelArchive.Controls.Add(this.labelArrowMinutes);
 			this.panelArchive.Controls.Add(this.labelArrowHours);
@@ -679,7 +686,6 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveSecond);
 			this.panelArchive.Controls.Add(this.textBoxArchiveYear);
 			this.panelArchive.Controls.Add(this.labelArchiveYear);
-			this.panelArchive.Controls.Add(this.labelArchiveFullPath);
 			this.panelArchive.Controls.Add(this.buttonSave);
 			this.panelArchive.Controls.Add(this.buttonFolderDelete);
 			this.panelArchive.Controls.Add(this.buttonFolderAdd);
@@ -696,60 +702,92 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(96, 81);
+			this.panelArchive.Location = new System.Drawing.Point(10, 567);
 			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
 			this.panelArchive.Size = new System.Drawing.Size(643, 370);
 			this.panelArchive.TabIndex = 1;
 			// 
+			// textBoxLogsDays
+			// 
+			this.textBoxLogsDays.Location = new System.Drawing.Point(131, 185);
+			this.textBoxLogsDays.Margin = new System.Windows.Forms.Padding(4);
+			this.textBoxLogsDays.Name = "textBoxLogsDays";
+			this.textBoxLogsDays.Size = new System.Drawing.Size(40, 22);
+			this.textBoxLogsDays.TabIndex = 24;
+			this.textBoxLogsDays.Text = "90";
+			this.textBoxLogsDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.toolTip.SetToolTip(this.textBoxLogsDays, "Years are never merged.");
+			// 
+			// labelLogsDays
+			// 
+			this.labelLogsDays.AutoSize = true;
+			this.labelLogsDays.Location = new System.Drawing.Point(57, 188);
+			this.labelLogsDays.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelLogsDays.Name = "labelLogsDays";
+			this.labelLogsDays.Size = new System.Drawing.Size(40, 17);
+			this.labelLogsDays.TabIndex = 23;
+			this.labelLogsDays.Text = "Days";
+			this.labelLogsDays.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// labelLogsHistory
+			// 
+			this.labelLogsHistory.AutoSize = true;
+			this.labelLogsHistory.Location = new System.Drawing.Point(5, 163);
+			this.labelLogsHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelLogsHistory.Name = "labelLogsHistory";
+			this.labelLogsHistory.Size = new System.Drawing.Size(441, 17);
+			this.labelLogsHistory.TabIndex = 22;
+			this.labelLogsHistory.Text = "Log files will be deleted after a certain number of days.  (0 = Disable)";
+			// 
 			// labelArrowSeconds
 			// 
 			this.labelArrowSeconds.Image = global::KeepBack.Properties.Resources.LeftArrow;
-			this.labelArrowSeconds.Location = new System.Drawing.Point(467, 161);
+			this.labelArrowSeconds.Location = new System.Drawing.Point(467, 131);
 			this.labelArrowSeconds.Name = "labelArrowSeconds";
 			this.labelArrowSeconds.Size = new System.Drawing.Size(17, 17);
-			this.labelArrowSeconds.TabIndex = 34;
+			this.labelArrowSeconds.TabIndex = 18;
 			// 
 			// labelArrowMinutes
 			// 
 			this.labelArrowMinutes.Image = global::KeepBack.Properties.Resources.LeftArrow;
-			this.labelArrowMinutes.Location = new System.Drawing.Point(374, 161);
+			this.labelArrowMinutes.Location = new System.Drawing.Point(374, 131);
 			this.labelArrowMinutes.Name = "labelArrowMinutes";
 			this.labelArrowMinutes.Size = new System.Drawing.Size(17, 17);
-			this.labelArrowMinutes.TabIndex = 33;
+			this.labelArrowMinutes.TabIndex = 15;
 			// 
 			// labelArrowHours
 			// 
 			this.labelArrowHours.Image = global::KeepBack.Properties.Resources.LeftArrow;
-			this.labelArrowHours.Location = new System.Drawing.Point(281, 161);
+			this.labelArrowHours.Location = new System.Drawing.Point(281, 131);
 			this.labelArrowHours.Name = "labelArrowHours";
 			this.labelArrowHours.Size = new System.Drawing.Size(17, 17);
-			this.labelArrowHours.TabIndex = 32;
+			this.labelArrowHours.TabIndex = 12;
 			// 
 			// labelArrowMonths
 			// 
 			this.labelArrowMonths.Image = global::KeepBack.Properties.Resources.LeftArrow;
-			this.labelArrowMonths.Location = new System.Drawing.Point(95, 161);
+			this.labelArrowMonths.Location = new System.Drawing.Point(95, 131);
 			this.labelArrowMonths.Name = "labelArrowMonths";
 			this.labelArrowMonths.Size = new System.Drawing.Size(17, 17);
-			this.labelArrowMonths.TabIndex = 31;
+			this.labelArrowMonths.TabIndex = 6;
 			// 
 			// labelArrowDays
 			// 
 			this.labelArrowDays.Image = global::KeepBack.Properties.Resources.LeftArrow;
-			this.labelArrowDays.Location = new System.Drawing.Point(188, 161);
+			this.labelArrowDays.Location = new System.Drawing.Point(188, 131);
 			this.labelArrowDays.Name = "labelArrowDays";
 			this.labelArrowDays.Size = new System.Drawing.Size(17, 17);
-			this.labelArrowDays.TabIndex = 30;
+			this.labelArrowDays.TabIndex = 9;
 			// 
 			// textBoxArchiveSecond
 			// 
 			this.textBoxArchiveSecond.Enabled = false;
-			this.textBoxArchiveSecond.Location = new System.Drawing.Point(503, 158);
+			this.textBoxArchiveSecond.Location = new System.Drawing.Point(503, 128);
 			this.textBoxArchiveSecond.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveSecond.Name = "textBoxArchiveSecond";
 			this.textBoxArchiveSecond.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveSecond.TabIndex = 29;
+			this.textBoxArchiveSecond.TabIndex = 20;
 			this.textBoxArchiveSecond.Text = "60";
 			this.textBoxArchiveSecond.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveSecond, "After this number of seconds, second-by-second backups are merged together into m" +
@@ -758,22 +796,22 @@ namespace KeepBack
 			// labelArchiveSecond
 			// 
 			this.labelArchiveSecond.AutoSize = true;
-			this.labelArchiveSecond.Location = new System.Drawing.Point(500, 137);
+			this.labelArchiveSecond.Location = new System.Drawing.Point(500, 107);
 			this.labelArchiveSecond.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveSecond.Name = "labelArchiveSecond";
 			this.labelArchiveSecond.Size = new System.Drawing.Size(63, 17);
-			this.labelArchiveSecond.TabIndex = 28;
+			this.labelArchiveSecond.TabIndex = 19;
 			this.labelArchiveSecond.Text = "Seconds";
 			this.labelArchiveSecond.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// textBoxArchiveYear
 			// 
 			this.textBoxArchiveYear.Enabled = false;
-			this.textBoxArchiveYear.Location = new System.Drawing.Point(38, 158);
+			this.textBoxArchiveYear.Location = new System.Drawing.Point(38, 128);
 			this.textBoxArchiveYear.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveYear.Name = "textBoxArchiveYear";
 			this.textBoxArchiveYear.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveYear.TabIndex = 27;
+			this.textBoxArchiveYear.TabIndex = 5;
 			this.textBoxArchiveYear.Text = "99";
 			this.textBoxArchiveYear.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveYear, "Years are never merged.");
@@ -781,24 +819,13 @@ namespace KeepBack
 			// labelArchiveYear
 			// 
 			this.labelArchiveYear.AutoSize = true;
-			this.labelArchiveYear.Location = new System.Drawing.Point(35, 137);
+			this.labelArchiveYear.Location = new System.Drawing.Point(35, 107);
 			this.labelArchiveYear.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveYear.Name = "labelArchiveYear";
 			this.labelArchiveYear.Size = new System.Drawing.Size(45, 17);
-			this.labelArchiveYear.TabIndex = 26;
+			this.labelArchiveYear.TabIndex = 4;
 			this.labelArchiveYear.Text = "Years";
 			this.labelArchiveYear.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// labelArchiveFullPath
-			// 
-			this.labelArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.labelArchiveFullPath.Location = new System.Drawing.Point(9, 60);
-			this.labelArchiveFullPath.Name = "labelArchiveFullPath";
-			this.labelArchiveFullPath.Size = new System.Drawing.Size(596, 22);
-			this.labelArchiveFullPath.TabIndex = 25;
-			this.labelArchiveFullPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// buttonSave
 			// 
@@ -808,7 +835,7 @@ namespace KeepBack
 			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(100, 28);
-			this.buttonSave.TabIndex = 5;
+			this.buttonSave.TabIndex = 0;
 			this.buttonSave.Text = "Save";
 			this.buttonSave.UseVisualStyleBackColor = true;
 			this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -820,11 +847,11 @@ namespace KeepBack
 			this.buttonFolderDelete.FlatAppearance.BorderSize = 0;
 			this.buttonFolderDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderDelete.Image = global::KeepBack.Properties.Resources.Delete;
-			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 251);
+			this.buttonFolderDelete.Location = new System.Drawing.Point(607, 269);
 			this.buttonFolderDelete.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderDelete.Name = "buttonFolderDelete";
 			this.buttonFolderDelete.Size = new System.Drawing.Size(32, 30);
-			this.buttonFolderDelete.TabIndex = 24;
+			this.buttonFolderDelete.TabIndex = 28;
 			this.buttonFolderDelete.Tag = "";
 			this.buttonFolderDelete.UseVisualStyleBackColor = true;
 			this.buttonFolderDelete.Click += new System.EventHandler(this.buttonFolderDelete_Click);
@@ -836,22 +863,22 @@ namespace KeepBack
 			this.buttonFolderAdd.FlatAppearance.BorderSize = 0;
 			this.buttonFolderAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
 			this.buttonFolderAdd.Image = global::KeepBack.Properties.Resources.Add;
-			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 216);
+			this.buttonFolderAdd.Location = new System.Drawing.Point(607, 234);
 			this.buttonFolderAdd.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonFolderAdd.Name = "buttonFolderAdd";
 			this.buttonFolderAdd.Size = new System.Drawing.Size(32, 30);
-			this.buttonFolderAdd.TabIndex = 23;
+			this.buttonFolderAdd.TabIndex = 27;
 			this.buttonFolderAdd.UseVisualStyleBackColor = true;
 			this.buttonFolderAdd.Click += new System.EventHandler(this.buttonFolderAdd_Click);
 			// 
 			// labelListFolders
 			// 
 			this.labelListFolders.AutoSize = true;
-			this.labelListFolders.Location = new System.Drawing.Point(5, 196);
+			this.labelListFolders.Location = new System.Drawing.Point(5, 214);
 			this.labelListFolders.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelListFolders.Name = "labelListFolders";
 			this.labelListFolders.Size = new System.Drawing.Size(255, 17);
-			this.labelListFolders.TabIndex = 22;
+			this.labelListFolders.TabIndex = 25;
 			this.labelListFolders.Text = "Folders to be backed up to the archive.";
 			// 
 			// listBoxFolders
@@ -861,20 +888,20 @@ namespace KeepBack
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.listBoxFolders.FormattingEnabled = true;
 			this.listBoxFolders.ItemHeight = 16;
-			this.listBoxFolders.Location = new System.Drawing.Point(9, 216);
+			this.listBoxFolders.Location = new System.Drawing.Point(9, 234);
 			this.listBoxFolders.Margin = new System.Windows.Forms.Padding(4);
 			this.listBoxFolders.Name = "listBoxFolders";
-			this.listBoxFolders.Size = new System.Drawing.Size(596, 148);
-			this.listBoxFolders.TabIndex = 21;
+			this.listBoxFolders.Size = new System.Drawing.Size(596, 132);
+			this.listBoxFolders.TabIndex = 26;
 			this.listBoxFolders.DoubleClick += new System.EventHandler(this.listBoxFolders_DoubleClick);
 			// 
 			// textBoxArchiveMinute
 			// 
-			this.textBoxArchiveMinute.Location = new System.Drawing.Point(410, 158);
+			this.textBoxArchiveMinute.Location = new System.Drawing.Point(410, 128);
 			this.textBoxArchiveMinute.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMinute.Name = "textBoxArchiveMinute";
 			this.textBoxArchiveMinute.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveMinute.TabIndex = 20;
+			this.textBoxArchiveMinute.TabIndex = 17;
 			this.textBoxArchiveMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups are merged together into h" +
         "ours.");
@@ -882,96 +909,96 @@ namespace KeepBack
 			// labelArchiveMinute
 			// 
 			this.labelArchiveMinute.AutoSize = true;
-			this.labelArchiveMinute.Location = new System.Drawing.Point(407, 137);
+			this.labelArchiveMinute.Location = new System.Drawing.Point(407, 107);
 			this.labelArchiveMinute.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveMinute.Name = "labelArchiveMinute";
 			this.labelArchiveMinute.Size = new System.Drawing.Size(57, 17);
-			this.labelArchiveMinute.TabIndex = 19;
+			this.labelArchiveMinute.TabIndex = 16;
 			this.labelArchiveMinute.Text = "Minutes";
 			this.labelArchiveMinute.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// textBoxArchiveHour
 			// 
-			this.textBoxArchiveHour.Location = new System.Drawing.Point(317, 158);
+			this.textBoxArchiveHour.Location = new System.Drawing.Point(317, 128);
 			this.textBoxArchiveHour.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveHour.Name = "textBoxArchiveHour";
 			this.textBoxArchiveHour.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveHour.TabIndex = 18;
+			this.textBoxArchiveHour.TabIndex = 14;
 			this.textBoxArchiveHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups are merged together into days.");
 			// 
 			// labelArchiveHour
 			// 
 			this.labelArchiveHour.AutoSize = true;
-			this.labelArchiveHour.Location = new System.Drawing.Point(314, 137);
+			this.labelArchiveHour.Location = new System.Drawing.Point(314, 107);
 			this.labelArchiveHour.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveHour.Name = "labelArchiveHour";
 			this.labelArchiveHour.Size = new System.Drawing.Size(46, 17);
-			this.labelArchiveHour.TabIndex = 17;
+			this.labelArchiveHour.TabIndex = 13;
 			this.labelArchiveHour.Text = "Hours";
 			this.labelArchiveHour.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// textBoxArchiveDay
 			// 
-			this.textBoxArchiveDay.Location = new System.Drawing.Point(224, 158);
+			this.textBoxArchiveDay.Location = new System.Drawing.Point(224, 128);
 			this.textBoxArchiveDay.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveDay.Name = "textBoxArchiveDay";
 			this.textBoxArchiveDay.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveDay.TabIndex = 16;
+			this.textBoxArchiveDay.TabIndex = 11;
 			this.textBoxArchiveDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups are merged together into months.");
 			// 
 			// labelArchiveDay
 			// 
 			this.labelArchiveDay.AutoSize = true;
-			this.labelArchiveDay.Location = new System.Drawing.Point(221, 137);
+			this.labelArchiveDay.Location = new System.Drawing.Point(221, 107);
 			this.labelArchiveDay.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveDay.Name = "labelArchiveDay";
 			this.labelArchiveDay.Size = new System.Drawing.Size(40, 17);
-			this.labelArchiveDay.TabIndex = 15;
+			this.labelArchiveDay.TabIndex = 10;
 			this.labelArchiveDay.Text = "Days";
 			this.labelArchiveDay.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// labelArchiveHistory
 			// 
 			this.labelArchiveHistory.AutoSize = true;
-			this.labelArchiveHistory.Location = new System.Drawing.Point(5, 105);
+			this.labelArchiveHistory.Location = new System.Drawing.Point(5, 83);
 			this.labelArchiveHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveHistory.Name = "labelArchiveHistory";
-			this.labelArchiveHistory.Size = new System.Drawing.Size(586, 17);
-			this.labelArchiveHistory.TabIndex = 14;
-			this.labelArchiveHistory.Text = "Historical backups are merged together to save space.  You can control when this " +
-    "happens:";
+			this.labelArchiveHistory.Size = new System.Drawing.Size(526, 17);
+			this.labelArchiveHistory.TabIndex = 3;
+			this.labelArchiveHistory.Text = "Over time, historical backups will be merged together to save space.  (0 = Disabl" +
+    "e)";
 			// 
 			// textBoxArchiveMonth
 			// 
-			this.textBoxArchiveMonth.Location = new System.Drawing.Point(131, 158);
+			this.textBoxArchiveMonth.Location = new System.Drawing.Point(131, 128);
 			this.textBoxArchiveMonth.Margin = new System.Windows.Forms.Padding(4);
 			this.textBoxArchiveMonth.Name = "textBoxArchiveMonth";
 			this.textBoxArchiveMonth.Size = new System.Drawing.Size(40, 22);
-			this.textBoxArchiveMonth.TabIndex = 13;
+			this.textBoxArchiveMonth.TabIndex = 8;
 			this.textBoxArchiveMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups are merged together into years.");
 			// 
 			// labelArchiveMonth
 			// 
 			this.labelArchiveMonth.AutoSize = true;
-			this.labelArchiveMonth.Location = new System.Drawing.Point(128, 137);
+			this.labelArchiveMonth.Location = new System.Drawing.Point(128, 107);
 			this.labelArchiveMonth.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchiveMonth.Name = "labelArchiveMonth";
 			this.labelArchiveMonth.Size = new System.Drawing.Size(54, 17);
-			this.labelArchiveMonth.TabIndex = 12;
+			this.labelArchiveMonth.TabIndex = 7;
 			this.labelArchiveMonth.Text = "Months";
 			this.labelArchiveMonth.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// labelArchivePath
 			// 
 			this.labelArchivePath.AutoSize = true;
-			this.labelArchivePath.Location = new System.Drawing.Point(6, 40);
+			this.labelArchivePath.Location = new System.Drawing.Point(6, 29);
 			this.labelArchivePath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchivePath.Name = "labelArchivePath";
 			this.labelArchivePath.Size = new System.Drawing.Size(66, 17);
-			this.labelArchivePath.TabIndex = 8;
+			this.labelArchivePath.TabIndex = 1;
 			this.labelArchivePath.Text = "Location:";
 			// 
 			// labelArchive
@@ -982,7 +1009,7 @@ namespace KeepBack
 			this.labelArchive.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelArchive.Name = "labelArchive";
 			this.labelArchive.Size = new System.Drawing.Size(62, 17);
-			this.labelArchive.TabIndex = 5;
+			this.labelArchive.TabIndex = 0;
 			this.labelArchive.Text = "Archive";
 			// 
 			// toolTip
@@ -991,6 +1018,17 @@ namespace KeepBack
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.IsBalloon = true;
 			this.toolTip.ReshowDelay = 100;
+			// 
+			// textBoxArchiveFullPath
+			// 
+			this.textBoxArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.textBoxArchiveFullPath.Location = new System.Drawing.Point(9, 49);
+			this.textBoxArchiveFullPath.Name = "textBoxArchiveFullPath";
+			this.textBoxArchiveFullPath.ReadOnly = true;
+			this.textBoxArchiveFullPath.Size = new System.Drawing.Size(596, 22);
+			this.textBoxArchiveFullPath.TabIndex = 2;
 			// 
 			// FormEdit
 			// 
@@ -1080,7 +1118,6 @@ namespace KeepBack
 		private System.Windows.Forms.Label labelPattern1Tag;
 		private System.Windows.Forms.Label labelPattern5Tag;
 		private System.Windows.Forms.Label labelPattern4Description;
-		private System.Windows.Forms.Label labelArchiveFullPath;
 		private System.Windows.Forms.ToolTip toolTip;
 		private System.Windows.Forms.TextBox textBoxArchiveYear;
 		private System.Windows.Forms.Label labelArchiveYear;
@@ -1095,5 +1132,9 @@ namespace KeepBack
 		private System.Windows.Forms.RadioButton radioButtonActionInclude;
 		private System.Windows.Forms.RadioButton radioButtonActionExclude;
 		private System.Windows.Forms.RadioButton radioButtonActionHistory;
+		private System.Windows.Forms.TextBox textBoxLogsDays;
+		private System.Windows.Forms.Label labelLogsDays;
+		private System.Windows.Forms.Label labelLogsHistory;
+		private System.Windows.Forms.TextBox textBoxArchiveFullPath;
 	}
 }

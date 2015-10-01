@@ -60,7 +60,7 @@ namespace KeepBack
 
 		public override string ToString()
 		{
-			return string.IsNullOrEmpty( pattern ) ? string.Empty : pattern;
+			return action.ToString() + "\t" + (string.IsNullOrEmpty( pattern ) ? string.Empty : pattern);
 		}
 
 		//--- end -------------------------------
