@@ -1,30 +1,36 @@
 # KeepBack
+
 A simple backup tool which preserves personal files and their history.
 
-Author: Chris Capon
-
-KeepBack is licensed under the GPL (see License.txt).
-
-For installation instructions, please refer to the PDF documentation included.  For further information, please visit:
+For installation instructions, please refer to the __PDF__ documentation included.  For further information, please visit:
 
    https://github.com/cccapon/KeepBack/
 
-KeepBack is a small backup application.  It is used to archive files and directories to USB hard drives or to Network Attached Storage (NAS) drives.
+_KeepBack_ is a small backup application.  It is used to archive files and directories to USB hard drives or to Network Attached Storage (NAS) drives.
 
-KeepBack is intended for the home user and has these features:
+_KeepBack_ is intended for the home user and has these features:
 
-## Keeps historical copies:
+* __Keeps_historical_copies:__
+
 Extra copies of all of your documents are maintained going back in time.  If disaster strikes and your current file becomes corrupt, an older copy may save the day.
 
-## Reverse incremental backups:
-With KeepBack, the most recent backup is a complete replica of all your current files.  Older backups only have copies of files that changed from one backup to the next.
+* __Reverse_incremental_backups:__
 
-## Can be safely interrupted:
+With _KeepBack_, the most recent backup is a complete replica of all your current files.  Older backups only have copies of files that changed from one backup to the next.
+
+* __Can_be_safely_interrupted:__
+ 
 While underway, backups can be stopped at any time without concern and restarted at a later date.  Files already preserved, stay preserved.  Only outstanding changed files will be backed up when KeepBack is launched again.
 
-## Automatic maintenance of backup sets:
-KeepBack has a system in place to merge older backups to conserve disk space. This is done over time based on a schedule you set.
+* __Automatic_maintenance_of_backup_sets:__
 
-## Portable across platforms:
-Written in C#, KeepBack can be run on any system which supports the .NET platform.  This includes systems which support the Mono run-time environment. KeepBack has run successfully on Windows XP, Vista, Windows 7 and Debian GNU/Linux.
+_KeepBack_ has a system in place to merge older backups to conserve disk space. This is done over time based on a schedule you set.
 
+* __Portable_across_platforms:__
+
+Written in __C#__, _KeepBack_ can be run on any system which supports the __.NET_platform__.  This includes systems which support the Mono run-time environment. KeepBack has run successfully on __Windows_XP__, __Vista__, __Windows_7__ and __Debian_GNU/Linux__.
+
+
+_KeepBack_ is licensed under the __GPL__ (see __*License*__).
+
+Author: Chris Capon
