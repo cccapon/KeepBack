@@ -1,6 +1,11 @@
 KeepBack Revision History
 -------------------------
 
+2011-01-20  1.03
+  - changed .keep XML to indent text (make it more human readable).
+  - when backup operation was cancelled, any unprocessed folders in the current archive would be moved to the history
+    folder inadvertently.  Now fixed.
+
 2010-11-14  1.02
   - disable Explore button for release to SourceForge.
 
