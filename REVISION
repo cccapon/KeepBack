@@ -1,1 +1,58 @@
-Version
+KeepBack Revision History
+-------------------------
+
+2010-11-14  1.02
+  - disable Explore button for release to SourceForge.
+
+2009-12-12  v1.01
+  - fixed bug in history and merging where some filenames have changed case and were not matched with each other.
+    - we now detect the case support of the file system automatically.
+    - it isn't a very good method, would like to find a better / faster way.
+
+2009-03-28  1.0
+  - added Edit interface for managing control files.
+  - added New button to create new control file.
+  - changed control file extension from .ctrl to .keep
+
+2009-01-13
+  - added counter for skipped files
+  - the control file is preserved in the dated backup folder now.  Old control files
+    will be preserved historically when they change.
+  - more cleanup of logged messages
+  - added history browser form, has no functional code yet, just a design prototype
+  - reorganized the main panel to clean things up a little
+  - check for and ignore empty patterns
+  - now check for prior history and that history path exists before moving files there
+
+2009-01-05
+  - fixed bug in history maintenance, it was trying to delete the old file from history
+    rather than current before moving new file in to current.
+  - cleaned up log messages and added a status legend to log file
+  - control file archive block now identifies separately, root=, folder= and name=
+    rather than path=.  This is to facilitate moving the archive location at a later
+    date.  When USB drives are plugged in, the drive letter is uncertain each time.
+    Same under Linux.  This will be the root= portion.  Folder can also change which
+    is the place the archive is located under the root.  Name stays the same and is
+    the name of the final directory in which everything is stored.
+
+2009-01-03
+  - Log files are now written to the Archive backup directory and have dated names.
+    - log files are maintained by the Merge facility the same way that directories
+      are merged.  When a folder no longer exists, its log files are removed as well.
+    - separate log files on a per-archive basis are created rather than one single log
+      file as before.
+  - Include, Exclude and History paths are now fully supported.
+    - Includes are checked before Excludes.
+  - Patterns that end with a directory character only match directories.
+  - Patterns that do not end with a directory character only match files.
+  - Excluded directories will not be scanned further for deeper Included directories.
+  - Included directories include all files and subfolders by default.
+    - subfolders can be excluded with an Exclude pattern.
+  - debug messages have been added to try to locate where the FileMove failure is occuring.
+  - dated backup folder names have been changed to remove the space in them.
+  - Patterns now have a Debug option to allow their effect to be traced.
+  - the <log> section has been removed from .ctrl files.
+
+
+-------------------------
+KeepBack Revision History
