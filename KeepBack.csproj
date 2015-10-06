@@ -163,6 +163,7 @@
     <None Include="KeepBack.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="LICENSE" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -172,6 +173,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
+    <None Include="REVISION" />
     <None Include="v1\v1.keep" />
   </ItemGroup>
   <ItemGroup>
@@ -190,10 +193,7 @@
     <Content Include="Image\Previous.png" />
     <None Include="Image\Working.gif" />
     <None Include="Image\Sleep.png" />
-    <Content Include="License.txt" />
     <Content Include="Notes.txt" />
-    <Content Include="ReadMe.txt" />
-    <Content Include="Release.txt" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
