@@ -91,6 +91,7 @@ namespace KeepBack
 			this.labelFolderName = new System.Windows.Forms.Label();
 			this.labelFolder = new System.Windows.Forms.Label();
 			this.panelArchive = new System.Windows.Forms.Panel();
+			this.textBoxArchiveFullPath = new System.Windows.Forms.TextBox();
 			this.textBoxLogsDays = new System.Windows.Forms.TextBox();
 			this.labelLogsDays = new System.Windows.Forms.Label();
 			this.labelLogsHistory = new System.Windows.Forms.Label();
@@ -120,7 +121,6 @@ namespace KeepBack
 			this.labelArchivePath = new System.Windows.Forms.Label();
 			this.labelArchive = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.textBoxArchiveFullPath = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
@@ -528,7 +528,7 @@ namespace KeepBack
 			this.panelFolder.Controls.Add(this.textBoxFolderName);
 			this.panelFolder.Controls.Add(this.labelFolderName);
 			this.panelFolder.Controls.Add(this.labelFolder);
-			this.panelFolder.Location = new System.Drawing.Point(656, 11);
+			this.panelFolder.Location = new System.Drawing.Point(654, 11);
 			this.panelFolder.Margin = new System.Windows.Forms.Padding(4);
 			this.panelFolder.Name = "panelFolder";
 			this.panelFolder.Size = new System.Drawing.Size(643, 496);
@@ -702,11 +702,22 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(10, 567);
+			this.panelArchive.Location = new System.Drawing.Point(10, 571);
 			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
 			this.panelArchive.Size = new System.Drawing.Size(643, 370);
 			this.panelArchive.TabIndex = 1;
+			// 
+			// textBoxArchiveFullPath
+			// 
+			this.textBoxArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.textBoxArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.textBoxArchiveFullPath.Location = new System.Drawing.Point(9, 49);
+			this.textBoxArchiveFullPath.Name = "textBoxArchiveFullPath";
+			this.textBoxArchiveFullPath.ReadOnly = true;
+			this.textBoxArchiveFullPath.Size = new System.Drawing.Size(596, 22);
+			this.textBoxArchiveFullPath.TabIndex = 2;
 			// 
 			// textBoxLogsDays
 			// 
@@ -717,7 +728,7 @@ namespace KeepBack
 			this.textBoxLogsDays.TabIndex = 24;
 			this.textBoxLogsDays.Text = "90";
 			this.textBoxLogsDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			this.toolTip.SetToolTip(this.textBoxLogsDays, "Years are never merged.");
+			this.toolTip.SetToolTip(this.textBoxLogsDays, "After this number of days, old log files will be deleted.");
 			// 
 			// labelLogsDays
 			// 
@@ -1018,17 +1029,6 @@ namespace KeepBack
 			this.toolTip.InitialDelay = 100;
 			this.toolTip.IsBalloon = true;
 			this.toolTip.ReshowDelay = 100;
-			// 
-			// textBoxArchiveFullPath
-			// 
-			this.textBoxArchiveFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxArchiveFullPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.textBoxArchiveFullPath.Location = new System.Drawing.Point(9, 49);
-			this.textBoxArchiveFullPath.Name = "textBoxArchiveFullPath";
-			this.textBoxArchiveFullPath.ReadOnly = true;
-			this.textBoxArchiveFullPath.Size = new System.Drawing.Size(596, 22);
-			this.textBoxArchiveFullPath.TabIndex = 2;
 			// 
 			// FormEdit
 			// 

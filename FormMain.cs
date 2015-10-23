@@ -165,9 +165,14 @@ namespace KeepBack
 			{
 				if( IsFilename )
 				{
-					FormEdit f = new FormEdit( Ctrl.Import( filename ) );
+					Ctrl c = Ctrl.Import( filename );
+					FormEdit f = new FormEdit( c );
 					f.ShowDialog();
-					Filename = f.Filename;
+					//..when saving a version 1.0 control file
+					if( (c.Version == Ctrl.Revision.v1) && f.Saved )
+					{
+						Filename = f.Filename;
+					}
 				}
 			}
 			catch( Exception ex )
@@ -447,7 +452,7 @@ namespace KeepBack
 				if( IsFilename )
 				{
 					Ctrl c = Ctrl.Import( filename );
-					if( c.IsUpgraded )
+					if( c.Version != Ctrl.Revision.current )
 					{
 						MessageBox.Show(
 							"Your control file has been upgraded from a previous version.\r\n\r\n"

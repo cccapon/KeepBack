@@ -85,6 +85,25 @@ namespace KeepBack.v1
 			return c;
 		}
 
+		public static void MoveLogFiles( KeepBack.Ctrl ctrl )
+		{
+			try
+			{
+				string src = ctrl.Path;
+				string dst = ctrl.CreateLogFolder();
+				foreach( string x in KeepBack.Ctrl.ListFiles( src ) )
+				{
+					if( (Path.GetExtension( x ).ToLower() == ".log") && KeepBack.Ctrl.IsDateFolder( x ) )
+					{
+						File.Move( Path.Combine( src, x ), Path.Combine( dst, x ) );
+					}
+				}
+			}
+			catch( Exception )
+			{
+			}
+		}
+
 		//--- end -------------------------------
 	}
 }

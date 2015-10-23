@@ -33,6 +33,12 @@ namespace KeepBack
 	{
 		//--- define ----------------------------
 
+		public enum Revision
+		{
+			v1,
+			current,
+		}
+
 		public enum DateFolderLevel : int
 		{
 			/* Date Folder names
@@ -71,7 +77,7 @@ namespace KeepBack
 		string            filename        = null;
 		CtrlArchive       archive         = null;
 
-		bool              isUpgraded      = false;             //indicates if the control file was upgraded from an old version.
+		Revision          version         = Revision.current;  //indicates if the control file was upgraded from an old version.
 		bool              isCaseSensitive = false;             //indicates whether archive filesystem distinguishes between upper and lower case or not
 		DateTime          minDateUtc      = DateTime.MinValue; //minimum LastWriteUDC date the archive filesystem will accept
 		DateTime          maxDateUtc      = DateTime.MaxValue; //maximum LastWriteUDC date the archive filesystem will accept
@@ -134,7 +140,7 @@ namespace KeepBack
 		}
 
 		[XmlIgnore]
-		public bool          IsUpgraded      { get { return isUpgraded; } }
+		public Revision      Version         { get { return version; } }
 
 		[XmlIgnore]
 		public bool          IsCaseSensitive { get { return isCaseSensitive; } }
@@ -168,19 +174,21 @@ namespace KeepBack
 						{
 							c = (Ctrl)(new XmlSerializer( typeof(Ctrl) )).Deserialize( r );
 							c.Filename = filename;
+							c.version = Revision.current;
 							break;
 						}
 						case v1.Ctrl.XmlNamespace:
 						{
 							v1.Ctrl c1 = (v1.Ctrl)(new XmlSerializer( typeof(v1.Ctrl) )).Deserialize( r );
 							c = c1.Upgrade( filename );
-							c.isUpgraded = true;
+							c.version = Revision.v1;
 							break;
 						}
 						default:
 						{
 							c = new Ctrl();
 							c.Filename = filename;
+							c.version = Revision.current;
 							break;
 						}
 					}
@@ -339,15 +347,7 @@ namespace KeepBack
 			string logfile = null;
 			try
 			{
-				if( ! Directory.Exists( Path ) )
-				{
-					throw new DirectoryNotFoundException( "Archive folder not found." );
-				}
-				logs = System.IO.Path.Combine( Path, LogFolder );
-				if( ! Directory.Exists( logs ) )
-				{
-					Directory.CreateDirectory( logs );
-				}
+				logs = CreateLogFolder();
 				string st = DateFolder( start, DateFolderLevel.Second );
 				logfile = System.IO.Path.Combine( logs, st + ".log" );
 				StreamWriter log = new StreamWriter( logfile, false, Encoding.ASCII );
@@ -359,6 +359,29 @@ namespace KeepBack
 			{
 				ex.Data[ExPath] = logs ?? Path;
 				if( logfile != null ) { ex.Data[ExFilename] = logfile; }
+				throw;
+			}
+		}
+
+		public string CreateLogFolder()
+		{
+			string logs = null;
+			try
+			{
+				if( ! Directory.Exists( Path ) )
+				{
+					throw new DirectoryNotFoundException( "Archive folder not found." );
+				}
+				logs = System.IO.Path.Combine( Path, LogFolder );
+				if( ! Directory.Exists( logs ) )
+				{
+					Directory.CreateDirectory( logs );
+				}
+				return logs;
+			}
+			catch( Exception ex )
+			{
+				ex.Data[ExPath] = logs ?? Path;
 				throw;
 			}
 		}

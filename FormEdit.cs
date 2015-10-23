@@ -55,8 +55,10 @@ namespace KeepBack
 		Ctrl  ctrl;
 		bool  modified           = false;
 		bool  ignoreChangeState  = false;
+		bool  saved              = false;
 		//--- property --------------------------
 		public string Filename { get { return (ctrl == null) ? string.Empty : ctrl.Filename; } }
+		public bool   Saved    { get { return saved; } }
 		//--- constructor -----------------------
 		public FormEdit( Ctrl ctrl )
 		{
@@ -78,7 +80,7 @@ namespace KeepBack
 			panelFolder .SetBounds( r.X, r.Y, r.Width, r.Height );  panelFolder .Anchor = st;
 			panelPattern.SetBounds( r.X, r.Y, r.Width, r.Height );  panelPattern.Anchor = st;
 
-			if( ctrl.IsUpgraded )
+			if( ctrl.Version != Ctrl.Revision.current )
 			{
 				MessageBox.Show( ctrl.Filename + "\r\n\r\nThis KeepBack file has been upgraded from an earlier version.\r\nPlease verify the settings before saving the file.", "Upgrade Wizard", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 );
 				modified = true;
@@ -285,14 +287,15 @@ namespace KeepBack
 			x = AcceptPattern();  o = o ?? x;
 			return o;
 		}
-		private bool Save()
+		private void Save()
 		{
 			try
 			{
 				if( ctrl != null )
 				{
-					if( ctrl.IsUpgraded )
+					if( ctrl.Version == Ctrl.Revision.v1 )
 					{
+						// Only allow "Save As..." when upgrading a 1.0 control file.
 						SaveFileDialog f = new SaveFileDialog();
 						f.AddExtension = true;
 						f.CheckPathExists = true;
@@ -306,15 +309,20 @@ namespace KeepBack
 						f.Title = "Save upgraded KeepBack file.";
 						if( f.ShowDialog() != System.Windows.Forms.DialogResult.OK )
 						{
-							return false;
+							return;
 						}
 						ctrl.Filename = f.FileName;
+						ctrl.Export();
+						KeepBack.v1.Ctrl.MoveLogFiles( ctrl );
 					}
-					ctrl.Export();
+					else
+					{
+						ctrl.Export();
+					}
+					saved = true;
 				}
 				modified = false;
 				buttonSave.Enabled = false;
-				return true;
 			}
 			catch( Exception ex )
 			{
@@ -323,7 +331,6 @@ namespace KeepBack
 #else
 				MessageBox.Show( ex.Message );
 #endif
-				return false;
 			}
 		}
 

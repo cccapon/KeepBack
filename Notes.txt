@@ -6,7 +6,6 @@
 - testing latest backup
 	- if nothing in the queue for 1 second, clear current update path
 	- for Exceptions, include the method throwing the exception in .data
-	- when upgrading a .keep file from 1.0, the path where the archive.keep file is saved should be editable (only during an upgrade)
 	- trap all permission related exceptions and provide a simpler text (or eliminate the text if in non-debug mode)
 
 
@@ -16,8 +15,6 @@
 
  Quick Notes
 ---------------------------------------
-- if upgraded control file is not saved, then revert back to old control file
-- When upgrading from 1.0, the log files should be moved to the logs folder.
   
    
 
