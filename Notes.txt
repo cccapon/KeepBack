@@ -10,12 +10,13 @@
 	- trap all permission related exceptions and provide a simpler text (or eliminate the text if in non-debug mode)
 
 
-- we were working on History Explorer, but started to merge 2.0 changes in
+- working on History Explorer, but started to merge 2.0 changes in
  
   
 
  Quick Notes
 ---------------------------------------
+When upgrading from 1.0 do the log files get moved?
   
    
 
