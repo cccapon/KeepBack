@@ -17,6 +17,7 @@
  Quick Notes
 ---------------------------------------
 When upgrading from 1.0 do the log files get moved?
+This change was made in a hotel room.
   
    
 
