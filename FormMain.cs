@@ -452,7 +452,8 @@ namespace KeepBack
 						MessageBox.Show(
 							"Your control file has been upgraded from a previous version.\r\n\r\n"
 							+ "Before running a backup, please verify the settings using the\r\n"
-							+ "configuration editor and save the file to the archive folder."
+							+ "configuration editor and save the file to the archive folder.\r\n\r\n"
+							+ "From the  Tools  menu, select  Edit"
 							, "Upgrade Wizard"
 							, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 
 							);

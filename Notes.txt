@@ -16,8 +16,8 @@
 
  Quick Notes
 ---------------------------------------
-When upgrading from 1.0 do the log files get moved?
-This change was made in a hotel room.
+- if upgraded control file is not saved, then revert back to old control file
+- When upgrading from 1.0, the log files should be moved to the logs folder.
   
    
 

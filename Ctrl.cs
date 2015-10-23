@@ -173,7 +173,7 @@ namespace KeepBack
 						case v1.Ctrl.XmlNamespace:
 						{
 							v1.Ctrl c1 = (v1.Ctrl)(new XmlSerializer( typeof(v1.Ctrl) )).Deserialize( r );
-							c = c1.Upgrade();
+							c = c1.Upgrade( filename );
 							c.isUpgraded = true;
 							break;
 						}

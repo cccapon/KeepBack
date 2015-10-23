@@ -46,7 +46,7 @@ namespace KeepBack.v1
 
 		//--- method ----------------------------
 
-		public KeepBack.Ctrl Upgrade()
+		public KeepBack.Ctrl Upgrade( string filename )
 		{
 			KeepBack.Ctrl c = new KeepBack.Ctrl();
 			if( (archives != null) && (archives.Length > 0) )
@@ -70,14 +70,14 @@ namespace KeepBack.v1
 				c.Filename = System.IO.Path.Combine( archive.FullPath, KeepBack.Ctrl.ArchiveFilename );
 				archive.Upgrade( c.ArchiveCreate() );
 				MessageBox.Show(
-					"Upgrading control file...\r\n\r\n"
-					+ "Archive path:\r\n\r\n"
+					"Control File:\r\n"
+					+ "      " + filename + "\r\n\r\n"
+					+ "Archive Folder:\r\n"
 					+ "      " + c.Path + "\r\n\r\n"
-					+ "The location of the archive is no longer stored in the .keep file.\r\n"
-					+ "Instead, the folder with the .keep file is used as the folder\r\n"
-					+ "for the archive.\r\n\r\n"
-					+ "When you save the upgraded .keep file, it will be saved to the\r\n"
-					+ "old archive path (as shown above)."
+					+ "This control file must be upgraded to the latest version.\r\n\r\n"
+					+ "Please note:  the path to the archive is no longer kept in the control file.  "
+					+ "Instead, the control file is always stored in the archive folder and launched from there.\r\n\r\n"
+					+ "When you save the upgraded .keep file, it will be saved to the archive folder shown above."
 					, "Upgrade Wizard"
 					, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1 
 					);
