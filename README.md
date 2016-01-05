@@ -2,8 +2,7 @@
 
 __A backup tool which preserves personal files and their history.__
 
-For installation instructions, please refer to the __PDF__ documentation included.
-For further information, please visit:
+For further information, including installation instructions and documentation, please visit:
 
    https://github.com/cccapon/KeepBack/
 
