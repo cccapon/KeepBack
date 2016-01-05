@@ -1,6 +1,22 @@
 KeepBack Revision History
 -------------------------
 
+2016-01-05  2.00
+  - Configuration files can now hold information on only one archive.  Previously, Backup Sets contained
+    definitions for multiple archives.  This made it difficult to know which archive was being referred to
+    when running the log browser or archive explorer.  By restricting configuration files to one archive,
+    it makes the operation simpler.
+  - Configuration files are now always saved in the Archive folder.  Opening the configuration file thus also
+    points to the archive folder.
+  - The interface has been rewritten to add some counters to better indicate the progress being made.
+  - Multi-threaded.  A scan thread checks for modified files while an update thread writes the changed
+    file to the archive.  Hopefully this will make the archive process a bit faster.
+  - Log files can be reviewed from within KeepBack from the Tools menu.
+  - The cleanup of log files is now separate from the merging of historical archives.  There is a single
+    setting indicating the number of days over which to keep log files.
+  - Filters have been combined so there is only one list (each filter has a "type" parameter).  The order
+    of the filters in the list is the order they will be applied against files being backed up.
+
 2011-08-24  1.04
   - alter interface to show Created, Modified, Deleted.  Removed Changed, Attribute, Written and Length.
   - no longer check attributes as indicator of a changed file.
