@@ -22,5 +22,53 @@ namespace KeepBack.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FormMainLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FormMainLocation"]));
+            }
+            set {
+                this["FormMainLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Size FormMainSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FormMainSize"]));
+            }
+            set {
+                this["FormMainSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point FormEditLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["FormEditLocation"]));
+            }
+            set {
+                this["FormEditLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Size FormEditSize {
+            get {
+                return ((global::System.Drawing.Size)(this["FormEditSize"]));
+            }
+            set {
+                this["FormEditSize"] = value;
+            }
+        }
     }
 }

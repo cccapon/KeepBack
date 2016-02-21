@@ -18,6 +18,7 @@
 
 */
 
+using KeepBack.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -62,11 +63,52 @@ namespace KeepBack
 		{
 			try
 			{
+				Point pt = Settings.Default.FormMainLocation;
+				if( ! pt.IsEmpty )
+				{
+					if( Screen.GetWorkingArea( pt ).Contains( new Rectangle( pt, new Size( 100, 100 ) ) ) )
+					{
+						this.Location = pt;
+					}
+				}
+				Size sz = Settings.Default.FormMainSize;
+				if( ! sz.IsEmpty )
+				{
+					sz.Width  = Math.Max( sz.Width , this.MinimumSize.Width  );
+					sz.Height = Math.Max( sz.Height, this.MinimumSize.Height );
+					this.Size = sz;
+				}
 				SetHeader();
 			}
 			catch( Exception ex )
 			{
 				Msg( ex );
+			}
+		}
+
+		private void FormMain_FormClosing( object sender, FormClosingEventArgs e )
+		{
+			try
+			{
+				bool b = false;
+				if( Settings.Default.FormMainLocation != this.Location )
+				{
+					Settings.Default.FormMainLocation = this.Location;
+					b = true;
+				}
+				Size s = (this.WindowState == FormWindowState.Normal) ? this.Size : this.RestoreBounds.Size;
+				if( Settings.Default.FormMainSize != s )
+				{
+					Settings.Default.FormMainSize = s;
+					b = true;
+				}
+				if( b )
+				{
+					Settings.Default.Save();
+				}
+			}
+			catch( Exception )
+			{
 			}
 		}
 
@@ -496,7 +538,5 @@ namespace KeepBack
 			richTextBoxInfo.AppendText( (richTextBoxInfo.TextLength > 0) ? ("\r\n" + message) : message );
 			richTextBoxInfo.ScrollToCaret();
 		}
-
-
 	}
 }

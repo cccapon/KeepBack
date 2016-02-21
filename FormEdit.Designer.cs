@@ -702,7 +702,7 @@ namespace KeepBack
 			this.panelArchive.Controls.Add(this.labelArchiveMonth);
 			this.panelArchive.Controls.Add(this.labelArchivePath);
 			this.panelArchive.Controls.Add(this.labelArchive);
-			this.panelArchive.Location = new System.Drawing.Point(10, 571);
+			this.panelArchive.Location = new System.Drawing.Point(10, 549);
 			this.panelArchive.Margin = new System.Windows.Forms.Padding(4);
 			this.panelArchive.Name = "panelArchive";
 			this.panelArchive.Size = new System.Drawing.Size(643, 370);
@@ -729,6 +729,7 @@ namespace KeepBack
 			this.textBoxLogsDays.Text = "90";
 			this.textBoxLogsDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxLogsDays, "After this number of days, old log files will be deleted.");
+			this.textBoxLogsDays.TextChanged += new System.EventHandler(this.textBoxArchive_TextChanged);
 			// 
 			// labelLogsDays
 			// 
@@ -916,6 +917,7 @@ namespace KeepBack
 			this.textBoxArchiveMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMinute, "After this number of minutes, minute-by-minute backups are merged together into h" +
         "ours.");
+			this.textBoxArchiveMinute.TextChanged += new System.EventHandler(this.textBoxArchive_TextChanged);
 			// 
 			// labelArchiveMinute
 			// 
@@ -937,6 +939,7 @@ namespace KeepBack
 			this.textBoxArchiveHour.TabIndex = 14;
 			this.textBoxArchiveHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveHour, "After this number of hours, hourly backups are merged together into days.");
+			this.textBoxArchiveHour.TextChanged += new System.EventHandler(this.textBoxArchive_TextChanged);
 			// 
 			// labelArchiveHour
 			// 
@@ -958,6 +961,7 @@ namespace KeepBack
 			this.textBoxArchiveDay.TabIndex = 11;
 			this.textBoxArchiveDay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveDay, "After this number of days, daily backups are merged together into months.");
+			this.textBoxArchiveDay.TextChanged += new System.EventHandler(this.textBoxArchive_TextChanged);
 			// 
 			// labelArchiveDay
 			// 
@@ -990,6 +994,7 @@ namespace KeepBack
 			this.textBoxArchiveMonth.TabIndex = 8;
 			this.textBoxArchiveMonth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			this.toolTip.SetToolTip(this.textBoxArchiveMonth, "After this number of months, monthly backups are merged together into years.");
+			this.textBoxArchiveMonth.TextChanged += new System.EventHandler(this.textBoxArchive_TextChanged);
 			// 
 			// labelArchiveMonth
 			// 
@@ -1037,9 +1042,11 @@ namespace KeepBack
 			this.ClientSize = new System.Drawing.Size(940, 617);
 			this.Controls.Add(this.splitContainer);
 			this.Margin = new System.Windows.Forms.Padding(4);
+			this.MinimumSize = new System.Drawing.Size(640, 47);
 			this.Name = "FormEdit";
 			this.Text = "Backup Selection";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEdit_FormClosing);
+			this.Load += new System.EventHandler(this.FormEdit_Load);
 			this.Shown += new System.EventHandler(this.FormEdit_Shown);
 			this.splitContainer.Panel1.ResumeLayout(false);
 			this.splitContainer.Panel2.ResumeLayout(false);

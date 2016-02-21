@@ -123,7 +123,7 @@ namespace KeepBack
 			this.richTextBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.richTextBoxInfo.BackColor = System.Drawing.SystemColors.AppWorkspace;
+			this.richTextBoxInfo.BackColor = System.Drawing.SystemColors.Info;
 			this.richTextBoxInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.richTextBoxInfo.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.richTextBoxInfo.Location = new System.Drawing.Point(13, 299);
@@ -132,6 +132,7 @@ namespace KeepBack
 			this.richTextBoxInfo.ReadOnly = true;
 			this.richTextBoxInfo.Size = new System.Drawing.Size(593, 107);
 			this.richTextBoxInfo.TabIndex = 13;
+			this.richTextBoxInfo.TabStop = false;
 			this.richTextBoxInfo.Text = "";
 			this.richTextBoxInfo.WordWrap = false;
 			// 
@@ -290,6 +291,7 @@ namespace KeepBack
 			// 
 			// menuStripMain
 			// 
+			this.menuStripMain.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
@@ -315,28 +317,28 @@ namespace KeepBack
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
 			this.newToolStripMenuItem.Text = "&New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.MenuNew_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.MenuOpen_Click);
 			// 
 			// closeToolStripMenuItem
 			// 
 			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
 			this.closeToolStripMenuItem.Text = "&Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.MenuClose_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.MenuExit_Click);
 			// 
@@ -350,41 +352,41 @@ namespace KeepBack
             this.backupToolStripMenuItem,
             this.debugToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
 			this.toolsToolStripMenuItem.Text = "&Tools";
 			// 
 			// editToolStripMenuItem
 			// 
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-			this.editToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.editToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.editToolStripMenuItem.Text = "&Edit";
 			this.editToolStripMenuItem.Click += new System.EventHandler(this.MenuEdit_Click);
 			// 
 			// exploreToolStripMenuItem
 			// 
 			this.exploreToolStripMenuItem.Name = "exploreToolStripMenuItem";
-			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.exploreToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.exploreToolStripMenuItem.Text = "E&xplore";
 			this.exploreToolStripMenuItem.Click += new System.EventHandler(this.MenuExplore_Click);
 			// 
 			// logsToolStripMenuItem
 			// 
 			this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-			this.logsToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.logsToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.logsToolStripMenuItem.Text = "&Logs";
 			this.logsToolStripMenuItem.Click += new System.EventHandler(this.MenuLogs_Click);
 			// 
 			// mergeToolStripMenuItem
 			// 
 			this.mergeToolStripMenuItem.Name = "mergeToolStripMenuItem";
-			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.mergeToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.mergeToolStripMenuItem.Text = "&Merge";
 			this.mergeToolStripMenuItem.Click += new System.EventHandler(this.MenuMerge_Click);
 			// 
 			// backupToolStripMenuItem
 			// 
 			this.backupToolStripMenuItem.Name = "backupToolStripMenuItem";
-			this.backupToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.backupToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.backupToolStripMenuItem.Text = "&Backup";
 			this.backupToolStripMenuItem.Click += new System.EventHandler(this.MenuBackup_Click);
 			// 
@@ -392,7 +394,7 @@ namespace KeepBack
 			// 
 			this.debugToolStripMenuItem.CheckOnClick = true;
 			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
 			this.debugToolStripMenuItem.Text = "&Debug";
 			// 
 			// helpToolStripMenuItem
@@ -406,12 +408,13 @@ namespace KeepBack
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 24);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
 			this.aboutToolStripMenuItem.Text = "&About";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.MenuAbout_Click);
 			// 
 			// statusStripMain
 			// 
+			this.statusStripMain.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.statusStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatus,
             this.toolStripBlank,
@@ -626,9 +629,10 @@ namespace KeepBack
 			this.Controls.Add(this.menuStripMain);
 			this.MainMenuStrip = this.menuStripMain;
 			this.Margin = new System.Windows.Forms.Padding(4);
-			this.MinimumSize = new System.Drawing.Size(640, 45);
+			this.MinimumSize = new System.Drawing.Size(640, 47);
 			this.Name = "FormMain";
 			this.Text = "Keep Back";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
 			this.Load += new System.EventHandler(this.FormMain_Load);
 			this.menuStripMain.ResumeLayout(false);
 			this.menuStripMain.PerformLayout();

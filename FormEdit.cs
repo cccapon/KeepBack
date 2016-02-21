@@ -18,6 +18,7 @@
 
 */
 
+using KeepBack.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -72,6 +73,31 @@ namespace KeepBack
 		 * ------------------
 		 */
 
+		private void FormEdit_Load( object sender, EventArgs e )
+		{
+			try
+			{
+				Point pt = Settings.Default.FormEditLocation;
+				if( ! pt.IsEmpty )
+				{
+					if( Screen.GetWorkingArea( pt ).Contains( new Rectangle( pt, new Size( 100, 100 ) ) ) )
+					{
+						this.Location = pt;
+					}
+				}
+				Size sz = Settings.Default.FormEditSize;
+				if( ! sz.IsEmpty )
+				{
+					sz.Width  = Math.Max( sz.Width , this.MinimumSize.Width  );
+					sz.Height = Math.Max( sz.Height, this.MinimumSize.Height );
+					this.Size = sz;
+				}
+			}
+			catch( Exception )
+			{
+			}
+		}
+
 		private void FormEdit_Shown( object sender, EventArgs e )
 		{
 			Rectangle r = splitContainer.Panel2.ClientRectangle;
@@ -91,13 +117,35 @@ namespace KeepBack
 
 		private void FormEdit_FormClosing( object sender, FormClosingEventArgs e )
 		{
-			Accept();
-			if( modified )
+			try
 			{
-				if( MessageBox.Show( "Settings have changed.\r\n\r\nWould you like them saved?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
+				Accept();
+				if( modified )
 				{
-					Save();
+					if( MessageBox.Show( "Settings have changed.\r\n\r\nWould you like them saved?", "Unsaved Changes", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2 ) == DialogResult.Yes )
+					{
+						Save();
+					}
 				}
+				bool b = false;
+				if( Settings.Default.FormEditLocation != this.Location )
+				{
+					Settings.Default.FormEditLocation = this.Location;
+					b = true;
+				}
+				Size s = (this.WindowState == FormWindowState.Normal) ? this.Size : this.RestoreBounds.Size;
+				if( Settings.Default.FormEditSize != s )
+				{
+					Settings.Default.FormEditSize = s;
+					b = true;
+				}
+				if( b )
+				{
+					Settings.Default.Save();
+				}
+			}
+			catch( Exception )
+			{
 			}
 		}
 
@@ -240,12 +288,20 @@ namespace KeepBack
 					CtrlArchive a = (CtrlArchive)node.Tag;
 					this.panelArchive.Tag = a;
 					buttonSave.Enabled = modified;
-					textBoxArchiveFullPath.Text  = ctrl.Path;
-					textBoxArchiveMonth   .Text  = a.Month .ToString();
-					textBoxArchiveDay     .Text  = a.Day   .ToString();
-					textBoxArchiveHour    .Text  = a.Hour  .ToString();
-					textBoxArchiveMinute  .Text  = a.Minute.ToString();
-					textBoxLogsDays       .Text  = a.Logs  .ToString();
+					try
+					{
+						ignoreChangeState = true;
+						textBoxArchiveFullPath.Text  = ctrl.Path;
+						textBoxArchiveMonth   .Text  = a.Month .ToString();
+						textBoxArchiveDay     .Text  = a.Day   .ToString();
+						textBoxArchiveHour    .Text  = a.Hour  .ToString();
+						textBoxArchiveMinute  .Text  = a.Minute.ToString();
+						textBoxLogsDays       .Text  = a.Logs  .ToString();
+					}
+					finally
+					{
+						ignoreChangeState = false;
+					}
 					if( a.Folders != null ) { this.listBoxFolders.Items.AddRange( a.Folders ); }
 				}
 				else if( t == typeof(CtrlFolder) )
@@ -267,7 +323,7 @@ namespace KeepBack
 					radioButtonActionInclude.Checked = (p.Action == CtrlFilter.ActionType.Include);
 					radioButtonActionExclude.Checked = (p.Action == CtrlFilter.ActionType.Exclude);
 					radioButtonActionHistory.Checked = (p.Action == CtrlFilter.ActionType.History);
-					textBoxPatternPattern.Text    =   p.Pattern;
+					textBoxPatternPattern.Text       =   p.Pattern;
 					PatternSetRadioButtons();
 				}
 			}
@@ -352,8 +408,17 @@ namespace KeepBack
 				s = textBoxArchiveHour  .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Hour   ) { a.Hour   = i; modified = true; } } catch { } }
 				s = textBoxArchiveMinute.Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Minute ) { a.Minute = i; modified = true; } } catch { } }
 				s = textBoxLogsDays     .Text.Trim(); if( ! string.IsNullOrEmpty( s ) ) { try { i = int.Parse( s ); if( i != a.Logs   ) { a.Logs   = i; modified = true; } } catch { } }
+				buttonSave.Enabled = modified;
 			}
 			return null;
+		}
+
+		private void textBoxArchive_TextChanged( object sender, EventArgs e )
+		{
+			if( ! ignoreChangeState )
+			{
+				AcceptArchive();
+			}
 		}
 
 		private void buttonSave_Click( object sender, EventArgs e )
