@@ -1,6 +1,6 @@
 KeepBack Revision History
 -------------------------
-2016-02-21  2.01
+2016-02-21  2.0.1
   - KeepBack will now remember the window location and size for the main window and the edit window.
   - On the main window, the Info panel colour has been changed to make it more readable.
   - When changing values in the Archive panel of the Edit window, the Save button will now activate.
