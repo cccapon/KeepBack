@@ -83,7 +83,7 @@ namespace KeepBack
 			get
 			{
 				Version version = Assembly.GetExecutingAssembly().GetName().Version;
-				return string.Format( "{0}.{1:D2}", version.Major, version.Minor );
+				return string.Format( "{0}.{1}.{2}", version.Major, version.Minor, version.Build );
 			}
 		}
 
