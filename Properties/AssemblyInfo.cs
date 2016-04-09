@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KeepBack")]
-[assembly: AssemblyCopyright("Copyright © 2008-2015 Chris Capon")]
+[assembly: AssemblyCopyright("Copyright © 2008 Chris Capon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
