@@ -1189,7 +1189,7 @@ namespace KeepBack
 				CtrlArchive archive = ctrl.Archive;
 				if( (archive != null) && (archive.Logs > 0) )
 				{
-					DateTime dt = start.AddDays( 0 - archive.Logs );
+					DateTime dt = start.AddDays( 1 - archive.Logs );
 					string s = Ctrl.DateFolder( dt, Ctrl.DateFolderLevel.Day );
 					Msg( "..remove old log files" );
 					if( debug ) { Log( "..remove log files older than {0} days - {1}", archive.Logs, s ); }
@@ -1219,38 +1219,49 @@ namespace KeepBack
 		{
 			if( IsCancelRequested ) { throw new Exception( "Merge cancelled." ); }
 			Msg( "Level: {0}", level );
-			string  s = MergeMinHistoryFolder( level );
-			int     z = (int)level;
-			if( ! string.IsNullOrEmpty( s ) && (z > 0) )
+			string[] a  = ctrl.HistoryFolders();
+			if( a.Length > 0 )
 			{
-				//..merge directories
-				string[] a  = ctrl.HistoryFolders();
-				int      i  = a.Length;
-				//..skip all folders being kept
-				do
+				string  s = MergeMinHistoryFolder( a[a.Length - 1], level );
+				if( ! string.IsNullOrEmpty( s ) )
 				{
-					--i;
-				}
-				while( (i > 0) && (string.Compare( a[i], s, true ) >= 0 ) );
-
-				//..scan remaining folders for potential merges and renames
-				while( i >= 0 )
-				{
-					int  j = i;
-					bool b = true;
-					while( (--i >= 0) && (string.Compare( a[i], 0, a[j], 0, z, true ) == 0) )
+					//..merge directories
+					int      i  = a.Length;
+					//..skip all folders being kept
+					do
 					{
-						if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
-						Log( "  ..remove/merge {0}", a[i] );
-						Merge( a[i], a[j] );
+						--i;
 					}
-					//rename any folder where the name is longer than it needs for uniquness
-					if( a[j].Length > z )
+					while( (i > 0) && (string.Compare( a[i], s, true ) >= 0 ) );
+
+					//..scan remaining folders for potential merges and renames
+					int z;
+					switch( level )
 					{
-						if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
-						string t = a[j].Substring( 0, z );
-						Log( "  ..rename to {0}", t );
-						DirectoryMove( ctrl.HistoryFullPath( a[j] ), ctrl.HistoryFullPath( t ) );
+						case Ctrl.DateFolderLevel.Month :  z = (int)Ctrl.DateFolderLevel.Year  ;  break;
+						case Ctrl.DateFolderLevel.Day   :  z = (int)Ctrl.DateFolderLevel.Month ;  break;
+						case Ctrl.DateFolderLevel.Hour  :  z = (int)Ctrl.DateFolderLevel.Day   ;  break;
+						case Ctrl.DateFolderLevel.Minute:  z = (int)Ctrl.DateFolderLevel.Hour  ;  break;
+						default:                           z = (int)Ctrl.DateFolderLevel.Second;  break;
+					}
+					while( i >= 0 )
+					{
+						int  j = i;
+						bool b = true;
+						while( (--i >= 0) && (string.Compare( a[i], 0, a[j], 0, z, true ) == 0) )
+						{
+							if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
+							Log( "  ..remove/merge {0}", a[i] );
+							Merge( a[i], a[j] );
+						}
+						//rename any folder where the name is longer than it needs for uniquness
+						if( a[j].Length > z )
+						{
+							if( b ) { b = false;  Log( "  {0} - {1}", level, a[j] ); }
+							string t = a[j].Substring( 0, z );
+							Log( "  ..rename to {0}", t );
+							DirectoryMove( ctrl.HistoryFullPath( a[j] ), ctrl.HistoryFullPath( t ) );
+						}
 					}
 				}
 			}
@@ -1312,22 +1323,21 @@ namespace KeepBack
 			}
 		}
 
-		string MergeMinHistoryFolder( Ctrl.DateFolderLevel level )
+		string MergeMinHistoryFolder( string last, Ctrl.DateFolderLevel level )
 		{
-			DateTime dt = DateTime.MinValue;
 			CtrlArchive archive = ctrl.Archive;
-			if( archive != null )
+			if( (archive != null) && (last.Length >= (int)level) )
 			{
+				DateTime dt = Ctrl.ParseDateFolder( last, level );
 				switch( level )
 				{
-					case Ctrl.DateFolderLevel.Year  :  if( archive.Month  > 0 ) { dt = start.AddMonths  ( 0 - archive.Month  ); } break;
-					case Ctrl.DateFolderLevel.Month :  if( archive.Day    > 0 ) { dt = start.AddDays    ( 0 - archive.Day    ); } break;
-					case Ctrl.DateFolderLevel.Day   :  if( archive.Hour   > 0 ) { dt = start.AddHours   ( 0 - archive.Hour   ); } break;
-					case Ctrl.DateFolderLevel.Hour  :  if( archive.Minute > 0 ) { dt = start.AddMinutes ( 0 - archive.Minute ); } break;
-					case Ctrl.DateFolderLevel.Minute:  dt = start;                                                                break;
+					case Ctrl.DateFolderLevel.Month  :  if( archive.Month  > 0 ) { return Ctrl.DateFolder( dt.AddMonths  ( 1 - archive.Month  ), level ); } break;
+					case Ctrl.DateFolderLevel.Day    :  if( archive.Day    > 0 ) { return Ctrl.DateFolder( dt.AddDays    ( 1 - archive.Day    ), level ); } break;
+					case Ctrl.DateFolderLevel.Hour   :  if( archive.Hour   > 0 ) { return Ctrl.DateFolder( dt.AddHours   ( 1 - archive.Hour   ), level ); } break;
+					case Ctrl.DateFolderLevel.Minute :  if( archive.Minute > 0 ) { return Ctrl.DateFolder( dt.AddMinutes ( 1 - archive.Minute ), level ); } break;
 				}
 			}
-			return (dt == DateTime.MinValue) ? null : Ctrl.DateFolder( dt, level );
+			return null;
 		}
 
 

@@ -495,6 +495,18 @@ namespace KeepBack
 		{
 			return date.ToString( @"yyyy-MM-dd-HHmmss", DateTimeFormatInfo.InvariantInfo ).Substring( 0, (int)level );
 		}
+		public static DateTime ParseDateFolder( string folder, DateFolderLevel level )
+		{
+			try
+			{
+				int len = Math.Min( folder.Length, (int)level );
+				return DateTime.ParseExact( folder.Substring( 0, len ), @"yyyy-MM-dd-HHmmss".Substring( 0, len ), DateTimeFormatInfo.InvariantInfo );
+			}
+			catch( Exception )
+			{
+				return DateTime.Now;
+			}
+		}
 		public static bool IsDateFolder( string path )
 		{
 			try

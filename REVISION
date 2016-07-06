@@ -1,5 +1,11 @@
 KeepBack Revision History
 -------------------------
+2016-07-06  2.0.2
+  - Merge History was incorrectly calculating dates and would keep too many backups.  Now, the
+    settings are applied correctly.
+  - Merge History used to be calculated from the current date/time when the merge was run.  Now
+    it is calculated from the date/time of the last backup.
+
 2016-02-21  2.0.1
   - KeepBack will now remember the window location and size for the main window and the edit window.
   - On the main window, the Info panel colour has been changed to make it more readable.
