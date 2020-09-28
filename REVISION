@@ -1,5 +1,8 @@
 KeepBack Revision History
 -------------------------
+2020-09-28  2.0.3
+  - The Pause and Cancel functionality were separated from the Merge and Backup buttons.  Previously, the Merge and Backup buttons did double-duty as Pause and Cancel while operations were underway.  A user reported that double-clicking the Backup button would accidentally trigger a Cancel operation.  Hopefully this can be avoided with the separate buttons.
+
 2016-07-06  2.0.2
   - Merge History was incorrectly calculating dates and would keep too many backups.  Now, the
     settings are applied correctly.
