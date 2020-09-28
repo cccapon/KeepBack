@@ -268,26 +268,29 @@ namespace KeepBack
 		{
 			try
 			{
-				if( IsFilename )
+				Backup bk = backup;
+				if( bk == null )
 				{
-#if false
-					ClearValues();
-					thread = new Thread( new ParameterizedThreadStart( this.Launch ) );
-					thread.Start( "Merge" );
-#endif
+					bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
 				}
-			}
-			catch( Exception ex )
-			{
-				Msg( ex );
-			}
-		}
-
-		private void MenuAbout_Click( object sender, EventArgs e )
-		{
-			try
-			{
-				new FormAbout().ShowDialog();
+				if( ! bk.IsRunning )
+				{
+					Ctrl c = GetControl();
+					if( c != null )
+					{
+						labelArchive.Text = c.Path;
+						richTextBoxInfo.Clear();
+						labelTagScan.Text = "Merge";
+						labelTagUpdate.Visible = false;
+						Msg( string.Empty );
+						Msg( "==== Merge ====" );
+						Msg( "Control File : {0}", c.Filename );
+						bk.Process( Backup.Operation.Merge, c, IsDebug );
+						ControlActivation();
+						timer_kick = -1;
+						timerRefresh.Start();
+					}
+				}
 			}
 			catch( Exception ex )
 			{
@@ -322,13 +325,35 @@ namespace KeepBack
 						timerRefresh.Start();
 					}
 				}
-				else
+			}
+			catch( Exception ex )
+			{
+				Msg( ex );
+			}
+		}
+
+		private void MenuAbout_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				new FormAbout().ShowDialog();
+			}
+			catch( Exception ex )
+			{
+				Msg( ex );
+			}
+		}
+
+		private void buttonPause_Click( object sender, EventArgs e )
+		{
+			try
+			{
+				Backup bk = backup;
+				if( (bk != null) && bk.IsRunning )
 				{
-					Msg( "..cancelling" );
-					bk.Cancel();
-					buttonMerge .ForeColor = buttonBackup.ForeColor;
-					buttonBackup.Enabled   = false;
-					buttonMerge .Enabled   = false;
+					bk.Pause();
+					buttonPause.ForeColor = buttonCancel.ForeColor;
+					buttonPause.Text      = bk.IsPaused ? "Resume" : "Pause";
 				}
 			}
 			catch( Exception ex )
@@ -337,38 +362,18 @@ namespace KeepBack
 			}
 		}
 
-		private void buttonMerge_Click( object sender, EventArgs e )
+		private void buttonCancel_Click( object sender, EventArgs e )
 		{
 			try
 			{
 				Backup bk = backup;
-				if( bk == null )
+				if( (bk != null) && bk.IsRunning )
 				{
-					bk = backup = new Backup( new Backup.MessageDelegate( Msg ) );
-				}
-				if( ! bk.IsRunning )
-				{
-					Ctrl c = GetControl();
-					if( c != null )
-					{
-						labelArchive.Text = c.Path;
-						richTextBoxInfo.Clear();
-						labelTagScan.Text = "Merge";
-						labelTagUpdate.Visible = false;
-						Msg( string.Empty );
-						Msg( "==== Merge ====" );
-						Msg( "Control File : {0}", c.Filename );
-						bk.Process( Backup.Operation.Merge, c, IsDebug );
-						ControlActivation();
-						timer_kick = -1;
-						timerRefresh.Start();
-					}
-				}
-				else
-				{
-					bk.Pause();
-					buttonMerge.Text      = bk.IsPaused ? "Resume" : "Pause";
-					buttonMerge.ForeColor = buttonBackup.ForeColor;
+					Msg( "..cancelling" );
+					bk.Cancel();
+					buttonPause .ForeColor = buttonCancel.ForeColor;
+					buttonCancel.Enabled   = false;
+					buttonPause .Enabled   = false;
 				}
 			}
 			catch( Exception ex )
@@ -409,7 +414,7 @@ namespace KeepBack
 
 					if( bk.IsPaused )
 					{
-						buttonMerge.ForeColor = ((timer_kick % 2) == 0) ? buttonMerge.BackColor : buttonBackup.ForeColor;
+						buttonPause.ForeColor = ((timer_kick % 2) == 0) ? buttonPause.BackColor : buttonCancel.ForeColor;
 					}
 
 					toolStripStatusLabelScanState  .Text = bk.IsScanAlive ? bk.ScanState.ToString() : (bk.IsMergeAlive ? bk.MergeState.ToString() : string.Empty);
@@ -463,11 +468,11 @@ namespace KeepBack
 			debugToolStripMenuItem  .Enabled = idle;
 
 			//Buttons
-			buttonBackup  .Text      = idle ? "Begin Backup"  : "Cancel";
-			buttonBackup  .Enabled   = fn;
-			buttonMerge   .Text      = idle ? "Merge History" : "Pause";
-			buttonMerge   .Enabled   = fn;
-			buttonMerge   .ForeColor = buttonBackup.ForeColor;
+			buttonMerge             .Enabled   = idle && fn;
+			buttonBackup            .Enabled   = idle && fn;
+			buttonPause             .Enabled   = ! idle;
+			buttonCancel            .Enabled   = ! idle;
+			buttonPause             .ForeColor = buttonCancel.ForeColor;
 
 			//Display
 			Color c = idle ? System.Drawing.SystemColors.Control : System.Drawing.SystemColors.Info;
